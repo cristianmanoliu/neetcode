@@ -3,6 +3,7 @@ package io.github.cristianmanoliu.arrays_hashing;
 import java.util.ArrayList;
 import java.util.List;
 
+// https://neetcode.io/problems/is-anagram?list=neetcode150
 public class ValidAnagram {
 
   public boolean isAnagram(String s, String t) {

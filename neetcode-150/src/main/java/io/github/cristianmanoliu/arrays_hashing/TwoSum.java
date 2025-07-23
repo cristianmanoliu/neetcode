@@ -1,5 +1,6 @@
 package io.github.cristianmanoliu.arrays_hashing;
 
+// https://neetcode.io/problems/two-integer-sum?list=neetcode150
 public class TwoSum {
 
   public int[] twoSum(int[] nums, int target) {

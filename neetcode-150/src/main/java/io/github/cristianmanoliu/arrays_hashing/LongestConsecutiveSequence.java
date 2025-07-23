@@ -3,6 +3,7 @@ package io.github.cristianmanoliu.arrays_hashing;
 import java.util.HashSet;
 import java.util.Set;
 
+// https://neetcode.io/problems/longest-consecutive-sequence?list=neetcode150
 public class LongestConsecutiveSequence {
 
   public int longestConsecutive(int[] nums) {

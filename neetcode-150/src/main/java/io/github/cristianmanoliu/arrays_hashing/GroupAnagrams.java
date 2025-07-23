@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// https://neetcode.io/problems/anagram-groups?list=neetcode150
 public class GroupAnagrams {
 
   public Collection<List<String>> groupAnagrams(String[] strs) {

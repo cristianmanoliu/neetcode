@@ -2,6 +2,7 @@ package io.github.cristianmanoliu.arrays_hashing;
 
 import java.util.List;
 
+// https://neetcode.io/problems/string-encode-and-decode?list=neetcode150
 public class EncodeAndDecodeStrings {
 
   public String encode(List<String> strs) {

@@ -1,5 +1,6 @@
 package io.github.cristianmanoliu.arrays_hashing;
 
+// https://neetcode.io/problems/products-of-array-discluding-self?list=neetcode150
 public class ProductsOfArrayExceptSelf {
 
   public int[] productExceptSelf(int[] nums) {
