@@ -1,5 +1,6 @@
 package io.github.cristianmanoliu.two_pointers;
 
+// https://neetcode.io/problems/two-integer-sum-ii?list=neetcode150
 public class TwoIntegerSumII {
 
   public int[] twoSum(int[] numbers, int target) {

@@ -1,5 +1,6 @@
 package io.github.cristianmanoliu.two_pointers;
 
+// https://neetcode.io/problems/is-palindrome?list=neetcode150
 public class ValidPalindrome {
 
   public boolean isPalindrome(String s) {
