@@ -17,7 +17,9 @@ class TrappingRainWaterTest {
      */
     int[] height = {0, 2, 0, 3, 1, 0, 1, 3, 2, 1};
     int expected = 9;
-    int result = trappingRainWater.trap(height);
+    int result = trappingRainWater.trapTwoPointer(height);
+    assertEquals(expected, result);
+    result = trappingRainWater.trapPrefixSuffixMaxima(height);
     assertEquals(expected, result);
   }
 
@@ -30,7 +32,9 @@ class TrappingRainWaterTest {
      */
     int[] height = {0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
     int expected = 6;
-    int result = trappingRainWater.trap(height);
+    int result = trappingRainWater.trapTwoPointer(height);
+    assertEquals(expected, result);
+    result = trappingRainWater.trapPrefixSuffixMaxima(height);
     assertEquals(expected, result);
   }
 }
