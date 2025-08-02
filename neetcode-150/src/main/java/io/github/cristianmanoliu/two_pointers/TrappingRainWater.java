@@ -37,6 +37,7 @@ public class TrappingRainWater {
      * ⬜ ⬛ 🟦 ⬛ 🟦 🟦 🟦 ⬛ ⬛ ⬜
      * ⬜ ⬛ 🟦 ⬛ ⬛ 🟦 ⬛ ⬛ ⬛ ⬛
      */
+    // Create arrays to store the maximum height to the left and right of each index
     int[] leftMax = new int[height.length];
     int[] rightMax = new int[height.length];
     leftMax[0] = height[0];
@@ -47,6 +48,7 @@ public class TrappingRainWater {
     for (int i = height.length - 2; i >= 0; i--) {
       rightMax[i] = Math.max(rightMax[i + 1], height[i]);
     }
+    // Calculate the total area of water that can be trapped
     int totalArea = 0;
     for (int i = 0; i < height.length; i++) {
       totalArea += Math.max(Math.min(leftMax[i], rightMax[i]) - height[i], 0);
