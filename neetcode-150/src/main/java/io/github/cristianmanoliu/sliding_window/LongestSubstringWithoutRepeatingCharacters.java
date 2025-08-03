@@ -13,14 +13,15 @@ public class LongestSubstringWithoutRepeatingCharacters {
     int leftSlider = 0;
     Set<String> seenChars = new HashSet<>();
     for (int rightSlider = 0; rightSlider < s.length(); rightSlider++) {
-      String currentChar = String.valueOf(s.charAt(rightSlider));
+      String rightChar = String.valueOf(s.charAt(rightSlider));
       // If the character is already seen, move the left slider
-      while (seenChars.contains(currentChar)) {
-        seenChars.remove(String.valueOf(s.charAt(leftSlider)));
+      while (seenChars.contains(rightChar)) {
+        String leftChar = String.valueOf(s.charAt(leftSlider));
+        seenChars.remove(leftChar);
         leftSlider++;
       }
       // Add the current character to the set
-      seenChars.add(currentChar);
+      seenChars.add(rightChar);
       // Calculate the maximum length of substring without repeating characters
       maxLength = Math.max(maxLength, rightSlider - leftSlider + 1);
     }
