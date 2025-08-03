@@ -9,25 +9,20 @@ public class LongestSubstringWithoutRepeatingCharacters {
     if (s == null || s.isEmpty()) {
       return 0;
     }
-    int left = 0;
-    int right = 1;
-    Set<String> unique = new HashSet<>();
-    String leftCharacter = String.valueOf(s.charAt(left));
-    unique.add(leftCharacter);
-    int maxLength = 1;
-    while (right < s.length()) {
-      String rightCharacter = String.valueOf(s.charAt(right));
-      if (unique.contains(rightCharacter)) {
-        left = left + 1;
-        right = left + 1;
-        leftCharacter = String.valueOf(s.charAt(left));
-        unique.clear();
-        unique.add(leftCharacter);
-      } else {
-        unique.add(rightCharacter);
-        maxLength = Math.max(maxLength, (1 + right - left));
-        right++;
+    int maxLength = 0;
+    int leftSlider = 0;
+    Set<String> seenChars = new HashSet<>();
+    for (int rightSlider = 0; rightSlider < s.length(); rightSlider++) {
+      String currentChar = String.valueOf(s.charAt(rightSlider));
+      // If the character is already seen, move the left slider
+      while (seenChars.contains(currentChar)) {
+        seenChars.remove(String.valueOf(s.charAt(leftSlider)));
+        leftSlider++;
       }
+      // Add the current character to the set
+      seenChars.add(currentChar);
+      // Calculate the maximum length of substring without repeating characters
+      maxLength = Math.max(maxLength, rightSlider - leftSlider + 1);
     }
     return maxLength;
   }
