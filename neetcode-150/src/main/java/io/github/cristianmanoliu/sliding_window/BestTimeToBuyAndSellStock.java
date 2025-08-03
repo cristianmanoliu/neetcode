@@ -10,6 +10,7 @@ public class BestTimeToBuyAndSellStock {
     int r = 1;
     int maxProfit = 0;
     while (r < prices.length) {
+      // is it profitable to sell on day r?
       if (prices[l] < prices[r]) {
         int profit = prices[r] - prices[l];
         maxProfit = Math.max(maxProfit, profit);
