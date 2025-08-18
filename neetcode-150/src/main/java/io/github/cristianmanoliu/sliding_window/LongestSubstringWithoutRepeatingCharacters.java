@@ -3,6 +3,7 @@ package io.github.cristianmanoliu.sliding_window;
 import java.util.HashSet;
 import java.util.Set;
 
+// https://neetcode.io/problems/longest-substring-without-duplicates?list=neetcode150
 public class LongestSubstringWithoutRepeatingCharacters {
 
   public int lengthOfLongestSubstring(String s) {

@@ -1,5 +1,6 @@
 package io.github.cristianmanoliu.sliding_window;
 
+// https://neetcode.io/problems/longest-repeating-substring-with-replacement?list=neetcode150
 public class LongestRepeatingCharacterReplacement {
 
   public int characterReplacement(String s, int k) {

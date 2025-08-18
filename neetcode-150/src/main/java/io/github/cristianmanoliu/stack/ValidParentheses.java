@@ -1,5 +1,6 @@
 package io.github.cristianmanoliu.stack;
 
+// https://neetcode.io/problems/validate-parentheses?list=neetcode150
 public class ValidParentheses {
   public boolean isValid(String s) {
     // Stack to keep track of opening parentheses
