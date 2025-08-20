@@ -13,23 +13,25 @@ public class GenerateParentheses {
     return res;
   }
 
-  // n = target pairs; open/close = counts used so far
   private static void backtrack(int n, int open, int close, StringBuilder sb, List<String> res) {
+    // Completeness predicate
     if (open == n && close == n) {
       res.add(sb.toString());
       return;
     }
-    // Try adding '(' if we still have room
+    // Feasibility predicate
     if (open < n) {
+      // Branch generator
       sb.append('(');
       backtrack(n, open + 1, close, sb, res);
-      sb.deleteCharAt(sb.length() - 1); // undo
+      sb.deleteCharAt(sb.length() - 1);
     }
-    // Try adding ')' only if it keeps prefixes valid
+    // Feasibility predicate
     if (close < open) {
+      // Branch generator
       sb.append(')');
       backtrack(n, open, close + 1, sb, res);
-      sb.deleteCharAt(sb.length() - 1); // undo
+      sb.deleteCharAt(sb.length() - 1);
     }
   }
 }
