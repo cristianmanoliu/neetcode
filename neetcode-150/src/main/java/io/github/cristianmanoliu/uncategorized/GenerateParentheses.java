@@ -1,4 +1,4 @@
-package io.github.cristianmanoliu.backtracking;
+package io.github.cristianmanoliu.uncategorized;
 
 import java.util.ArrayList;
 import java.util.List;

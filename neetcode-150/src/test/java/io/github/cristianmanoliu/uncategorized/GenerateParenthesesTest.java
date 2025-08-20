@@ -1,4 +1,4 @@
-package io.github.cristianmanoliu.backtracking;
+package io.github.cristianmanoliu.uncategorized;
 
 import static org.junit.jupiter.api.Assertions.*;
 
