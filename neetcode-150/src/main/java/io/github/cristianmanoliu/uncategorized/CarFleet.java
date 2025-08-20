@@ -18,7 +18,9 @@ public class CarFleet {
     for (int i = 0; i < n; i++) {
       // If the current car arrives later than the last car in the fleet, it forms a new fleet
       if (cars[i][1] > lastTime) {
+        // Increment the fleet count
         fleets++;
+        // Update the last time to the current car's time
         lastTime = cars[i][1];
       }
     }
