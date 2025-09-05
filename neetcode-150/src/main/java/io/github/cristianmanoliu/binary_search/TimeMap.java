@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// https://neetcode.io/problems/time-based-key-value-store?list=neetcode150
 public class TimeMap {
 
   private final Map<String, List<Entry>> map = new HashMap<>();
