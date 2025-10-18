@@ -15,10 +15,10 @@ class WordDictionaryTest {
     wordDictionary.addWord("dad");
     wordDictionary.addWord("mad");
 
-    assertFalse(wordDictionary.search("pad")); // returns false
-    assertTrue(wordDictionary.search("bad"));   // returns true
-    assertTrue(wordDictionary.search(".ad"));   // returns true
-    assertTrue(wordDictionary.search("b.."));   // returns true
+    assertFalse(wordDictionary.search("pad"));
+    assertTrue(wordDictionary.search("bad"));
+    assertTrue(wordDictionary.search(".ad"));
+    assertTrue(wordDictionary.search("b.."));
   }
 
 }
