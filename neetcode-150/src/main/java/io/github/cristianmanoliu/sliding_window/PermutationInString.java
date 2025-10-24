@@ -3,6 +3,7 @@ package io.github.cristianmanoliu.sliding_window;
 // https://neetcode.io/problems/permutation-string?list=neetcode150
 public class PermutationInString {
 
+  // Permutation means that the characters can be rearranged to form another string.
   public boolean checkInclusion(String s1, String s2) {
     if (s1.length() > s2.length()) {
       return false; // s1 cannot be a permutation of s2 if it's longer

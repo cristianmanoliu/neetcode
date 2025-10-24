@@ -155,12 +155,10 @@ Keep track of the maximum length of the substring found during the process.
 
 **Main idea**:
 Use a sliding window approach with two pointers (left and right) to represent the current substring.
-Use a hash map to count the frequency of characters in the current window.
-Calculate the maximum frequency of any character in the window.
+Keep track of most frequent character in the current window.
+Expand the right pointer to include new characters and update the frequency count.
 If the number of characters that need to be replaced (window size - max frequency) exceeds k, move the left pointer to the right to shrink the window.
 Keep track of the maximum length of the substring found during the process.
-
-Frequency of characters can be tracked using an array of size 26 for uppercase letters to optimize space and access time.
 
 ### Permutation in String
 
