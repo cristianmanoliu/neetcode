@@ -138,14 +138,29 @@ The trapped water at each position can be calculated as: water += min(left_max, 
 ### Best Time to Buy and Sell Stock
 
 **Main idea**:
+Use a single pass through the array to track the minimum price seen so far and calculate the maximum profit at each step.
+Each time you encounter a new price, check if selling at that price would yield a higher profit than previously recorded.
+Update the minimum price if the current price is lower than the recorded minimum.
 
 ### Longest Substring Without Repeating Characters
 
 **Main idea**:
+Use a sliding window approach with two pointers (left and right) to represent the current substring.
+Use a hash set to track characters in the current window.
+Expand the right pointer to include new characters and check for duplicates.
+If a duplicate is found, move the left pointer to the right until the duplicate is removed.
+Keep track of the maximum length of the substring found during the process.
 
 ### Longest Repeating Character Replacement
 
 **Main idea**:
+Use a sliding window approach with two pointers (left and right) to represent the current substring.
+Use a hash map to count the frequency of characters in the current window.
+Calculate the maximum frequency of any character in the window.
+If the number of characters that need to be replaced (window size - max frequency) exceeds k, move the left pointer to the right to shrink the window.
+Keep track of the maximum length of the substring found during the process.
+
+Frequency of characters can be tracked using an array of size 26 for uppercase letters to optimize space and access time.
 
 ### Permutation in String
 
@@ -158,7 +173,6 @@ The trapped water at each position can be calculated as: water += min(left_max, 
 ### Sliding Window Maximum
 
 **Main idea**:
-
 
 ## Stack
 
