@@ -6,6 +6,8 @@ import java.util.List;
 // https://neetcode.io/problems/is-anagram?list=neetcode150
 public class ValidAnagram {
 
+  // Anagram: a word, phrase, or name formed by rearranging the letters of another,
+  // such as cinema, formed from iceman.
   public boolean isAnagram(String s, String t) {
     if (s.length() != t.length()) {
       return false;
