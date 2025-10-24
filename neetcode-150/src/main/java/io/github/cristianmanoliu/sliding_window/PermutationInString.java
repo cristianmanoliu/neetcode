@@ -6,41 +6,54 @@ public class PermutationInString {
   // Permutation means that the characters can be rearranged to form another string.
   public boolean checkInclusion(String s1, String s2) {
     if (s1.length() > s2.length()) {
-      return false; // s1 cannot be a permutation of s2 if it's longer
+      return false;
     }
 
-    int l = 0;
-    int r = s1.length() - 1;
-    while (r < s2.length()) {
-      String substring = s2.substring(l, r + 1);
-      if (isPermutation(s1, substring)) {
-        return true; // Found a permutation of s1 in s2
-      }
-      l++;
-      r++;
+    int[] s1Count = new int[26];
+    int[] s2Count = new int[26];
+
+    // Initialize frequency counts for the first window
+    for (int i = 0; i < s1.length(); i++) {
+      s1Count[s1.charAt(i) - 'a']++;
+      s2Count[s2.charAt(i) - 'a']++;
     }
 
-    return false;
-  }
-
-  private boolean isPermutation(String s1, String substring) {
-    if (s1.length() != substring.length()) {
-      return false; // If lengths differ, they cannot be permutations
-    }
-
-    int[] charCount = new int[26]; // Assuming only lowercase letters a-z
-
-    for (char c : s1.toCharArray()) {
-      charCount[c - 'a']++;
-    }
-
-    for (char c : substring.toCharArray()) {
-      charCount[c - 'a']--;
-      if (charCount[c - 'a'] < 0) {
-        return false; // More occurrences of c in substring than in s1
+    // Track how many character frequencies match
+    int matches = 0;
+    for (int i = 0; i < 26; i++) {
+      if (s1Count[i] == s2Count[i]) {
+        matches++;
       }
     }
 
-    return true; // All counts match, so they are permutations
+    // Slide the window across s2
+    int left = 0;
+    for (int right = s1.length(); right < s2.length(); right++) {
+      if (matches == 26) {
+        return true; // All frequencies match
+      }
+
+      // Add incoming character (expand window to the right)
+      int incomingIdx = s2.charAt(right) - 'a';
+      s2Count[incomingIdx]++;
+      if (s2Count[incomingIdx] == s1Count[incomingIdx]) {
+        matches++;
+      } else if (s2Count[incomingIdx] == s1Count[incomingIdx] + 1) {
+        matches--; // Was matching, now it's not
+      }
+
+      // Remove outgoing character (shrink window from the left)
+      int outgoingIdx = s2.charAt(left) - 'a';
+      s2Count[outgoingIdx]--;
+      if (s2Count[outgoingIdx] == s1Count[outgoingIdx]) {
+        matches++;
+      } else if (s2Count[outgoingIdx] == s1Count[outgoingIdx] - 1) {
+        matches--; // Was matching, now it's not
+      }
+
+      left++;
+    }
+
+    return matches == 26; // Check the last window
   }
 }

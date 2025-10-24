@@ -163,14 +163,35 @@ Keep track of the maximum length of the substring found during the process.
 ### Permutation in String
 
 **Main idea**:
+Use a sliding window approach with two pointers (left and right) to represent the current substring.
+Maintain a frequency count of characters in the target string and the current window.
+Expand the right pointer to include new characters and update the frequency count.
+If the frequency counts match, return true.
+If the window size exceeds the length of the target string, move the left pointer to the right to shrink the window and update the frequency count.
+Continue this process until the right pointer reaches the end of the string.
+
+Frequency counts can be compared using arrays of size 26 (for lowercase letters) for efficiency.
+Frequency counts can also be compared using hash maps if the character set is larger.
 
 ### Minimum Window Substring
 
 **Main idea**:
+Use a sliding window approach with two pointers (left and right) to represent the current substring.
+Maintain a frequency count of characters in the target string and the current window.
+Expand the right pointer to include new characters and update the frequency count.
+When the current window contains all characters from the target string, try to shrink the window by moving the left pointer to the right while still maintaining
+all required characters.
+Keep track of the minimum window found during the process.
 
 ### Sliding Window Maximum
 
 **Main idea**:
+Use a deque (double-ended queue) to store indices of array elements.
+The deque will maintain the indices of elements in decreasing order of their values.
+As you iterate through the array, remove indices from the front of the deque if they are out of the current window.
+Remove indices from the back of the deque while the current element is greater than the elements at those indices.
+Add the current index to the back of the deque.
+The maximum for the current window is at the front of the deque.
 
 ## Stack
 

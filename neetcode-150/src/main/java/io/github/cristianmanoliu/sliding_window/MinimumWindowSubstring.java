@@ -3,24 +3,24 @@ package io.github.cristianmanoliu.sliding_window;
 // https://neetcode.io/problems/minimum-window-with-characters?list=neetcode150
 public class MinimumWindowSubstring {
 
-  public String minWindow(String s, String t) {
-    if (s.length() < t.length()) {
+  public String minWindow(String source, String target) {
+    if (source.length() < target.length()) {
       return "";
     }
 
-    // Count characters in t
-    int[] charCount = new int[128];
-    for (char c : t.toCharArray()) {
+    // Count characters in target
+    int[] charCount = new int[58];
+    for (char c : target.toCharArray()) {
       charCount[c]++;
     }
 
-    int left = 0, right = 0, required = t.length(), minLength = Integer.MAX_VALUE;
+    int left = 0, right = 0, required = target.length(), minLength = Integer.MAX_VALUE;
     String result = "";
 
     // Sliding window
-    while (right < s.length()) {
-      char rightChar = s.charAt(right);
-      // If the character is part of t, decrease the required count
+    while (right < source.length()) {
+      char rightChar = source.charAt(right);
+      // If the character is part of target, decrease the required count
       if (charCount[rightChar] > 0) {
         required--;
       }
@@ -28,21 +28,21 @@ public class MinimumWindowSubstring {
       charCount[rightChar]--;
       // Move the right pointer to expand the window
       right++;
-      // When we have a valid window (all characters in t are found)
+      // When we have a valid window (all characters in target are found)
       while (required == 0) {
         // Update the result if this window is smaller than the previous one
         if (right - left < minLength) {
           // Update the minimum length and the result substring
           minLength = right - left;
-          // Extract the substring from s
-          result = s.substring(left, right);
+          // Extract the substring from source
+          result = source.substring(left, right);
         }
 
         // Try to contract the window from the left
-        char leftChar = s.charAt(left);
+        char leftChar = source.charAt(left);
         // Increase the count of the character in the map
         charCount[leftChar]++;
-        // If the character is part of t, increase the required count
+        // If the character is part of target, increase the required count
         if (charCount[leftChar] > 0) {
           required++;
         }
