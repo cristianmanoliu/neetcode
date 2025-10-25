@@ -453,6 +453,31 @@ Each position in the min stack represents the minimum of all elements at or belo
 **Time Complexity**: O(1) - all operations (push, pop, top, getMin) are constant time
 **Space Complexity**: O(n) - worst case, min stack stores n elements (same as main stack)
 
+### [Medium] Evaluate Reverse Polish Notation
+
+**Main idea**:
+Use a stack to evaluate expressions in Reverse Polish Notation (postfix). Iterate through the tokens:
+
+- **Initialize stack**: Create empty stack to store operands
+- **Process each token**: For each token in the expression:
+    - **If number**: Push the number onto the stack
+    - **If operator** (`'+'`, `'-'`, `'*'`, `'/'`):
+        - Pop two operands from stack (second operand popped first, then first operand)
+        - Apply the operation: first_operand operator second_operand
+        - Push the result back onto the stack
+- **Return result**: The final value remaining on the stack is the answer
+
+The key insight: RPN eliminates the need for parentheses and operator precedence rules. The stack naturally handles the order of operations since operators
+always apply to the most recent operands.
+
+**Important note**: Order matters when popping - the second value popped is the first operand. For example, with tokens ["4", "13", "5", "/"], we pop 5 first (
+second operand), then 13 (first operand), and compute 13 / 5 = 2.
+
+**Edge cases**: Division truncates toward zero. Valid expressions always result in exactly one value on the stack.
+
+**Time Complexity**: O(n) - single pass through all tokens
+**Space Complexity**: O(n) - stack stores at most n/2 operands
+
 ## Binary Search
 
 ## Linked List

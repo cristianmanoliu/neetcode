@@ -1,52 +1,54 @@
 package io.github.cristianmanoliu.arrays_hashing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // https://neetcode.io/problems/string-encode-and-decode?list=neetcode150
+// https://leetcode.com/problems/encode-and-decode-strings/description/
 public class EncodeAndDecodeStrings {
 
+  /**
+   * Encodes a list of strings to a single string using length-prefix encoding.
+   * <p>
+   * Format: length + "#" + string for each string in the list.
+   * <p>
+   * Example: ["hello", "world"] -> "5#hello5#world"
+   */
   public String encode(List<String> strs) {
-    if (strs == null || strs.isEmpty()) {
-      return ""; // Return empty string if input is null or empty
-    }
     StringBuilder encoded = new StringBuilder();
+
     for (String str : strs) {
-      if (str != null) {
-        // Append the length of the string followed by a delimiter and the string itself
-        encoded.append(str.length()).append('#').append(str);
-      }
+      encoded.append(str.length()).append('#').append(str);
     }
-    // Return the encoded string
+
     return encoded.toString();
   }
 
+  /**
+   * Decodes a single string back to a list of strings.
+   * <p>
+   * Parses length-prefix encoding by reading length, then extracting exact character count.
+   */
   public List<String> decode(String str) {
-    if (str == null || str.isEmpty()) {
-      return List.of(); // Return empty list if input is null or empty
-    }
-
-    List<String> decoded = new java.util.ArrayList<>();
+    List<String> decoded = new ArrayList<>();
     int i = 0;
 
     while (i < str.length()) {
-      // Find the delimiter '#'
+      // Find the delimiter '#' to extract length
       int delimiterIndex = str.indexOf('#', i);
-      if (delimiterIndex == -1) {
-        break; // No more delimiters found, exit the loop
-      }
 
-      // Extract the length of the string
+      // Extract length of the next string
       int length = Integer.parseInt(str.substring(i, delimiterIndex));
-      i = delimiterIndex + 1; // Move past the delimiter
 
-      // Extract the string based on the length
-      String substring = str.substring(i, i + length);
-      decoded.add(substring);
+      // Extract the string starting after '#'
+      int startIndex = delimiterIndex + 1;
+      int endIndex = startIndex + length;
+      decoded.add(str.substring(startIndex, endIndex));
 
-      // Move index forward by the length of the string plus the delimiter
-      i += length;
+      // Move to the next encoded string
+      i = endIndex;
     }
 
-    return decoded; // Return the list of decoded strings
+    return decoded;
   }
 }

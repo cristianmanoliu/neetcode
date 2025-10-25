@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 // https://neetcode.io/problems/longest-consecutive-sequence?list=neetcode150
+// https://leetcode.com/problems/longest-consecutive-sequence
 public class LongestConsecutiveSequence {
 
   public int longestConsecutive(int[] nums) {
@@ -13,7 +14,9 @@ public class LongestConsecutiveSequence {
     }
 
     int longestStreak = 0;
-    for (int num : nums) {
+
+    // Iterate over unique numbers only
+    for (int num : numSet) {
       // Only check for the start of a sequence
       if (!numSet.contains(num - 1)) {
         int currentNum = num;
