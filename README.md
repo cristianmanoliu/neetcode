@@ -478,6 +478,66 @@ second operand), then 13 (first operand), and compute 13 / 5 = 2.
 **Time Complexity**: O(n) - single pass through all tokens
 **Space Complexity**: O(n) - stack stores at most n/2 operands
 
+### [Medium] Generate Parentheses
+
+**Main idea**:
+Use backtracking (recursive DFS) to build all valid combinations of parentheses. Track the count of opening and closing parentheses:
+
+- **Initialize result list**: Create empty list to store all valid combinations
+- **Recursive backtracking function**: Start with empty string, 0 open parentheses, 0 close parentheses
+- **Decision rules at each step**:
+    - **Add opening parenthesis**: If open_count < n, add '(' and recurse with open_count + 1
+    - **Add closing parenthesis**: If close_count < open_count, add ')' and recurse with close_count + 1
+- **Base case**: When open_count == n AND close_count == n:
+    - Add the current string to result list
+    - Return to explore other combinations
+- **Backtrack**: After exploring a path, remove the last added parenthesis and try other options
+- **Return result**: List of all valid combinations
+
+The key insight: We can only add a closing parenthesis if we have more opening parentheses than closing ones (close_count < open_count). This ensures validity
+at every step. We can add an opening parenthesis as long as we haven't used all n pairs yet (open_count < n).
+
+**Edge cases**: n = 1 returns ["()"], which is the base case. n = 0 would return [""].
+
+**Time Complexity**: O(4^n / √n) - this is the nth Catalan number, representing the count of valid combinations
+**Space Complexity**: O(n) - recursion stack depth for building strings of length 2n
+
+### [Medium] Daily Temperatures
+
+**Main idea**:
+Use a monotonic decreasing stack to track indices of temperatures waiting for a warmer day. Iterate through the temperatures array:
+
+- **Initialize result array**: Create array of same length, filled with 0s (default: no warmer day)
+- **Initialize stack**: Create empty stack to store indices (not temperatures)
+- **Process each temperature**: For each index i in temperatures:
+    - **Check for warmer days**: While stack is not empty AND current temperature > temperature at stack top:
+        - Pop index from stack (let's call it prevIndex)
+        - Calculate days to wait: result[prevIndex] = i - prevIndex
+        - Continue popping while condition holds
+    - **Push current index**: Add current index i to stack
+- **Return result**: Remaining indices in stack already have 0 (no warmer day found)
+
+The key insight: The stack maintains indices of temperatures in decreasing order. When we encounter a warmer temperature, it resolves all previous cooler
+temperatures still waiting in the stack. This is a **monotonic stack pattern** - we maintain a specific ordering (decreasing temperatures) and process elements
+when that order is violated.
+
+**Example walkthrough** for temperatures = [73,74,75,71,69,72,76,73]:
+
+- i=0: Stack=[0], temp=73
+- i=1: temp=74 > temp[0]=73, so result[0]=1-0=1, Stack=[1]
+- i=2: temp=75 > temp[1]=74, so result[1]=2-1=1, Stack=[2]
+- i=3: temp=71 < temp[2]=75, Stack=[2,3]
+- i=4: temp=69 < temp[3]=71, Stack=[2,3,4]
+- i=5: temp=72 > temp[4]=69, result[4]=5-4=1; temp=72 > temp[3]=71, result[3]=5-3=2; Stack=[2,5]
+- i=6: temp=76 > temp[5]=72, result[5]=6-5=1; temp=76 > temp[2]=75, result[2]=6-2=4; Stack=[6]
+- i=7: temp=73 < temp[6]=76, Stack=[6,7]
+- Result: [1,1,4,2,1,1,0,0]
+
+**Edge cases**: Single temperature returns [0]. All increasing temperatures: each element is 1 except last (0). All decreasing temperatures: all elements are 0.
+
+**Time Complexity**: O(n) - each index is pushed and popped from stack at most once
+**Space Complexity**: O(n) - stack stores at most n indices in worst case (decreasing temperatures)
+
 ## Binary Search
 
 ## Linked List
