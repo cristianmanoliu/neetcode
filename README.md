@@ -665,6 +665,34 @@ false.
 **Time Complexity**: O(log(m × n)) - binary search on m × n elements
 **Space Complexity**: O(1) - only using constant space for pointers and coordinate conversion
 
+### [Medium] Koko Eating Bananas
+
+**Main idea**:
+Use binary search on the answer space (eating speed) to find the minimum speed that allows finishing all bananas within h hours:
+
+- **Define search space**: Set left = 1 (minimum speed) and right = max(piles) (maximum useful speed)
+- **Binary search on speed**: While left < right:
+    - **Calculate mid-speed**: mid = left + (right - left) / 2
+    - **Check feasibility**: Calculate total hours needed at speed mid:
+        - For each pile, hours = ceil(pile / mid) = (pile + mid - 1) / mid
+        - Sum all hours for all piles
+    - **Adjust search space**:
+        - If total_hours ≤ h: speed mid is feasible, try slower speed, set right = mid
+        - If total_hours > h: speed too slow, need faster speed, set left = mid + 1
+- **Return left**: Minimum speed that allows finishing within h hours
+
+The key insight: This is a **binary search on answer** problem with a monotonic property - if Koko can finish all bananas at speed k within h hours, she can
+definitely finish at any speed faster than k. The problem becomes finding the minimum feasible speed. We don't search for the answer in the array; instead, we
+search the range of possible speeds [1, max(piles)].
+
+**Why max(piles) as upper bound?**: Koko can only eat from one pile per hour, so eating faster than the largest pile provides no benefit - she'd still spend one
+hour per pile regardless.
+
+**Edge cases**: Single pile: return ceil(pile/h). If h equals number of piles, return max(piles).
+
+**Time Complexity**: O(n × log m) - where n is number of piles and m is max(piles), binary search runs log m iterations, each checking all n piles
+**Space Complexity**: O(1) - only using constant space for variables
+
 ## Linked List
 
 ## Trees
