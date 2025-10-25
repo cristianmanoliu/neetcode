@@ -693,6 +693,41 @@ hour per pile regardless.
 **Time Complexity**: O(n × log m) - where n is number of piles and m is max(piles), binary search runs log m iterations, each checking all n piles
 **Space Complexity**: O(1) - only using constant space for variables
 
+### [Medium] Find Minimum in Rotated Sorted Array
+
+**Main idea**:
+Use modified binary search to find the minimum element by identifying which half is sorted and eliminating the sorted half:
+
+- **Initialize pointers**: Set left = 0 and right = n - 1
+- **Binary search loop**: While left < right:
+    - **Calculate middle index**: mid = left + (right - left) / 2
+    - **Check if already sorted**: If nums[left] < nums[right], array is sorted, return nums[left]
+    - **Determine which half contains minimum**:
+        - If nums[mid] > nums[right]: minimum is in right half (rotation point is to the right)
+            - Set left = mid + 1
+        - Else: minimum is in left half (including mid, as mid could be the minimum)
+            - Set right = mid
+- **Return nums[left]**: Left pointer points to minimum element
+
+The key insight: In a rotated sorted array, comparing the middle element with the rightmost element tells us which half is sorted and which contains the
+rotation point (where the minimum lives). If nums[mid] > nums[right], the right half is unsorted and contains the minimum. Otherwise, the left half (including
+mid) contains the minimum. We never eliminate mid when it could be the minimum, which is why we use `right = mid` instead of `right = mid - 1`.
+
+**Why compare with right instead of left?**: Comparing with nums[right] gives clearer logic - if mid > right, we know for certain the minimum is to the right of
+mid. If we compared with left, the logic becomes more complex with edge cases.
+
+**Example walkthrough** for nums = [4,5,6,7,0,1,2]:
+
+- left=0, right=6, mid=3: nums[3]=7 > nums[6]=2 → minimum in right half, left=4
+- left=4, right=6, mid=5: nums[5]=1 < nums[6]=2 → minimum in left half (including mid), right=5
+- left=4, right=5, mid=4: nums[4]=0 < nums[5]=1 → minimum in left half, right=4
+- left=4, right=4 → loop ends, return nums[4]=0
+
+**Edge cases**: Array not rotated (already sorted) returns first element. Single element returns that element.
+
+**Time Complexity**: O(log n) - binary search eliminates half the search space each iteration
+**Space Complexity**: O(1) - only using constant space for pointers
+
 ## Linked List
 
 ## Trees

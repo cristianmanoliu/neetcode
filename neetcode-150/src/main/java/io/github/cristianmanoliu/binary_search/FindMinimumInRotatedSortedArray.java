@@ -1,6 +1,7 @@
 package io.github.cristianmanoliu.binary_search;
 
 // https://neetcode.io/problems/find-minimum-in-rotated-sorted-array?list=neetcode150
+// https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
 public class FindMinimumInRotatedSortedArray {
 
   public int findMin(int[] nums) {
