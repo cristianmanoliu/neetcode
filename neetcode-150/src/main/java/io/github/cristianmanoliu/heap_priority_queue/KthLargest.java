@@ -23,15 +23,25 @@ public class KthLargest {
   }
 
   /**
-   * Adds a new value into the stream and returns the k-th largest element so far. Time: O(log k) per call; Space: O(k) overall.
+   * Adds a new value into the stream and returns the k-th largest element so far.
+   * <p>
+   * Time: O(log k) per call; Space: O(k) overall.
    */
   public int add(int val) {
     if (minHeap.size() < k) {
       minHeap.offer(val);
-    } else if (val > minHeap.peek()) {
-      minHeap.poll();
-      minHeap.offer(val);
+    } else {
+      Integer top = minHeap.peek(); // non-null under invariant, but guard defensively
+      if (top != null && val > top) {
+        minHeap.poll();
+        minHeap.offer(val);
+      }
     }
-    return minHeap.peek();
+    Integer head = minHeap.peek();
+    if (head == null) {
+      throw new IllegalStateException("Heap is empty; ensure k > 0 and constructor invariants hold.");
+    }
+    return head;
   }
+
 }

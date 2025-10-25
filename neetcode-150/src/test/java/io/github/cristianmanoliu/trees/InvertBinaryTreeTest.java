@@ -1,6 +1,7 @@
 package io.github.cristianmanoliu.trees;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 
@@ -51,9 +52,9 @@ class InvertBinaryTreeTest {
     assertEquals(3, invertedRoot.right.right.right.val);
 
     // Verify all left children are null after inversion
-    assertEquals(null, invertedRoot.left);
-    assertEquals(null, invertedRoot.right.left);
-    assertEquals(null, invertedRoot.right.right.left);
+    assertNull(invertedRoot.left);
+    assertNull(invertedRoot.right.left);
+    assertNull(invertedRoot.right.right.left);
   }
 
 

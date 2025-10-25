@@ -22,9 +22,10 @@ public class ValidAnagram {
 
     // Verify characters in second string (decrement)
     for (int i = 0; i < t.length(); i++) {
-      charCount[t.charAt(i) - 'a']--;
+      int charCountInSecondString = charCount[t.charAt(i) - 'a'];
+      charCountInSecondString--;
       // If count goes negative, character appears more in t than in s
-      if (charCount[t.charAt(i) - 'a'] < 0) {
+      if (charCountInSecondString < 0) {
         return false;
       }
     }

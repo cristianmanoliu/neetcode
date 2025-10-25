@@ -7,18 +7,7 @@ import java.util.Stack;
 // https://leetcode.com/problems/car-fleet/
 public class CarFleet {
 
-  public int carFleet(int target, int[] position, int[] speed) {
-    int n = position.length;
-
-    // Create array of Car objects pairing position with speed
-    Car[] cars = new Car[n];
-    for (int i = 0; i < n; i++) {
-      cars[i] = new Car(position[i], speed[i]);
-    }
-
-    // Sort by position in descending order (closest to target first)
-    Arrays.sort(cars, (a, b) -> b.position - a.position);
-
+  private static Stack<Double> computeFleets(int target, Car[] cars) {
     Stack<Double> stack = new Stack<>();
 
     // Process each car from closest to target
@@ -33,6 +22,22 @@ public class CarFleet {
       }
       // Otherwise, current car catches up to the fleet ahead (merges)
     }
+    return stack;
+  }
+
+  public int carFleet(int target, int[] position, int[] speed) {
+    int n = position.length;
+
+    // Create array of Car objects pairing position with speed
+    Car[] cars = new Car[n];
+    for (int i = 0; i < n; i++) {
+      cars[i] = new Car(position[i], speed[i]);
+    }
+
+    // Sort by position in descending order (closest to target first)
+    Arrays.sort(cars, (a, b) -> b.position - a.position);
+
+    Stack<Double> stack = computeFleets(target, cars);
 
     return stack.size();
   }

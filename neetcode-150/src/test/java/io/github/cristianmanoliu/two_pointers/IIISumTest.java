@@ -35,7 +35,7 @@ class IIISumTest {
   @Test
   void returnsSingleTripletForExample3() {
     int[] nums = {0, 0, 0};
-    List<List<Integer>> expected = Arrays.asList(
+    List<List<Integer>> expected = List.of(
         Arrays.asList(0, 0, 0)
     );
     List<List<Integer>> result = iiiSum.threeSum(nums);
@@ -56,7 +56,7 @@ class IIISumTest {
   @Test
   void returnsSingleUniqueTripletForInputWithDuplicates() {
     int[] nums = {1, -1, -1, 0};
-    List<List<Integer>> expected = Arrays.asList(
+    List<List<Integer>> expected = List.of(
         Arrays.asList(-1, 0, 1)
     );
     List<List<Integer>> result = iiiSum.threeSum(nums);

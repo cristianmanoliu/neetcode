@@ -55,7 +55,7 @@ public class WordDictionary {
 
   private static class TrieNode {
 
-    TrieNode[] children;
+    final TrieNode[] children;
     boolean isEndOfWord;
 
     public TrieNode() {

@@ -3,7 +3,7 @@ package io.github.cristianmanoliu.trie;
 // https://neetcode.io/problems/implement-prefix-tree?list=neetcode150
 public class PrefixTree {
 
-  private TrieNode root;
+  private final TrieNode root;
 
   public PrefixTree() {
     this.root = new TrieNode();

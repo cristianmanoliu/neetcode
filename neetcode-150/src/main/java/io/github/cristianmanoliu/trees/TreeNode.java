@@ -2,12 +2,9 @@ package io.github.cristianmanoliu.trees;
 
 public class TreeNode {
 
-  int val;
+  final int val;
   TreeNode left;
   TreeNode right;
-
-  TreeNode() {
-  }
 
   TreeNode(int val) {
     this.val = val;

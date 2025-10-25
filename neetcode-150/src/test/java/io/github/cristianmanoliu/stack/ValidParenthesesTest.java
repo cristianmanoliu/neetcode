@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class ValidParenthesesTest {
 
-  private ValidParentheses validParentheses = new ValidParentheses();
+  private final ValidParentheses validParentheses = new ValidParentheses();
 
   @Test
   public void tc1() {

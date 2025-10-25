@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class EvaluateReversePolishNotationTest {
 
-  private EvaluateReversePolishNotation evaluateReversePolishNotation = new EvaluateReversePolishNotation();
+  private final EvaluateReversePolishNotation evaluateReversePolishNotation = new EvaluateReversePolishNotation();
 
   @Test
   public void example1() {
