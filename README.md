@@ -1022,6 +1022,28 @@ Empty list, single node, or two nodes require no changes. For odd lengths, the f
 **Time Complexity**: O(n) — one pass to find middle, one to reverse, one to weave
 **Space Complexity**: O(1) — in-place with a constant number of pointers
 
+### [Medium] Remove Nth Node From End of List
+
+**Main idea**:
+Use a **dummy head** and two pointers to keep a fixed gap of **n** nodes, so the **slow** pointer lands just **before** the node to remove.
+
+* **Create dummy**: Set `dummy.next = head`. Initialize `slow = dummy`, `fast = dummy`.
+* **Offset fast**: Advance `fast` **n+1** steps to create a gap of `n` between `slow` and the target node (so `slow` ends up before it).
+* **Traverse together**: While `fast != null`, advance both `fast` and `slow` by one.
+* **Delete node**: Relink `slow.next = slow.next.next`.
+* **Return result**: `return dummy.next`.
+
+The key insight:
+By maintaining a fixed gap, when `fast` reaches the end, `slow` is positioned exactly one node before the one to delete, enabling O(1) removal without computing
+the length.
+
+**Edge cases**:
+Removing the head (`n == length`) is handled naturally by the dummy node; empty or single-node lists work without special cases. If `n` exceeds the list length,
+behavior depends on your contract (common approach: no-op / return original head).
+
+**Time Complexity**: O(n) — one pass after the initial offset
+**Space Complexity**: O(1) — constant extra pointers
+
 ## Trees
 
 TODO
