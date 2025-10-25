@@ -8,48 +8,36 @@ public class MinimumWindowSubstring {
       return "";
     }
 
-    // Count characters in target
     int[] charCount = new int[58];
     for (char c : target.toCharArray()) {
-      charCount[c]++;
+      charCount[c - 'A']++;
     }
 
-    int left = 0, right = 0, required = target.length(), minLength = Integer.MAX_VALUE;
-    String result = "";
+    int left = 0, required = target.length();
+    int minStart = 0, minEnd = Integer.MAX_VALUE;
 
-    // Sliding window
-    while (right < source.length()) {
+    for (int right = 0; right < source.length(); right++) {
       char rightChar = source.charAt(right);
-      // If the character is part of target, decrease the required count
-      if (charCount[rightChar] > 0) {
+      if (charCount[rightChar - 'A'] > 0) {
         required--;
       }
-      // Decrease the count of the character in the map
-      charCount[rightChar]--;
-      // Move the right pointer to expand the window
-      right++;
-      // When we have a valid window (all characters in target are found)
+      charCount[rightChar - 'A']--;
+
       while (required == 0) {
-        // Update the result if this window is smaller than the previous one
-        if (right - left < minLength) {
-          // Update the minimum length and the result substring
-          minLength = right - left;
-          // Extract the substring from source
-          result = source.substring(left, right);
+        if (right - left < minEnd - minStart) {
+          minStart = left;
+          minEnd = right;
         }
 
-        // Try to contract the window from the left
         char leftChar = source.charAt(left);
-        // Increase the count of the character in the map
-        charCount[leftChar]++;
-        // If the character is part of target, increase the required count
-        if (charCount[leftChar] > 0) {
+        charCount[leftChar - 'A']++;
+        if (charCount[leftChar - 'A'] > 0) {
           required++;
         }
-        // Move the left pointer to shrink the window
         left++;
       }
     }
-    return result;
+
+    return minEnd == Integer.MAX_VALUE ? "" : source.substring(minStart, minEnd + 1);
   }
 }
