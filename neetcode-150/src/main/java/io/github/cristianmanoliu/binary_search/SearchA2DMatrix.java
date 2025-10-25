@@ -1,8 +1,14 @@
 package io.github.cristianmanoliu.binary_search;
 
 // https://neetcode.io/problems/search-2d-matrix?list=neetcode150
+// https://leetcode.com/problems/search-a-2d-matrix
 public class SearchA2DMatrix {
+
   public boolean searchMatrix(int[][] matrix, int target) {
+    if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+      return false;
+    }
+
     int top = 0;
     int bottom = matrix.length - 1;
     while (top <= bottom) {

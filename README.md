@@ -635,6 +635,36 @@ vice versa).
 **Time Complexity**: O(log n) - search space halves with each iteration
 **Space Complexity**: O(1) - only uses constant extra space for pointers (iterative version)
 
+### [Medium] Search in 2D Matrix
+
+**Main idea**:
+Treat the 2D matrix as a virtual 1D sorted array and perform binary search by converting indices between 1D and 2D coordinates:
+
+- **Initialize pointers**: Set left = 0 and right = m × n - 1 (total elements - 1)
+- **Binary search loop**: While left ≤ right:
+    - **Calculate middle index**: mid = left + (right - left) / 2
+    - **Convert to 2D coordinates**:
+        - row = mid / n (number of columns)
+        - col = mid % n (modulo gives column position)
+    - **Compare with target**:
+        - If matrix[row][col] == target: return true (found!)
+        - If matrix[row][col] < target: search right half, set left = mid + 1
+        - If matrix[row][col] > target: search left half, set right = mid - 1
+- **Return false**: Target not found in matrix
+
+The key insight: Since each row is sorted and the first element of each row is greater than the last element of the previous row, the entire matrix can be
+viewed as a single sorted sequence. By converting between 1D indices (for binary search) and 2D coordinates (for matrix access), we achieve O(log(m×n)) time
+complexity without actually flattening the matrix.
+
+**Alternative approach**: Perform two binary searches - first find the correct row, then search within that row. This also achieves O(log m + log n) = O(log(
+m×n)) time.
+
+**Edge cases**: Empty matrix returns false. Single element matrix: check if it equals target. Target outside the range [matrix[0][0], matrix[m-1][n-1]] returns
+false.
+
+**Time Complexity**: O(log(m × n)) - binary search on m × n elements
+**Space Complexity**: O(1) - only using constant space for pointers and coordinate conversion
+
 ## Linked List
 
 ## Trees
