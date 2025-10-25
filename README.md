@@ -858,6 +858,87 @@ variant.
 **Time Complexity**: O(log n) — each iteration halves the search interval by discarding one side  
 **Space Complexity**: O(1) — only constant extra variables for indices and comparisons are used
 
+### [Medium] Time Based Key-Value Store
+
+**Main idea**:  
+Use a hashmap from key to a timestamp-sorted list of (timestamp, value) pairs; on set, append because timestamps per key are strictly increasing, and on get,
+binary search to find the value with the largest timestamp ≤ t in \(O(\log m)\), where \(m\) is the number of versions for that key. [web:35][web:36][web:41]
+
+- **Data structure**: Map<String, List<(timestamp, value)>> with each per-key list maintained in increasing timestamp order due to strictly increasing set
+  timestamps.
+- **set(key, value, t)**: Append (t, value) to the list for that key; this preserves order and yields amortized \(O(1)\) insertion without
+  re-sorting.
+- **get(key, t)**: If the key is absent, return ""; otherwise binary search the key’s list for the rightmost timestamp ≤ t and return its value, or "" if no
+  such timestamp exists.
+- **Key insight**: Appending preserves per-key sorted order, enabling a rightmost-≤ lookup via binary search without extra maintenance work. [web:35][web:36]
+
+**Why binary search?**  
+Timestamps per key are monotonic, so a rightmost-≤ search returns the most recent valid value in \(O(\log m)\) time instead of scanning
+linearly.
+
+**Example walkthrough**:  
+After set("foo","bar",1) and set("foo","bar2",4), get("foo",3) returns "bar", and get("foo",5) returns "bar2" because 1 ≤ 3 < 4 and 4 ≤ 5
+respectively.
+
+**Edge cases**:
+
+- Missing key: return "" immediately since no versions exist for that key.
+- Query time before the key’s first timestamp: return "" as no timestamp ≤ t exists.
+- Exact timestamp match: return that exact value when found by the binary search.
+
+**Time Complexity**: set in amortized \(O(1)\); get in \(O(\log m)\) per query over the versions of that key.
+**Space Complexity**: \(O(N)\) total across all keys, where \(N\) is the number of set operations.
+
+### [Hard] Median of Two Sorted Arrays
+
+**Main idea**:  
+Use binary search on the partition index of the smaller array to split both arrays into left and right halves such that every element on the left is ≤ every
+element on the right; the median is then determined from the boundary elements in O(log min(m,n)) time.
+
+- **Ensure A is smaller**: Swap arrays if needed so that binary search operates on the smaller array
+- **Initialize binary search**: Set low = 0 and high = length of A
+- **Binary search loop**: While low <= high:
+    - **Calculate partition positions**:
+        - cutX = (low + high) / 2
+        - cutY = ⌊(m + n + 1) / 2⌋ - cutX
+    - **Define boundary elements**:
+        - leftX = A[cutX-1] if cutX > 0, else -∞
+        - rightX = A[cutX] if cutX < |A|, else +∞
+        - leftY = B[cutY-1] if cutY > 0, else -∞
+        - rightY = B[cutY] if cutY < |B|, else +∞
+    - **Check partition validity**: If leftX ≤ rightY AND leftY ≤ rightX:
+        - If (m + n) is odd: return max(leftX, leftY)
+        - If (m + n) is even: return (max(leftX, leftY) + min(rightX, rightY)) / 2
+    - **Adjust search space**:
+        - If leftX > rightY: high = cutX - 1 (move left in A)
+        - Else: low = cutX + 1 (move right in A)
+
+**The key insight**:  
+The correct partition divides the combined arrays into two halves of equal size (or differing by 1) where all left elements are ≤ all right elements. Binary
+searching the partition position in the smaller array determines both partitions simultaneously, making this efficient. The median lies exactly at the partition
+boundary.
+
+**Why binary search on the smaller array?**  
+Searching on the smaller array minimizes iterations to O(log min(m,n)) and ensures the corresponding partition in the larger array remains valid (cutY stays
+within bounds).
+
+**Example walkthrough** for nums1 = [1,3], nums2 = [2]:
+
+- m=2, n=1, total=3 (odd), need left half size = 2
+- cutX=1 (middle of A), cutY=1 (from formula: ⌊(2+1+1)/2⌋ - 1 = 1)
+- leftX=1, rightX=3, leftY=2, rightY=+∞
+- Check: 1 ≤ +∞ ✓ and 2 ≤ 3 ✓ → partition valid
+- Odd total → median = max(1, 2) = 2
+
+**Edge cases**:
+
+- One empty array: Binary search handles via -∞/+∞ sentinels; reduces to finding middle of non-empty array
+- All elements in A less than all in B: Partition at end of A naturally satisfies conditions
+- Duplicate values: Order and boundary checks work regardless of duplicates
+
+**Time Complexity**: O(log min(m, n)) — binary search on smaller array  
+**Space Complexity**: O(1) — only constant variables for pointers and boundaries
+
 ## Linked List
 
 ## Trees
