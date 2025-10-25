@@ -820,6 +820,44 @@ mid. If we compared with left, the logic becomes more complex with edge cases.
 **Time Complexity**: O(log n) - binary search eliminates half the search space each iteration
 **Space Complexity**: O(1) - only using constant space for pointers
 
+### [Medium] Search in Rotated Sorted Array
+
+**Main idea**:  
+Use binary search while exploiting that at least one half of a rotated sorted array (with distinct elements) is always sorted; decide which half is sorted using
+nums[left] and nums[mid], then narrow the search to the half that can contain the target.
+
+- **Initialize pointers**: Set left = 0 and right = n - 1
+- **Binary search loop**: While left <= right, compute mid = left + (right - left) / 2
+- **Hit check**: If nums[mid] == target, return mid
+- **Find sorted half**: If nums[left] <= nums[mid], the left half [left..mid] is sorted; otherwise the right half [mid..right] is sorted
+- **Target in left half?** If left half is sorted and nums[left] <= target < nums[mid], move right = mid - 1; otherwise move left = mid + 1
+- **Target in right half?** If right half is sorted and nums[mid] < target <= nums[right], move left = mid + 1; otherwise move right = mid - 1
+- **Miss**: If the loop ends without a match, return -1
+
+**The key insight**:  
+In a rotated sorted array with distinct elements, one side of mid is always sorted; comparing nums[left] and nums[mid] tells which side is sorted, and a simple
+range check on that side's endpoints determines whether to keep it or discard it, ensuring a logarithmic search space reduction each iteration.
+
+**Why compare with left?**  
+Checking nums[left] <= nums[mid] directly answers whether the left portion is monotonically increasing, which makes range tests against [nums[left], nums[mid])
+straightforward; comparing with right also works, but left-based checks often lead to slightly clearer and symmetric conditions in code for this problem
+variant.
+
+**Example walkthrough** for nums = [4,5,6,7,0,1,2], target = 0:
+
+- left=0, right=6, mid=3: nums[left]=4 <= nums[mid]=7 → left half sorted; 4 <= 0 < 7 is false → left = mid + 1 = 4
+- left=4, right=6, mid=5: nums[left]=0 <= nums[mid]=1 → left half sorted; 0 <= 0 < 1 is true → right = mid - 1 = 4
+- left=4, right=4: nums[mid]=nums[4]=0 equals target → return 4
+
+**Edge cases**:
+
+- Not rotated (nums[left] <= nums[right]) still works because one side remains sorted at each step and the range checks behave like standard binary search
+- Single-element arrays return either index 0 if it matches target or -1 otherwise, handled naturally by the loop condition
+- Target absent concludes with left > right and returns -1 by construction
+
+**Time Complexity**: O(log n) — each iteration halves the search interval by discarding one side  
+**Space Complexity**: O(1) — only constant extra variables for indices and comparisons are used
+
 ## Linked List
 
 ## Trees

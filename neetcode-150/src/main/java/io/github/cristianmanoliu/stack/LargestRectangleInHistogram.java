@@ -3,7 +3,8 @@ package io.github.cristianmanoliu.stack;
 import java.util.Stack;
 
 // https://neetcode.io/problems/largest-rectangle-in-histogram?list=neetcode150
-public class  LargestRectangleInHistogram {
+public class LargestRectangleInHistogram {
+
   public int largestRectangleArea(int[] heights) {
     Stack<HeightIndex> stack = new Stack<>();
     int maxArea = 0;

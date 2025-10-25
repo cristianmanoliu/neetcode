@@ -10,10 +10,6 @@ public class TimeMap {
 
   private final Map<String, List<Entry>> map = new HashMap<>();
 
-  private record Entry(String value, int timestamp) {
-
-  }
-
   public TimeMap() {
     // No initialization needed beyond map
   }
@@ -40,5 +36,9 @@ public class TimeMap {
       }
     }
     return result;
+  }
+
+  private record Entry(String value, int timestamp) {
+
   }
 }
