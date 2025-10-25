@@ -1,51 +1,40 @@
 package io.github.cristianmanoliu.stack;
 
+import java.util.Stack;
+
 // https://neetcode.io/problems/minimum-stack?list=neetcode150
+// https://leetcode.com/problems/min-stack/
 public class MinStack {
 
-  private int min;
-  private int[] stack;
-  private int index;
+  private final Stack<Integer> stack;
+  private final Stack<Integer> minStack;
 
   public MinStack() {
-    this.min = Integer.MAX_VALUE;
-    this.stack = new int[1000]; // assuming a fixed size for simplicity
-    this.index = 0; // stack is empty initially
+    stack = new Stack<>();
+    minStack = new Stack<>();
   }
 
   public void push(int val) {
-    if(index >= stack.length) {
-      int currentSize = stack.length;
-      int[] newStack = new int[currentSize * 2];
-      System.arraycopy(stack, 0, newStack, 0, currentSize);
-      this.stack = newStack;
-    }
-    this.stack[this.index] = val;
-    this.index++;
-    if (val < this.min) {
-      this.min = val;
+    stack.push(val);
+    // Push to minStack if it's empty or val is less than or equal to current min
+    if (minStack.isEmpty() || val <= minStack.peek()) {
+      minStack.push(val);
+    } else {
+      // Keep the current minimum by pushing it again
+      minStack.push(minStack.peek());
     }
   }
 
   public void pop() {
-    int poppedValue = this.stack[this.index - 1];
-    this.index--;
-    if (poppedValue == this.min) {
-      // Recalculate the minimum value
-      this.min = Integer.MAX_VALUE;
-      for (int i = 0; i < this.index; i++) {
-        if (this.stack[i] < this.min) {
-          this.min = this.stack[i];
-        }
-      }
-    }
+    stack.pop();
+    minStack.pop();
   }
 
   public int top() {
-    return stack[this.index - 1];
+    return stack.peek();
   }
 
   public int getMin() {
-    return min;
+    return minStack.peek();
   }
 }

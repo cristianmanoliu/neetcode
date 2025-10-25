@@ -4,196 +4,454 @@ https://neetcode.io/practice?tab=neetcode150
 
 ## Arrays & Hashing
 
-### Contains Duplicate
+### [Easy] Contains Duplicate
 
 **Main idea**:
-Use a hash set to track seen elements.
-As you iterate through the array, check if the current element is already in the set.
-If it is, return true.
-If not, add it to the set. If you finish iterating without finding duplicates, return false.
+Use a hash set to track seen elements as you iterate through the array:
 
-### Valid Anagram
+- **Initialize hash set**: Create an empty set to store seen elements
+- **Iterate through array**: For each element in the array:
+    - **Check for duplicate**: If current element exists in the set, return true
+    - **Add to set**: Otherwise, add current element to the set
+- **Return false**: If iteration completes without finding duplicates
 
-**Main idea**:
-Use a hash map to count the frequency of each character in the first string.
-Then, iterate through the second string, decrementing the count for each character.
-If a character's count goes below zero or if a character is not found in the map, return false.
-Finally, check if all counts are zero to confirm the strings are anagrams.
+The key insight: A hash set provides O(1) average-case lookup and insertion, allowing us to detect duplicates in a single pass.
 
-Instead of a hash map, you can also use an array of size 26 (for lowercase letters) to count character frequencies, which can be more space-efficient.
+**Edge cases**: Empty array or single element array returns false.
 
-### Two Sum
+**Time Complexity**: O(n) - single pass through the array
+**Space Complexity**: O(n) - hash set stores up to n elements
 
-**Main idea**:
-Use a hash map to store the complement of each number (target - current number) as you iterate through the array.
-If the current number exists in the map, return the indices of the current number and its complement.
-If not, add the current number and its index to the map.
-
-### Group Anagrams
+### [Easy] Valid Anagram
 
 **Main idea**:
-Use a hash map where the key is a sorted version of the string and the value is a list of strings that are anagrams of each other.
-Iterate through the list of strings, sort each string, and append it to the corresponding list in the map.
-Finally, return the values of the map as a list of lists.
+Use a hash map to count character frequencies and compare between two strings:
 
-We can also use an array of size 26 to count character frequencies as a key instead of sorting, which can be more efficient.
-The array can be hashed or converted to a tuple to be used as a key in the hash map.
+- **Early check**: If string lengths differ, return false immediately
+- **Count frequencies**: Create hash map counting frequency of each character in first string
+- **Verify second string**: Iterate through second string:
+    - Decrement count for each character in the map
+    - If character not found or count goes below zero, return false
+- **Verify completion**: Check if all counts are zero (or simply verify second string depleted the counts)
 
-### Top K Frequent Elements
+Alternative approach: Use an array of size 26 for lowercase letters instead of hash map for better space efficiency.
 
-**Main idea**:
-Use a hash map to count the frequency of each element in the array.
-Then, use a min-heap (priority queue) to keep track of the top k elements based on their frequencies.
-Iterate through the frequency map, adding elements to the heap.
-If the heap size exceeds k, remove the element with the lowest frequency.
-Finally, extract the elements from the heap to get the top k frequent elements.
+The key insight: Two strings are anagrams if and only if they have identical character frequency distributions.
 
-### Encode and Decode Strings
+**Edge cases**: Empty strings are anagrams of each other. Case sensitivity matters unless specified otherwise.
 
-**Main idea**:
-To encode a list of strings, concatenate them into a single string with a delimiter that does not appear in the strings (e.g., using length-prefix encoding).
-To decode, split the encoded string using the delimiter and reconstruct the original list of strings.
+**Time Complexity**: O(n) - where n is the length of the strings
+**Space Complexity**: O(1) - fixed size (26 characters) or O(k) where k is character set size
 
-### Product of Array Except Self
+### [Easy] Two Sum
 
 **Main idea**:
-Use two passes to calculate the product of all elements except self without using division.
-In the first pass, create an output array where each element at index i contains the product of all elements to the left of i.
-In the second pass, traverse the array from the end, multiplying each element in the output array by the product of all elements to the right of i.
+Use a hash map to store complements and find the pair in a single pass:
 
-### Valid Sudoku
+- **Initialize hash map**: Create empty map to store {number: index} pairs
+- **Iterate through array**: For each element at index i:
+    - **Calculate complement**: target - nums[i]
+    - **Check for complement**: If complement exists in map, return [map[complement], i]
+    - **Store current**: Add nums[i] and its index to the map
+- **Continue**: Repeat until pair is found
+
+The key insight: By storing each number's complement (target - number) as we iterate, we can find the pair in O(n) time instead of O(n²) with nested loops.
+
+**Edge cases**: Problem guarantees exactly one solution exists. Array has at least 2 elements.
+
+**Time Complexity**: O(n) - single pass through the array
+**Space Complexity**: O(n) - hash map stores up to n elements
+
+### [Medium] Group Anagrams
 
 **Main idea**:
-Use three sets of hash sets to track the numbers seen in each row, column, and 3x3 sub-box.
-Iterate through each cell in the 9x9 board.
-For each number, check if it has already been seen in the corresponding row, column, or sub-box.
-If it has, return false.
-If not, add it to the respective sets.
-If you finish iterating without finding duplicates, return true.
+Use a hash map with sorted strings (or character counts) as keys to group anagrams:
 
-The 3x3 sub-box can be identified using the formula: box_index = (row // 3) * 3 + (col // 3).
+- **Initialize hash map**: Create map where keys represent anagram patterns and values are lists of strings
+- **Iterate through strings**: For each string:
+    - **Generate key**: Sort the string to create a canonical representation (or use character count array)
+    - **Group by key**: Append the original string to the list at that key
+- **Return groups**: Extract all values from the map as the result
 
-### Longest Consecutive Sequence
+Alternative key generation: Use character frequency array of size 26, convert to tuple for hashing (more efficient than sorting).
+
+The key insight: All anagrams share the same sorted representation or character frequency distribution, making them perfect hash keys.
+
+**Edge cases**: Empty string list returns empty result. Single character strings group individually.
+
+**Time Complexity**: O(n × k log k) - where n is number of strings and k is max string length (for sorting); O(n × k) with frequency counting
+**Space Complexity**: O(n × k) - storing all strings in the hash map
+
+### [Medium] Top K Frequent Elements
 
 **Main idea**:
-Use a hash set to store all unique numbers from the array.
-Iterate through the array, and for each number, check if it is the start of a sequence (i.e., num - 1 is not in the set).
-If it is, count the length of the sequence by incrementing from that number until you reach a number not in the set.
-Keep track of the maximum sequence length found during the iteration.¬
+Use a hash map to count frequencies, then a heap to find the top k elements:
+
+- **Count frequencies**: Create hash map tracking frequency of each element
+- **Initialize min-heap**: Create heap of size k to track top k frequent elements
+- **Process frequencies**: For each unique element and its frequency:
+    - **Add to heap**: Push (frequency, element) onto heap
+    - **Maintain size**: If heap size exceeds k, remove minimum element
+- **Extract result**: Pop all elements from heap to get top k frequent elements
+
+Alternative: Use bucket sort with array of size n+1 where index represents frequency (O(n) time).
+
+The key insight: A min-heap of size k efficiently maintains the k largest frequencies while processing all elements in O(n log k) time.
+
+**Edge cases**: If k equals array length, return all unique elements. Array must have at least k unique elements.
+
+**Time Complexity**: O(n log k) - n elements processed with heap operations of O(log k)
+**Space Complexity**: O(n) - hash map stores all unique elements
+
+### [Medium] Encode and Decode Strings
+
+**Main idea**:
+Use length-prefix encoding to handle strings with any characters including delimiters:
+
+- **Encode**: For each string, prepend its length followed by a delimiter (e.g., "4#word5#hello")
+    - Concatenate: length + "#" + string for each string
+    - This handles strings containing any characters since length is explicit
+- **Decode**: Parse the encoded string:
+    - Read length until delimiter "#"
+    - Extract exactly that many characters as the string
+    - Repeat until end of encoded string
+
+The key insight: Length-prefix encoding avoids delimiter collision issues since we know exactly how many characters to read for each string.
+
+**Edge cases**: Empty strings encoded as "0#". Empty list encodes to empty string.
+
+**Time Complexity**: O(n) - where n is total characters across all strings
+**Space Complexity**: O(n) - for storing the encoded/decoded result
+
+### [Medium] Product of Array Except Self
+
+**Main idea**:
+Use two passes to calculate products without division:
+
+- **Initialize output array**: Create result array of same length, initialized to 1
+- **Left pass**: Traverse left to right:
+    - For each index i, set output[i] = product of all elements to the left
+    - Maintain running product: left_product *= nums[i-1]
+- **Right pass**: Traverse right to left:
+    - For each index i, multiply output[i] by product of all elements to the right
+    - Maintain running product: right_product *= nums[i+1]
+- **Return result**: Output array now contains product of array except self
+
+The key insight: By separating left and right products into two passes, we avoid division and handle zeros correctly while maintaining O(1) extra space.
+
+**Edge cases**: Array length is at least 2. Zeros in array are handled correctly without division.
+
+**Time Complexity**: O(n) - two passes through the array
+**Space Complexity**: O(1) - output array doesn't count as extra space per problem constraints
+
+### [Medium] Valid Sudoku
+
+**Main idea**:
+Use hash sets to track numbers seen in rows, columns, and 3×3 sub-boxes:
+
+- **Initialize tracking structures**: Create three collections of sets:
+    - rows: array of 9 sets (one per row)
+    - cols: array of 9 sets (one per column)
+    - boxes: array of 9 sets (one per 3×3 sub-box)
+- **Iterate through board**: For each cell (row, col):
+    - Skip empty cells ('.')
+    - **Calculate box index**: box_index = (row // 3) × 3 + (col // 3)
+    - **Check for duplicate**: If number exists in rows[row], cols[col], or boxes[box_index], return false
+    - **Add to sets**: Add number to respective row, column, and box sets
+- **Return true**: If no duplicates found
+
+The key insight: Using separate hash sets for rows, columns, and boxes allows O(1) duplicate checking in a single pass through the board.
+
+**Edge cases**: Board is always 9×9. Empty cells marked with '.'. Only need to validate filled cells.
+
+**Time Complexity**: O(1) - always checking 81 cells regardless of input
+**Space Complexity**: O(1) - fixed space for 27 sets (9 rows + 9 cols + 9 boxes)
+
+### [Medium] Longest Consecutive Sequence
+
+**Main idea**:
+Use a hash set to identify sequence starts and count lengths efficiently:
+
+- **Initialize hash set**: Add all array elements to set for O(1) lookup
+- **Initialize max length**: Track longest sequence found (start at 0)
+- **Iterate through array**: For each number:
+    - **Check if sequence start**: If (num - 1) not in set, this is a sequence start
+    - **Count sequence length**: Starting from num, increment and check set membership:
+        - While (num + length) exists in set, increment length
+    - **Update maximum**: If current sequence longer than max, update max
+- **Return result**: Maximum sequence length found
+
+The key insight: By only counting from sequence starts (where num-1 doesn't exist), we avoid redundant work and achieve O(n) time despite nested loops.
+
+**Edge cases**: Empty array returns 0. Single element returns 1. Duplicates don't affect result.
+
+**Time Complexity**: O(n) - each number visited at most twice (once in outer loop, once when counting)
+**Space Complexity**: O(n) - hash set stores all unique elements
 
 ## Two Pointers
 
-### Valid Palindrome
+### [Easy] Valid Palindrome
 
 **Main idea**:
-Place one pointer at the string's start and another at its end, advance both pointers toward the center, skipping non-alphanumeric characters and ignoring case
-differences.
-If characters at both pointers match, continue; if they don't, return false.
-If the pointers cross without mismatches, return true.
+Use a two-pointer approach to check if a string is a palindrome. Start with pointers at both ends of the string:
 
-### Two Sum II - Input Array Is Sorted
+- **Initialize pointers**: Set left pointer at index 0 and right pointer at the last index
+- **Advance toward center**: While left < right:
+    - Skip non-alphanumeric characters: increment left while character is not alphanumeric
+    - Skip non-alphanumeric characters: decrement right while character is not alphanumeric
+    - **Compare characters**: Compare characters at both pointers (case-insensitive)
+        - If characters match: move left pointer right (left++) and right pointer left (right--)
+        - If characters don't match: return false
+- **Return true**: If pointers cross without finding mismatches
 
-**Main idea**:
-Use two pointers, one starting at the beginning (left) and the other at the end (right) of the sorted array.
-Calculate the sum of the elements at both pointers.
-If the sum equals the target, return the indices (adjusted for 1-based indexing).
-If the sum is less than the target, move the left pointer to the right to increase the sum.
-If the sum is greater than the target, move the right pointer to the left to decrease the sum.
-Continue this process until the pointers meet.
+The key insight: By processing from both ends simultaneously and skipping non-alphanumeric characters, we efficiently validate palindrome properties in a single
+pass without modifying the string.
 
-### 3Sum
+**Edge cases**: Empty string and single character strings are valid palindromes.
 
-**Main idea**:
-Sort the array to facilitate the two-pointer approach.
-Iterate through the array, fixing one element at a time.
-For each fixed element, use two pointers (left and right) to find pairs that sum to the negative of the fixed element.
-Skip duplicate elements to avoid repeating triplets.
-Collect unique triplets in a result list and return it.
+**Time Complexity**: O(n) - single pass through the string with both pointers converging
+**Space Complexity**: O(1) - only constant extra space for pointers
 
-### Container With Most Water
+### [Medium] Two Sum II - Input Array Is Sorted
 
 **Main idea**:
-Use two pointers, one at the beginning (left) and one at the end (right) of the array.
-Calculate the area formed by the lines at both pointers and the x-axis.
-Keep track of the maximum area found.
-Move the pointer pointing to the shorter line inward, as this may lead to a larger area.
-Repeat the process until the pointers meet.
+Use a two-pointer approach to find two numbers that sum to the target. Leverage the sorted property of the array:
 
-Also, calculate the area using the formula: area = min(height[left], height[right]) * (right - left).
-Move the pointer of the shorter line because the area is limited by the shorter line, and moving it inward may find a taller line that increases the area.
+- **Initialize pointers**: Set left pointer at index 0 and right pointer at the last index
+- **Calculate current sum**: While left < right:
+    - Compute sum: current_sum = numbers[left] + numbers[right]
+    - **Check against target**:
+        - If current_sum == target: return [left + 1, right + 1] (1-based indexing)
+        - If current_sum < target: move left pointer right (left++) to increase sum
+        - If current_sum > target: move right pointer left (right--) to decrease sum
+- **Continue**: Repeat until target is found
 
-### Trapping Rain Water
+The key insight: Since the array is sorted, moving the left pointer increases the sum and moving the right pointer decreases it. This guarantees finding the
+solution in O(n) time without needing extra space for a hash map.
+
+**Edge cases**: The problem guarantees exactly one solution exists. Minimum array size is 2.
+
+**Time Complexity**: O(n) - single pass through the array with both pointers converging
+**Space Complexity**: O(1) - only constant extra space for pointers
+
+### [Medium] 3Sum
 
 **Main idea**:
-Use two pointers, one at the beginning (left) and one at the end (right) of the array.
-Maintain two variables to track the maximum height seen from the left and right sides (left_max and right_max).
-Calculate the trapped water at each position based on the minimum of left_max and right_max minus the current height.
-Move the pointer pointing to the shorter line inward, updating left_max or right_max as needed.
-Continue this process until the pointers meet.
+Sort the array to enable efficient duplicate handling and two-pointer searching. Iterate through the array fixing one element at a time:
 
-The trapped water at each position can be calculated as: water += min(left_max, right_max) - height[current_position]
+- **Sort the array**: Enable ordered traversal and efficient duplicate skipping
+- **Iterate with fixed element**: For each index i from 0 to n-3:
+    - Skip duplicate fixed elements: if i > 0 and nums[i] == nums[i-1], continue
+    - Set target: target = -nums[i]
+    - **Initialize two pointers**: left = i + 1, right = n - 1
+    - **Two-pointer search**: While left < right:
+        - Calculate sum: current_sum = nums[left] + nums[right]
+        - If current_sum == target:
+            - Add triplet [nums[i], nums[left], nums[right]] to result
+            - Move both pointers: left++, right--
+            - Skip duplicate left values: while left < right and nums[left] == nums[left-1], increment left
+            - Skip duplicate right values: while left < right and nums[right] == nums[right+1], decrement right
+        - If current_sum < target: move left pointer right (left++)
+        - If current_sum > target: move right pointer left (right--)
+- **Return result**: List of unique triplets
+
+The key insight: Sorting allows us to use the two-pointer technique efficiently and skip duplicates systematically. For a fixed first element, the problem
+reduces to finding two numbers that sum to a target, which is solvable in O(n) time with two pointers.
+
+**Edge cases**: Arrays with fewer than 3 elements return empty result.
+
+**Time Complexity**: O(n²) - O(n log n) for sorting + O(n²) for nested iteration (n iterations × O(n) two-pointer search)
+**Space Complexity**: O(1) or O(n) - depending on sorting algorithm used (not counting output space)
+
+### [Medium] Container With Most Water
+
+**Main idea**:
+Use a two-pointer approach to find the maximum area. Start with pointers at both ends of the array:
+
+- **Initialize pointers and variables**: Set left pointer at index 0 and right pointer at the last index, initialize max_area to 0
+- **Calculate current area**: Compute area using formula: area = min(height[left], height[right]) × (right - left)
+- **Update maximum**: If current area exceeds max_area, update max_area
+- **Move pointer strategically**:
+    - If height[left] < height[right]: move left pointer right (left++)
+    - Else: move right pointer left (right--)
+- **Continue**: Repeat until left and right pointers meet
+
+The key insight: Moving the pointer pointing to the shorter line is optimal because the area is constrained by the shorter height. Moving the taller line's
+pointer would only decrease width without potential for increasing height, guaranteeing a smaller area.
+
+**Edge cases**: Array must have at least 2 elements. All heights of 0 return 0 area.
+
+**Time Complexity**: O(n) - single pass through the array with both pointers converging
+**Space Complexity**: O(1) - only constant extra space for pointers and tracking variables
+
+### [Hard] Trapping Rain Water
+
+**Main idea**:
+Use a two-pointer approach to calculate trapped water in a single pass. Start with pointers at both ends of the array:
+
+- **Initialize pointers and variables**: Set left and right pointers at array boundaries, and left_max and right_max to 0, total water to 0
+- **Compare boundary heights**: While left < right, compare height[left] and height[right]
+- **Process left side** (if height[left] < height[right]):
+    - If height[left] >= left_max: update left_max
+    - Else: add (left_max - height[left]) to total water
+    - Move left pointer right
+- **Process right side** (if height[left] >= height[right]):
+    - If height[right] >= right_max: update right_max
+    - Else: add (right_max - height[right]) to total water
+    - Move right pointer left
+- **Continue**: Repeat until pointers meet
+
+The key insight: At each step, water trapped at current position depends on the minimum of the maximum heights seen from both sides. We process from the side
+with the smaller height because that height definitively bounds the water level at that position—we don't need to know the exact maximum from the other side
+since we know it's at least as tall.
+
+**Edge cases**: Arrays with fewer than 3 elements cannot trap water. All equal heights trap 0 water.
+
+**Time Complexity**: O(n) - single pass through the array with both pointers
+**Space Complexity**: O(1) - only constant extra space
 
 ## Sliding Window
 
-### Best Time to Buy and Sell Stock
+### [Easy] Best Time to Buy and Sell Stock
 
 **Main idea**:
-Use a single pass through the array to track the minimum price seen so far and calculate the maximum profit at each step.
-Each time you encounter a new price, check if selling at that price would yield a higher profit than previously recorded.
-Update the minimum price if the current price is lower than the recorded minimum.
+Use a single pass through the array to track the minimum price seen so far and calculate the maximum profit at each step. Iterate through the prices:
 
-### Longest Substring Without Repeating Characters
+- **Initialize variables**: Set minimum price to infinity (or first price) and maximum profit to 0
+- **Expand iteration**: Move through each price in the array
+- **Calculate potential profit**: For current price, compute profit as (current price - minimum price)
+- **Update maximum**: If current profit exceeds maximum profit, update maximum profit
+- **Update minimum**: If current price is lower than minimum price, update minimum price
+- **Continue**: Repeat until all prices are processed
 
-**Main idea**:
-Use a sliding window approach with two pointers (left and right) to represent the current substring.
-Use a hash set to track characters in the current window.
-Expand the right pointer to include new characters and check for duplicates.
-If a duplicate is found, move the left pointer to the right until the duplicate is removed.
-Keep track of the maximum length of the substring found during the process.
+**Time Complexity**: O(n) - single pass through the array
+**Space Complexity**: O(1) - only constant extra space for tracking minimum price and maximum profit
 
-### Longest Repeating Character Replacement
-
-**Main idea**:
-Use a sliding window approach with two pointers (left and right) to represent the current substring.
-Keep track of most frequent character in the current window.
-Expand the right pointer to include new characters and update the frequency count.
-If the number of characters that need to be replaced (window size - max frequency) exceeds k, move the left pointer to the right to shrink the window.
-Keep track of the maximum length of the substring found during the process.
-
-### Permutation in String
+### [Medium] Longest Substring Without Repeating Characters
 
 **Main idea**:
-Use a sliding window approach with two pointers (left and right) to represent the current substring.
-Maintain a frequency count of characters in the target string and the current window.
-Expand the right pointer to include new characters and update the frequency count.
-If the frequency counts match, return true.
-If the window size exceeds the length of the target string, move the left pointer to the right to shrink the window and update the frequency count.
-Continue this process until the right pointer reaches the end of the string.
+Use a sliding window approach with two pointers (left and right) to represent the current substring. Iterate through the string:
 
-Frequency counts can be compared using arrays of size 26 (for lowercase letters) for efficiency.
-Frequency counts can also be compared using hash maps if the character set is larger.
+- **Initialize hash set**: Track characters currently in the window
+- **Expand window**: Move right pointer to include new characters
+- **Check for duplicates**: If current character already exists in the set:
+    - Shrink window from left by removing characters until duplicate is removed
+    - Move left pointer right and update the set
+- **Add character**: Add current character to the set
+- **Track maximum**: Update maximum length whenever a valid window is found
+- **Continue**: Repeat until right pointer reaches the end of the string
 
-### Minimum Window Substring
+**Time Complexity**: O(n) - each character is visited at most twice (once by right pointer, once by left pointer)
+**Space Complexity**: O(min(n, m)) - where n is string length and m is character set size (typically O(1) for fixed alphabets)
 
-**Main idea**:
-Use a sliding window approach with two pointers (left and right) to represent the current substring.
-Maintain a frequency count of characters in the target string and the current window.
-Expand the right pointer to include new characters and update the frequency count.
-When the current window contains all characters from the target string, try to shrink the window by moving the left pointer to the right while still maintaining
-all required characters.
-Keep track of the minimum window found during the process.
-
-### Sliding Window Maximum
+### [Medium] Longest Repeating Character Replacement
 
 **Main idea**:
-Use a deque (double-ended queue) to store indices of array elements.
-The deque will maintain the indices of elements in decreasing order of their values.
-As you iterate through the array, remove indices from the front of the deque if they are out of the current window.
-Remove indices from the back of the deque while the current element is greater than the elements at those indices.
-Add the current index to the back of the deque.
-The maximum for the current window is at the front of the deque.
+Use a sliding window approach with two pointers (left and right) to represent the current substring. Iterate through the string:
+
+- **Initialize frequency map**: Track character counts in the current window
+- **Track maximum frequency**: Maintain the count of the most frequent character in the window
+- **Expand window**: Move right pointer to include new characters and update frequency count and max frequency
+- **Check validity**: Calculate characters needing replacement as (window size - max frequency)
+    - If replacements needed ≤ k: window is valid, update maximum length
+    - If replacements needed > k: shrink window from left
+- **Shrink window**: Remove leftmost character from window, update frequency count, and move left pointer right
+- **Continue**: Repeat until right pointer reaches the end of the string
+
+**Time Complexity**: O(n) - single pass through the string with each character processed at most twice
+**Space Complexity**: O(1) - fixed-size frequency map (26 characters for uppercase letters) or O(k) for variable character sets
+
+### [Medium] Permutation in String
+
+**Main idea**:
+Use a sliding window approach with two pointers (left and right) to represent the current substring. Iterate through the string:
+
+- **Initialize frequency maps**: Track character counts for the target string (s1) and current window in s2
+- **Expand window**: Move right pointer to include new characters and update window frequency count
+- **Check match**: When window size equals s1 length, compare frequency counts
+    - If frequencies match: return true (permutation found)
+    - If frequencies don't match: shrink window from left
+- **Shrink window**: Remove leftmost character from window and move left pointer right
+- **Continue**: Repeat until right pointer reaches the end of s2
+
+Frequency counts can be compared using arrays of size 26 (for lowercase letters) for efficiency, or hash maps for larger character sets.
+
+**Time Complexity**: O(n) - single pass through s2, where n is the length of s2
+**Space Complexity**: O(1) - fixed-size frequency arrays (26 characters) or O(k) for hash maps where k is the character set size
+
+### [Hard] Minimum Window Substring
+
+**Main idea**:
+Use a sliding window approach with two pointers (left and right) to represent the current substring. Iterate through the string:
+
+- **Initialize frequency maps**: Track character counts for the target string and current window
+- **Expand window**: Move right pointer to include new characters and update window frequency count
+- **Check completeness**: When window contains all required characters (with correct frequencies), attempt to shrink
+- **Shrink window**: Move left pointer right while maintaining all required characters, updating minimum window
+- **Track minimum**: Record the smallest valid window found
+
+**Time Complexity**: O(m + n) - where m is target length and n is source string length
+**Space Complexity**: O(m + n) - for frequency maps of both strings
+
+### [Hard] Sliding Window Maximum
+
+**Main idea**:
+Use a deque (double-ended queue) to store indices of array elements. Iterate through the array:
+
+- **Maintain decreasing order**: The deque keeps indices in decreasing order of their corresponding values
+- **Remove out-of-window indices**: Remove indices from the front if they fall outside the current window
+- **Remove smaller elements**: Remove indices from the back while the current element is greater than elements at those indices
+- **Add current index**: Add the current index to the back of the deque
+- **Track maximum**: The maximum for the current window is always at the front of the deque
+
+**Time Complexity**: O(n) - each element is added and removed from the deque at most once
+**Space Complexity**: O(k) - deque stores at most k indices (window size)
 
 ## Stack
+
+### [Easy] Valid Parentheses
+
+**Main idea**:
+Use a stack to track opening parentheses. Iterate through each character:
+
+- **Opening bracket** (`'('`, `'{'`, `'['`): Push onto the stack
+- **Closing bracket** (`')'`, `'}'`, `']'`):
+    - Check if stack is non-empty and top matches the corresponding opening bracket
+    - If it matches: pop the stack
+    - If it doesn't match or stack is empty: return false
+
+After processing all characters, return true if the stack is empty (all brackets matched), otherwise return false.
+
+**Time Complexity**: O(n) - single pass through the string
+**Space Complexity**: O(n) - stack stores at most n/2 opening brackets
+
+### [Medium] Min Stack
+
+**Main idea**:
+Use two stacks to track both values and minimum values at each state:
+
+- **Initialize two stacks**: Create a main stack for values and a min stack for tracking minimums
+- **Push operation**: When pushing value x:
+    - Push x onto main stack
+    - If min stack is empty or x ≤ min stack top, push x onto min stack
+    - Otherwise, push current minimum (min stack top) onto min stack again
+- **Pop operation**:
+    - Pop from both main stack and min stack simultaneously
+- **Top operation**:
+    - Return top element from main stack
+- **Get minimum operation**:
+    - Return top element from min stack (always contains current minimum)
+
+Alternative approach: Only push to min stack when new minimum is found, but requires careful handling during pop operations to ensure min stack stays
+synchronized.
+
+The key insight: By maintaining a parallel min stack that stores the minimum value at each level of the main stack, we can retrieve the minimum in O(1) time.
+Each position in the min stack represents the minimum of all elements at or below that position in the main stack.
+
+**Edge cases**: Stack can be empty after series of push/pop operations. Minimum tracking must handle duplicate minimum values correctly.
+
+**Time Complexity**: O(1) - all operations (push, pop, top, getMin) are constant time
+**Space Complexity**: O(n) - worst case, min stack stores n elements (same as main stack)
 
 ## Binary Search
 

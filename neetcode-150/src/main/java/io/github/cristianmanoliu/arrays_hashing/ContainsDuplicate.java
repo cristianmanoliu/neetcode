@@ -4,25 +4,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 // https://neetcode.io/problems/duplicate-integer?list=neetcode150
+// https://leetcode.com/problems/contains-duplicate
 public class ContainsDuplicate {
 
   public boolean hasDuplicate(int[] nums) {
-    if (nums == null || nums.length == 0) {
-      return false;
-    }
-
-    boolean hasDuplicate = false;
-    Set<Integer> unique = new HashSet<>();
-
-    for (int number : nums) {
-      if (unique.contains(number)) {
-        hasDuplicate = true;
-        break;
-      } else {
-        unique.add(number);
+    Set<Integer> seen = new HashSet<>();
+    for (int num : nums) {
+      if (!seen.add(num)) {
+        return true;
       }
     }
-
-    return hasDuplicate;
+    return false;
   }
 }
