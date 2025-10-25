@@ -2,6 +2,98 @@
 
 https://neetcode.io/practice?tab=neetcode150
 
+> Note: Big-O notation describes asymptotic growth. It is commonly used to denote an upper bound (often the worst-case) unless an average or best case is
+> explicitly stated.
+
+## Big O Notation - Time and Space Complexity
+
+### Time Complexity
+
+O(1) - Constant Time
+
+- The running time does not grow with input size.
+- Example: Accessing an element in an array by index.
+
+O(log n) - Logarithmic Time
+
+- The running time grows in proportion to the logarithm of the input size.
+- Example: Binary search in a sorted array (each step halves the search space).
+
+O(n) - Linear Time
+
+- The running time grows linearly with the input size.
+- Example: Iterating through an array.
+
+O(n log n) - Linearithmic Time
+
+- The running time grows on the order of n·log n.
+- Example: Efficient comparison-based sorting algorithms such as Merge Sort (worst-case O(n log n)) and Quick Sort (average-case O(n log n), worst-case O(n^2)).
+
+O(n^2) - Quadratic Time
+
+- The running time grows proportionally to the square of the input size.
+- Example: Nested loops over the input, such as in simple implementations of Bubble Sort or insertion-sort-like nested comparisons.
+
+O(2^n) - Exponential Time
+
+- The running time grows exponentially, on the order of 2^n (roughly doubles when n increases by 1).
+- Example: Recursive algorithms that solve problems by exploring all subsets or choices (e.g., generating all subsets / naive exponential search). The Tower of
+  Hanoi recurrence also yields exponential time O(2^n).
+
+O(n!) - Factorial Time
+
+- The running time grows factorially with the input size, on the order of n!.
+- Example: Generating all permutations of a set (if you explicitly enumerate and store them).
+
+### Space Complexity
+
+O(1) - Constant Space
+
+- The extra space required does not grow with input size (only a fixed number of variables).
+- Example: Using a fixed number of variables.
+
+O(log n) - Logarithmic Space
+
+- The extra space grows proportional to the logarithm of the input size.
+- Example: Recursion depth for divide-and-conquer algorithms on balanced inputs, e.g., recursive binary search uses O(log n) stack space.
+
+O(n) - Linear Space
+
+- The extra space grows linearly with the input size.
+- Example: Allocating an additional array of size n.
+
+O(n log n) - Linearithmic Space (uncommon)
+
+- The extra space grows on the order of n·log n.
+- Typical divide-and-conquer algorithms use O(n) or O(log n) extra space; O(n log n) space is not typical.
+- Examples:
+    - Sparse Table for RMQ precomputes n·⌊log2 n⌋ values.
+    - Binary lifting (jump pointers) for LCA stores O(log n) parent pointers per node, totaling O(n log n) space.
+
+O(n^2) - Quadratic Space
+
+- The extra space grows proportional to n^2.
+- Example: Storing a 2D matrix of size n × n.
+
+O(2^n) - Exponential Space
+
+- The extra space grows on the order of 2^n.
+- Example: Storing all subsets of a set (power set) explicitly requires O(2^n) space.
+
+O(n!) - Factorial Space
+
+- The extra space grows on the order of n!.
+- Example: Storing all permutations of a set.
+
+### Summary
+
+- Time Complexity: O(1) < O(log n) < O(n) < O(n log n) < O(n^2) < O(2^n) < O(n!)
+- Space Complexity: O(1) < O(log n) < O(n) < O(n log n) < O(n^2) < O(2^n) < O(n!)
+
+Usually O(1) and O(log n) are considered very efficient.
+
+---
+
 ## Arrays & Hashing
 
 ### [Easy] Contains Duplicate
