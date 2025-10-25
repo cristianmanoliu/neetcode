@@ -1003,6 +1003,25 @@ The sentinel `dummy` removes head special-casing; maintaining the invariant that
 **Time Complexity**: O(m+n)
 **Space Complexity**: O(1)
 
+### [Medium] Reorder List
+
+**Main idea**:
+Transform the list in-place using **Split → Reverse → Weave**:
+
+* **Find middle**: Use slow/fast pointers to locate the end of the first half (slow stops at mid-left for even length)
+* **Split**: Detach halves by setting `slow.next = null`
+* **Reverse second half**: Reverse the list starting at the original `slow.next`
+* **Weave halves**: Alternately splice nodes: take one from the first half, then one from the reversed second half, repeating until the second half is exhausted
+
+The key insight:
+Reversing the second half turns the desired order `L0, Ln, L1, Ln-1, …` into a simple alternating merge of two lists.
+
+**Edge cases**:
+Empty list, single node, or two nodes require no changes. For odd lengths, the first half will have one extra node and remains at the end after weaving.
+
+**Time Complexity**: O(n) — one pass to find middle, one to reverse, one to weave
+**Space Complexity**: O(1) — in-place with a constant number of pointers
+
 ## Trees
 
 TODO
