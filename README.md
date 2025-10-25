@@ -574,7 +574,66 @@ independent fleets.
 **Time Complexity**: O(n log n) - dominated by sorting the cars by position
 **Space Complexity**: O(n) - storing the sorted pairs and stack of arrival times
 
+### [Hard] Largest Rectangle in Histogram
+
+**Main idea**:
+Use a monotonic increasing stack to efficiently find the largest rectangle. For each bar, determine how far left and right it can extend:
+
+- **Initialize variables**: Create empty stack to store indices, and max_area = 0
+- **Process each bar**: Iterate through all bars with index i:
+    - **Pop taller bars**: While stack is not empty AND current height < height at stack top:
+        - Pop index from stack (call it top_index)
+        - Calculate height: height = heights[top_index]
+        - Calculate width:
+            - If stack is empty: width = i (extends to beginning)
+            - Else: width = i - stack.peek() - 1
+        - Calculate area: area = height × width
+        - Update max_area if current area is larger
+    - **Push current index**: Add current index i to stack
+- **Process remaining bars**: After loop, pop remaining indices and calculate areas
+    - For each remaining index, width extends to end of histogram
+    - Width = n - stack.peek() - 1 (where n is array length)
+- **Return max_area**: Maximum rectangle area found
+
+The key insight: The stack maintains bars in **increasing height order**. When we encounter a shorter bar, all taller bars in the stack have found their right
+boundary (they can't extend past this shorter bar). The bar below each popped bar in the stack represents its left boundary. This allows us to calculate the
+maximum rectangle area for each bar as the minimum height in O(n) time.
+
+**Example walkthrough** for heights = [2,1,5,6,2,3]:
+
+- i=0: height=2, stack=[0]
+- i=1: height=1 < heights[0]=2, pop 0: area=2×1=2, push 1, stack=[1]
+- i=2: height=5, stack=[1,2]
+- i=3: height=6, stack=[1,2,3]
+- i=4: height=2 < heights[3]=6, pop 3: area=6×1=6, pop 2: area=5×2=10, push 4
+
 ## Binary Search
+
+### [Easy] Binary Search
+
+**Main idea**:
+Use divide and conquer to efficiently search for a target value in a sorted array by repeatedly halving the search space:
+
+- **Initialize pointers**: Set left pointer at index 0 and right pointer at last index (n-1)
+- **Loop until found or exhausted**: While left ≤ right:
+    - **Calculate middle index**: mid = left + (right - left) / 2 (avoids integer overflow)
+    - **Check middle element**:
+        - If nums[mid] == target: return mid (found!)
+        - If nums[mid] < target: search right half, set left = mid + 1
+        - If nums[mid] > target: search left half, set right = mid - 1
+- **Return -1**: If loop ends without finding target, it doesn't exist in array
+
+The key insight: By comparing with the middle element and eliminating half the remaining search space each iteration, we achieve logarithmic time complexity.
+This only works on **sorted arrays** - the sorted property guarantees that if the middle element is too large, all elements to the right are also too large (and
+vice versa).
+
+**Why use left + (right - left) / 2?**: The formula `(left + right) / 2` can cause integer overflow if left + right exceeds the maximum integer value. Using
+`left + (right - left) / 2` is mathematically equivalent but avoids this issue.
+
+**Edge cases**: Empty array returns -1. Single element: either match or -1. Target smaller than all elements or larger than all elements returns -1.
+
+**Time Complexity**: O(log n) - search space halves with each iteration
+**Space Complexity**: O(1) - only uses constant extra space for pointers (iterative version)
 
 ## Linked List
 

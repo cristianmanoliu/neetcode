@@ -37,15 +37,8 @@ public class CarFleet {
     return stack.size();
   }
 
-  // Helper class to store car data
-  static class Car {
+  record Car(int position, int speed) {
 
-    int position;
-    int speed;
-
-    Car(int position, int speed) {
-      this.position = position;
-      this.speed = speed;
-    }
   }
+
 }
