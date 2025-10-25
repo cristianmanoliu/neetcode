@@ -482,8 +482,8 @@ Use a sliding window approach with two pointers (left and right) to represent th
 - **Shrink window**: Move left pointer right while maintaining all required characters, updating minimum window
 - **Track minimum**: Record the smallest valid window found
 
-**Time Complexity**: O(m + n) - where m is target length and n is source string length
-**Space Complexity**: O(m + n) - for frequency maps of both strings
+**Time Complexity**: O(m + n) — where m is target length and n is source string length
+**Space Complexity**: O(k) — where k is the number of distinct required characters (bounded by the alphabet size)
 
 ### [Hard] Sliding Window Maximum
 
@@ -682,10 +682,10 @@ Use a monotonic increasing stack to efficiently find the largest rectangle. For 
         - Calculate area: area = height × width
         - Update max_area if current area is larger
     - **Push current index**: Add current index i to stack
-- **Process remaining bars**: After loop, pop remaining indices and calculate areas
-    - For each remaining index, width extends to end of histogram
-    - Width = n - stack.peek() - 1 (where n is array length)
-- **Return max_area**: Maximum rectangle area found
+- **Process remaining bars**: After the loop, pop remaining indices and calculate areas
+    - If the stack is empty after popping `top_index`: `width = n`
+    - Else: `width = n - stack.peek() - 1`
+- **Return `max_area`**: Maximum rectangle area found
 
 The key insight: The stack maintains bars in **increasing height order**. When we encounter a shorter bar, all taller bars in the stack have found their right
 boundary (they can't extend past this shorter bar). The bar below each popped bar in the stack represents its left boundary. This allows us to calculate the
@@ -748,8 +748,8 @@ The key insight: Since each row is sorted and the first element of each row is g
 viewed as a single sorted sequence. By converting between 1D indices (for binary search) and 2D coordinates (for matrix access), we achieve O(log(m×n)) time
 complexity without actually flattening the matrix.
 
-**Alternative approach**: Perform two binary searches - first find the correct row, then search within that row. This also achieves O(log m + log n) = O(log(
-m×n)) time.
+**Alternative approach**: Perform two binary searches - first find the correct row, then search within that row.
+This also achieves O(log m + log n) = O(log(m×n)) time.
 
 **Edge cases**: Empty matrix returns false. Single element matrix: check if it equals target. Target outside the range [matrix[0][0], matrix[m-1][n-1]] returns
 false.
@@ -862,7 +862,7 @@ variant.
 
 **Main idea**:  
 Use a hashmap from key to a timestamp-sorted list of (timestamp, value) pairs; on set, append because timestamps per key are strictly increasing, and on get,
-binary search to find the value with the largest timestamp ≤ t in \(O(\log m)\), where \(m\) is the number of versions for that key. [web:35][web:36][web:41]
+binary search to find the value with the largest timestamp ≤ t in O(log m), where m is the number of versions for that key.
 
 - **Data structure**: Map<String, List<(timestamp, value)>> with each per-key list maintained in increasing timestamp order due to strictly increasing set
   timestamps.
@@ -870,7 +870,7 @@ binary search to find the value with the largest timestamp ≤ t in \(O(\log m)\
   re-sorting.
 - **get(key, t)**: If the key is absent, return ""; otherwise binary search the key’s list for the rightmost timestamp ≤ t and return its value, or "" if no
   such timestamp exists.
-- **Key insight**: Appending preserves per-key sorted order, enabling a rightmost-≤ lookup via binary search without extra maintenance work. [web:35][web:36]
+- **Key insight**: Appending preserves per-key sorted order, enabling a rightmost-≤ lookup via binary search without extra maintenance work.
 
 **Why binary search?**  
 Timestamps per key are monotonic, so a rightmost-≤ search returns the most recent valid value in \(O(\log m)\) time instead of scanning
@@ -941,26 +941,112 @@ within bounds).
 
 ## Linked List
 
+### [Easy] Reverse Linked List
+
+**Main idea**:  
+Iterate once with three pointers (`prev`, `curr`, `next`): save `next`, set `curr.next = prev`, then advance `prev = curr` and `curr = next`; when `curr`
+becomes `null`, `prev` is the new head, producing an in-place reversal in O(n) time.
+
+- **Initialize pointers**: Set `prev = null` and `curr = head`
+- **Iterative loop**: While `curr != null`:
+    - **Save next node**: `next = curr.next`
+    - **Reverse link**: `curr.next = prev`
+    - **Advance pointers**: `prev = curr`, `curr = next`
+- **Return result**: When the loop ends (`curr == null`), return `prev` as the new head
+
+**The key insight**:  
+Saving `next` before flipping `curr.next` preserves reachability to the remainder of the list, allowing safe, local pointer reversal per node in a single pass.
+
+**Why three-pointers?**  
+The `prev`–`curr`–`next` pattern achieves linear time and constant extra space iteratively, avoiding the call\-stack overhead and potential stack overflow of
+recursion.
+
+**Example walkthrough** for `head = 1 -> 2 -> 3 -> null`:
+
+- Start: `prev = null`, `curr = 1`
+- Step 1: save `2`; set `1.next = null`; move `prev = 1`, `curr = 2`
+- Step 2: save `3`; set `2.next = 1`; move `prev = 2`, `curr = 3`
+- Step 3: save `null`; set `3.next = 2`; move `prev = 3`, `curr = null`
+- Return `prev = 3` → `3 -> 2 -> 1 -> null`
+
+**Edge cases**:
+
+- Empty list (`head = null`): Loop never runs; return `null`
+- Single node: One flip sets its `next` to `null`; same node becomes new head
+- Two nodes: Two flips produce `B -> A -> null` from `A -> B -> null`
+
+**Time Complexity**: O(n) — each node is visited and relinked once  
+**Space Complexity**: O(1) — only three pointer variables are used
+
+### [Easy] Merge Two Sorted Lists
+
+**Main idea**:
+Use a **dummy (sentinel) head** and a **tail** pointer. Compare the heads of both sorted lists, splice the smaller node to `tail.next`, advance that list’s
+pointer, and move `tail` forward. When one list ends, append the remainder of the other. Return `dummy.next`. Runs in **O(m+n)** time, **O(1)** extra space, and
+is **stable** if ties pick from the first list.
+
+* **Initialize pointers**:
+  Create `dummy`, set `tail = dummy`; let `p = head1`, `q = head2`.
+* **Iterative loop**: While `p != null` and `q != null`:
+
+    * If `p.val <= q.val`: set `tail.next = p`; advance `p = p.next`
+    * Else: set `tail.next = q`; advance `q = q.next`
+    * Advance `tail = tail.next`
+* **Attach remainder**:
+  `tail.next = (p != null ? p : q)`
+* **Return result**:
+  `return dummy.next`
+
+**The key insight**:
+The sentinel `dummy` removes head special-casing; maintaining the invariant that `dummy.next … tail` is sorted ensures global correctness.
+
+**Time Complexity**: O(m+n)
+**Space Complexity**: O(1)
+
 ## Trees
+
+TODO
 
 ## Heaps & Priority Queue
 
+TODO
+
 ## Backtracking
+
+TODO
 
 ## Tries
 
+TODO
+
 ## Graphs
+
+TODO
 
 ## Advanced Graphs
 
+TODO
+
 ## 1-D Dynamic Programming
+
+TODO
 
 ## 2-D Dynamic Programming
 
+TODO
+
 ## Greedy
+
+TODO
 
 ## Intervals
 
+TODO
+
 ## Math & Geometry
 
+TODO
+
 ## Bit Manipulation
+
+TODO
