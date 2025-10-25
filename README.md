@@ -538,6 +538,42 @@ when that order is violated.
 **Time Complexity**: O(n) - each index is pushed and popped from stack at most once
 **Space Complexity**: O(n) - stack stores at most n indices in worst case (decreasing temperatures)
 
+### [Medium] Car Fleet
+
+**Main idea**:
+Sort cars by position and calculate arrival times to determine how many fleets form. Use a stack or counter to track fleets:
+
+- **Pair positions with speeds**: Create list of (position, speed) pairs for each car
+- **Sort by position**: Sort pairs in descending order (closest to target first)
+- **Calculate arrival times**: For each car, compute time = (target - position) / speed
+- **Process cars from closest to target**: Iterate through sorted cars:
+    - **Calculate arrival time**: time_to_arrive = (target - position) / speed
+    - **Check if new fleet forms**:
+        - If stack is empty OR current car's time > top of stack time: new fleet forms
+        - Push current arrival time onto stack
+        - Else: current car catches up to fleet ahead (don't push, it merges)
+- **Return fleet count**: Size of stack equals number of fleets
+
+The key insight: A car forms a new fleet only if it takes **longer** to reach the target than the car directly ahead of it. If it arrives sooner, it must slow
+down to match the fleet ahead (cars can't pass). By processing from closest to target backwards, we can determine which cars catch up versus which form
+independent fleets.
+
+**Example walkthrough** for target=12, position=[10,8,0,5,3], speed=[2,4,1,1,3]:
+
+- Sort by position: [(10,2), (8,4), (5,1), (3,3), (0,1)]
+- Arrival times: [1.0, 1.0, 7.0, 3.0, 12.0]
+- Process:
+    - Car at 10: time=1.0, stack=[1.0], fleets=1
+    - Car at 8: time=1.0, same as stack top (merges), stack=[1.0], fleets=1
+    - Car at 5: time=7.0 > 1.0 (new fleet), stack=[1.0, 7.0], fleets=2
+    - Car at 3: time=3.0 < 7.0 (catches up), stack=[1.0, 7.0], fleets=2
+    - Car at 0: time=12.0 > 7.0 (new fleet), stack=[1.0, 7.0, 12.0], fleets=3
+
+**Edge cases**: Single car returns 1. All cars at same position impossible (positions are unique). Cars already at target have time=0.
+
+**Time Complexity**: O(n log n) - dominated by sorting the cars by position
+**Space Complexity**: O(n) - storing the sorted pairs and stack of arrival times
+
 ## Binary Search
 
 ## Linked List
