@@ -1314,6 +1314,43 @@ The sentinel `dummy` removes head special-casing; maintaining the invariant that
 **Time Complexity**: O(m+n)
 **Space Complexity**: O(1)
 
+### (Easy) Linked List Cycle
+
+### Key takeaway
+
+Use Floyd’s tortoise-and-hare: advance `slow` by 1 and `fast` by 2; if they ever meet, there’s a cycle; if `fast` hits `null`, there isn’t.
+
+**Time:** O(n)
+**Space:** O(1)
+
+#### Algorithm explanation
+
+Use **Floyd’s Tortoise and Hare** (two pointers) to detect a cycle in O(1) space:
+
+* **Initialize pointers**:
+  Set `slow = head`, `fast = head`.
+
+* **Traverse with two speeds**:
+  While `fast != null` and `fast.next != null`:
+
+    * Move `slow = slow.next` (one step).
+    * Move `fast = fast.next.next` (two steps).
+    * If at any point `slow == fast`, a cycle exists → **return `true`**.
+
+* **No cycle condition**:
+  If the loop ends because `fast` reached `null` (or `fast.next == null`), the list terminates → **return `false`**.
+
+**Why this works (invariant):**
+If there’s a cycle, the faster pointer laps the slower one inside the cycle; their relative speed is 1 step per iteration, guaranteeing a meeting in at most the
+cycle length many iterations after both enter the cycle.
+
+**Edge cases:**
+Empty list (`head == null`) or single node without a self-loop returns `false` immediately via the loop guard. A self-loop (`head.next == head`) is correctly
+detected when `slow` and `fast` meet.
+
+**Time Complexity**: O(n) — each pointer advances at most `n` steps before meeting or reaching `null`.
+**Space Complexity**: O(1) — only a constant number of pointers are used.
+
 ### (Medium) Reorder List
 
 #### Key takeaway
@@ -1402,6 +1439,38 @@ Use a **three-pass interleaving strategy** to copy both `next` and `random` poin
 
     * Append each `x'` to the new list.
     * Restore `x.next` to the original successor (the node after `x'`).
+
+**Time Complexity:** O(n) — three linear passes over the list
+**Space Complexity:** O(1) extra — in-place interleaving (excluding the newly created copied list)
+
+### (Medium) Add Two Numbers
+
+#### Key takeaway
+
+Traverse both lists with a carry: at each node sum `x + y + carry`, append a node with `sum % 10`, and update `carry = sum / 10`; continue until both lists and
+carry are exhausted.
+
+**Time:** O(max(m, n))
+**Space:** O(max(m, n)) for the output list; O(1) extra workspace
+
+#### Algorithm explanation
+
+Use a **dummy head** to build the result list while walking both input lists in lockstep:
+
+* **Initialize**: `carry = 0`; `dummy` sentinel and `tail = dummy`.
+* **Iterate**: While at least one list has a node or `carry != 0`:
+
+    * Read digits `x = l1.val` (or 0 if `l1 == null`) and `y = l2.val` (or 0).
+    * Compute `sum = x + y + carry`; append new node with `sum % 10`.
+    * Update `carry = sum / 10` and advance `l1`, `l2`, and `tail`.
+* **Finish**: Return `dummy.next`.
+
+**Why dummy head?**
+It eliminates head special-casing—every new digit is appended uniformly. This iterative approach naturally handles different-length lists and a final nonzero
+carry.
+
+**Time Complexity:** O(max(m, n))
+**Space Complexity:** O(max(m, n)) for the output list; O(1) extra workspace
 
 ## Trees
 
