@@ -167,123 +167,40 @@ Put all numbers in a set; for each `x` where `x-1` isn’t in the set, walk forw
 
 ### [Easy] Valid Palindrome
 
-**Main idea**:
-Use a two-pointer approach to check if a string is a palindrome. Start with pointers at both ends of the string:
+Use two pointers `l,r`; while `l<r`, advance past non-alphanumerics on each side, compare `lower(s[l])` vs `lower(s[r])`; if unequal return `false`, else move
+inward; finish → `true`.
 
-- **Initialize pointers**: Set left pointer at index 0 and right pointer at the last index
-- **Advance toward center**: While left < right:
-    - Skip non-alphanumeric characters: increment left while character is not alphanumeric
-    - Skip non-alphanumeric characters: decrement right while character is not alphanumeric
-    - **Compare characters**: Compare characters at both pointers (case-insensitive)
-        - If characters match: move left pointer right (left++) and right pointer left (right--)
-        - If characters don't match: return false
-- **Return true**: If pointers cross without finding mismatches
-
-The key insight: By processing from both ends simultaneously and skipping non-alphanumeric characters, we efficiently validate palindrome properties in a single
-pass without modifying the string.
-
-**Edge cases**: Empty string and single character strings are valid palindromes.
-
-**Time Complexity**: O(n) - single pass through the string with both pointers converging
-**Space Complexity**: O(1) - only constant extra space for pointers
+**Time:** O(n)
+**Space:** O(1)
 
 ### [Medium] Two Sum II - Input Array Is Sorted
 
-**Main idea**:
-Use a two-pointer approach to find two numbers that sum to the target. Leverage the sorted property of the array:
+Use two pointers `l=0, r=n-1`; while `l<r`, compare `sum = a[l]+a[r]`: if `sum==target` return `[l+1, r+1]`; if `sum<target` increment `l`; else decrement `r`.
 
-- **Initialize pointers**: Set left pointer at index 0 and right pointer at the last index
-- **Calculate current sum**: While left < right:
-    - Compute sum: current_sum = numbers[left] + numbers[right]
-    - **Check against target**:
-        - If current_sum == target: return [left + 1, right + 1] (1-based indexing)
-        - If current_sum < target: move left pointer right (left++) to increase sum
-        - If current_sum > target: move right pointer left (right--) to decrease sum
-- **Continue**: Repeat until target is found
-
-The key insight: Since the array is sorted, moving the left pointer increases the sum and moving the right pointer decreases it. This guarantees finding the
-solution in O(n) time without needing extra space for a hash map.
-
-**Edge cases**: The problem guarantees exactly one solution exists. Minimum array size is 2.
-
-**Time Complexity**: O(n) - single pass through the array with both pointers converging
-**Space Complexity**: O(1) - only constant extra space for pointers
+**Time:** O(n)
+**Space:** O(1)
 
 ### [Medium] 3Sum
 
-**Main idea**:
-Sort the array to enable efficient duplicate handling and two-pointer searching. Iterate through the array fixing one element at a time:
+Sort the array; for each index `i` (skipping duplicates), run a two-pointer scan on `(i+1 … n-1)` to find pairs summing to `-nums[i]`, collecting triplets and
+skipping duplicate `left/right` values.
 
-- **Sort the array**: Enable ordered traversal and efficient duplicate skipping
-- **Iterate with fixed element**: For each index i from 0 to n-3:
-    - Skip duplicate fixed elements: if i > 0 and nums[i] == nums[i-1], continue
-    - Set target: target = -nums[i]
-    - **Initialize two pointers**: left = i + 1, right = n - 1
-    - **Two-pointer search**: While left < right:
-        - Calculate sum: current_sum = nums[left] + nums[right]
-        - If current_sum == target:
-            - Add triplet [nums[i], nums[left], nums[right]] to result
-            - Move both pointers: left++, right--
-            - Skip duplicate left values: while left < right and nums[left] == nums[left-1], increment left
-            - Skip duplicate right values: while left < right and nums[right] == nums[right+1], decrement right
-        - If current_sum < target: move left pointer right (left++)
-        - If current_sum > target: move right pointer left (right--)
-- **Return result**: List of unique triplets
-
-The key insight: Sorting allows us to use the two-pointer technique efficiently and skip duplicates systematically. For a fixed first element, the problem
-reduces to finding two numbers that sum to a target, which is solvable in O(n) time with two pointers.
-
-**Edge cases**: Arrays with fewer than 3 elements return empty result.
-
-**Time Complexity**: O(n²) - O(n log n) for sorting + O(n²) for nested iteration (n iterations × O(n) two-pointer search)
-**Space Complexity**: O(1) or O(n) - depending on sorting algorithm used (not counting output space)
+**Time:** O(n²) (dominated by the outer loop × two-pointer)
+**Space:** O(1) extra (or O(n) depending on sort).
 
 ### [Medium] Container With Most Water
 
-**Main idea**:
-Use a two-pointer approach to find the maximum area. Start with pointers at both ends of the array:
+Two pointers `l=0, r=n-1`; at each step update `max = max(max, min(h[l],h[r])*(r-l))` and move inward the pointer at the shorter height, until `l==r`.
 
-- **Initialize pointers and variables**: Set left pointer at index 0 and right pointer at the last index, initialize max_area to 0
-- **Calculate current area**: Compute area using formula: area = min(height[left], height[right]) × (right - left)
-- **Update maximum**: If current area exceeds max_area, update max_area
-- **Move pointer strategically**:
-    - If height[left] < height[right]: move left pointer right (left++)
-    - Else: move right pointer left (right--)
-- **Continue**: Repeat until left and right pointers meet
-
-The key insight: Moving the pointer pointing to the shorter line is optimal because the area is constrained by the shorter height. Moving the taller line's
-pointer would only decrease width without potential for increasing height, guaranteeing a smaller area.
-
-**Edge cases**: Array must have at least 2 elements. All heights of 0 return 0 area.
-
-**Time Complexity**: O(n) - single pass through the array with both pointers converging
-**Space Complexity**: O(1) - only constant extra space for pointers and tracking variables
+**Time:** O(n)
+**Space:** O(1)
 
 ### [Hard] Trapping Rain Water
 
-**Main idea**:
-Use a two-pointer approach to calculate trapped water in a single pass. Start with pointers at both ends of the array:
+Two pointers with running maxima: keep `l,r` and `leftMax,rightMax`; at each step, move the side with the smaller height, add `(leftMax - h[l])` or
+`(rightMax - h[r])` if positive, updating the respective max, until `l==r`.
 
-- **Initialize pointers and variables**: Set left and right pointers at array boundaries, and left_max and right_max to 0, total water to 0
-- **Compare boundary heights**: While left < right, compare height[left] and height[right]
-- **Process left side** (if height[left] < height[right]):
-    - If height[left] >= left_max: update left_max
-    - Else: add (left_max - height[left]) to total water
-    - Move left pointer right
-- **Process right side** (if height[left] >= height[right]):
-    - If height[right] >= right_max: update right_max
-    - Else: add (right_max - height[right]) to total water
-    - Move right pointer left
-- **Continue**: Repeat until pointers meet
-
-The key insight: At each step, water trapped at current position depends on the minimum of the maximum heights seen from both sides. We process from the side
-with the smaller height because that height definitively bounds the water level at that position—we don't need to know the exact maximum from the other side
-since we know it's at least as tall.
-
-**Edge cases**: Arrays with fewer than 3 elements cannot trap water. All equal heights trap 0 water.
-
-**Time Complexity**: O(n) - single pass through the array with both pointers
-**Space Complexity**: O(1) - only constant extra space
+**Time:** O(n)**Space:** O(1)
 
 ## Sliding Window
 
