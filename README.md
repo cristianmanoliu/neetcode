@@ -1237,6 +1237,13 @@ within bounds).
 
 ### (Easy) Reverse Linked List
 
+#### Key takeaway
+
+Iterate with `prev=null, curr=head`; while `curr`, set `next=curr.next`, `curr.next=prev`, advance `prev=curr`, `curr=next`; return `prev`.
+
+**Time:** O(n)
+**Space:** O(1)
+
 #### Algorithm explanation
 
 Iterate once with three pointers (`prev`, `curr`, `next`): save `next`, set `curr.next = prev`, then advance `prev = curr` and `curr = next`; when `curr`
@@ -1275,6 +1282,14 @@ recursion.
 
 ### (Easy) Merge Two Sorted Lists
 
+#### Key takeaway
+
+Use a dummy head and `tail`; while `p` and `q`, splice the smaller (`p.val ≤ q.val ? p : q`) to `tail.next` and advance pointers; when one ends, append the
+remainder; return `dummy.next`.
+
+**Time:** O(m+n)
+**Space:** O(1)
+
 #### Algorithm explanation
 
 Use a **dummy (sentinel) head** and a **tail** pointer. Compare the heads of both sorted lists, splice the smaller node to `tail.next`, advance that list’s
@@ -1301,6 +1316,14 @@ The sentinel `dummy` removes head special-casing; maintaining the invariant that
 
 ### (Medium) Reorder List
 
+#### Key takeaway
+
+Find middle with slow/fast, split (`slow.next=null`), reverse the second half, then weave nodes alternately from first half and reversed second half until the
+second is exhausted.
+
+**Time:** O(n)
+**Space:** O(1)
+
 #### Algorithm explanation
 
 Transform the list in-place using **Split → Reverse → Weave**:
@@ -1320,6 +1343,14 @@ Empty list, single node, or two nodes require no changes. For odd lengths, the f
 **Space Complexity**: O(1) — in-place with a constant number of pointers
 
 ### (Medium) Remove Nth Node From End of List
+
+#### Key takeaway
+
+Use a dummy head and two pointers with a fixed gap `n`: advance `fast` `n+1` steps, move `fast` and `slow` together to the end, then delete `slow.next` and
+return `dummy.next`.
+
+**Time:** O(n)
+**Space:** O(1)
 
 #### Algorithm explanation
 
