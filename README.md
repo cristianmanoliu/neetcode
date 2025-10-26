@@ -1491,6 +1491,84 @@ cycle’s entry, which equals the duplicate.
 **Time Complexity:** O(n) — each pointer advances at most a constant number of full passes over the array.
 **Space Complexity:** O(1) — uses only a constant number of variables.
 
+### (Medium) LRU Cache
+
+#### Key takeaway
+
+Combine a **HashMap** (key → node) with a **doubly linked list** (MRU at head, LRU at tail): `get` moves the node to the front; `put` updates or inserts at the
+front and evicts from the tail when capacity is exceeded.
+
+**Time:** O(1) per `get`/`put`
+**Space:** O(capacity)
+
+#### Algorithm explanation
+
+Maintain two data structures in sync:
+
+* **Hash map for O(1) lookup:** Maps keys to their corresponding list nodes.
+* **Doubly linked list for O(1) recency updates:**
+
+    * **Most-recently-used (MRU)** items are placed right after a dummy `head`.
+    * **Least-recently-used (LRU)** item is right before a dummy `tail`.
+
+**Operations:**
+
+* **get(key):**
+  Look up the node in the map; if absent return `-1`. If present, **move the node to the head** (mark as MRU) and return its value.
+* **put(key, value):**
+
+    * If the key exists, update the node’s value and **move it to head**.
+    * If new, create a node, **insert at head**, store in the map; **if size exceeds capacity, remove the tail’s previous node (LRU)** and delete its key from
+      the map.
+
+**Time Complexity:** O(1) per operation (hash map lookup + O(1) list splices)
+**Space Complexity:** O(capacity) for the map and list nodes
+
+### (Hard) Merge K Sorted Lists
+
+#### Key takeaway
+
+Use a min-heap (priority queue) of the current heads from each list: repeatedly extract the smallest node, append it, and push its successor—yielding a single
+merged sorted list.
+
+**Time:** O(N log k), where `N` is the total number of nodes and `k` is the number of lists
+**Space:** O(k) extra for the heap (output list not counted)
+
+#### Algorithm explanation
+
+* **Initialize heap:** Push the head of each non-empty list into a min-heap keyed by node value.
+* **Iteratively merge:**
+
+    * Pop the smallest node from the heap and append it to the result list.
+    * If that node has a `next`, push `next` into the heap.
+* **Finish:** When the heap is empty, all nodes have been appended in sorted order; return the merged list’s head.
+
+**Why a heap?**
+At any step we need the smallest among up to `k` candidates (the current heads). A binary heap provides `O(log k)` selection/update, making the total cost
+`O(N log k)`.
+
+**Alternative (divide & conquer):**
+Pairwise merge lists (like merge sort) until one remains; this also yields **O(N log k)** time and **O(1)** extra space beyond recursion/iteration, and can be
+competitive in practice.
+
+### (Hard) Reverse Nodes in k-Group
+
+#### Key takeaway
+
+Walk the list in blocks of size `k`; for each full block, reverse it in-place by pointing each node to the segment’s successor (`groupNext`), then splice the
+reversed block back using a dummy and advance to the next block.
+
+**Time:** O(n) — each node is visited and relinked a constant number of times
+**Space:** O(1) — in-place reversal with a fixed number of pointers
+
+#### Algorithm explanation
+
+* **Find group:** From `groupPrev`, locate the `k`-th node (`kth`). If absent, stop—remaining nodes are fewer than `k` and remain as-is.
+* **Reverse in-place:** Reverse the half-open interval `[groupPrev.next, groupNext)` by standard pointer flipping with `prev = groupNext` and
+  `curr = groupPrev.next` until `curr == groupNext`.
+* **Splice back:** After reversal, `kth` is the new head of the block and the old head is now the tail; connect `groupPrev.next = kth`, then set `groupPrev` to
+  the block’s tail to proceed.
+
 ## Trees
 
 TODO
