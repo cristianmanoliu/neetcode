@@ -1664,7 +1664,146 @@ TODO
 
 ## Tries
 
-TODO
+### (Medium) Implement Trie (Prefix Tree)
+
+#### Key takeaway
+
+Store words character-by-character in a rooted tree where each edge is a letter; `insert` creates nodes along the path and marks the last node as a word,
+`search` checks that the path exists **and** ends at a word, and `startsWith` only checks path existence.
+
+**Time:**
+
+* `insert(word)`: O(|word|)
+* `search(word)`: O(|word|)
+* `startsWith(prefix)`: O(|prefix|)
+
+**Space:** O(T) total over all inserted words (each node has up to 26 children).
+
+### (Medium) Implement Trie (Prefix Tree)
+
+#### Algorithm explanation
+
+Use a **rooted tree of characters** where each node has up to 26 children (for `'a'..'z'`) and a boolean `isWord` marking the end of a stored word.
+
+**Data structure**
+
+* `Node`: `child[26]` array (or `Map<Character,Node>` for general alphabets) and `boolean isWord`.
+* `root`: an empty `Node`.
+
+**Operations**
+
+1. **insert(word)**
+
+    * Start at `root`.
+    * For each character `c` in `word`:
+
+        * Compute `idx = c - 'a'`.
+        * If `child[idx] == null`, allocate a new `Node` there.
+        * Move to `child[idx]`.
+    * After the loop, set `isWord = true` on the last node.
+
+2. **search(word)**
+
+    * Traverse from `root` following each character’s child pointer.
+    * If at any step the required child is `null`, return `false`.
+    * After consuming all characters, return `node.isWord` (must end at a word).
+
+3. **startsWith(prefix)**
+
+    * Traverse from `root` following the prefix characters.
+    * If any required child is `null`, return `false`.
+    * If traversal succeeds, return `true` (no need to check `isWord`).
+
+**Correctness intuition**
+
+* Each word corresponds to a unique path from `root`; `insert` guarantees the path exists and marks its terminal node.
+* `search` verifies both the path and that the terminal node represents a complete word.
+* `startsWith` only verifies the path’s existence, matching the definition of “has a word with this prefix.”
+
+**Complexities**
+
+* `insert(word)`: O(|word|)
+* `search(word)`: O(|word|)
+* `startsWith(prefix)`: O(|prefix|)
+* **Space:** O(T) across all words inserted, where `T` is the total number of characters stored.
+
+O(|word|) means time proportional to the length of the input string
+
+### (Medium) Design Add and Search Words Data Structure
+
+#### Key takeaway
+
+Store words in a **Trie**; `addWord` inserts characters normally, and `search` uses **DFS** to handle the wildcard `'.'` by branching over all children at that
+position.
+
+**Time:**
+
+* `addWord(w)`: O(|w|)
+* `search(w)`: Best O(|w|); worst-case with many `'.'` is O(26^d) where `d` is the number of wildcards (bounded by branching over existing children)
+
+**Space:** O(T) for the trie nodes, where `T` is the total number of inserted characters (each node has up to 26 pointers)
+
+#### Algorithm explanation
+
+Use a **Trie (prefix tree)** where each node holds up to 26 children (`'a'..'z'`) and a boolean `isWord` indicating the end of a stored word.
+
+**Data structure**
+
+* `Node`: `Node[] child = new Node[26]; boolean isWord;`
+* `root`: empty node.
+
+**addWord(word)**
+
+1. Set `cur = root`.
+2. For each character `c` in `word`:
+
+    * `idx = c - 'a'`.
+    * If `cur.child[idx] == null`, allocate `cur.child[idx] = new Node()`.
+    * `cur = cur.child[idx]`.
+3. After all characters, set `cur.isWord = true`.
+
+**search(pattern) with wildcard `'.'`**
+Implement a DFS helper `matches(i, node)` that returns `true` iff `pattern[i:]` matches some word in the subtree rooted at `node`.
+
+1. **Base case:** If `i == pattern.length()`, return `node.isWord`.
+2. Let `ch = pattern.charAt(i)`.
+
+    * **If `ch != '.'`:**
+
+        * `idx = ch - 'a'`; let `next = node.child[idx]`.
+        * If `next == null`, return `false`.
+        * Else return `matches(i+1, next)`.
+    * **If `ch == '.'`:**
+
+        * For each non-null child `next` of `node`:
+
+            * If `matches(i+1, next)` is `true`, return `true`.
+        * If none succeed, return `false`.
+
+Call `search(pattern)` as `return matches(0, root)`.
+
+**Correctness intuition**
+
+* `addWord` builds the unique path for the word and marks its terminal node; thus any inserted word has a path ending at `isWord = true`.
+* `search` without wildcards follows exactly that path.
+* On `'.'`, branching over all children explores exactly the set of letters that could occupy that position; the DFS returns `true` iff some branch reaches a
+  terminal `isWord`.
+
+**Edge cases**
+
+* Empty string: `addWord("")` marks `root.isWord = true`; `search("")` checks `root.isWord`.
+* Patterns containing only `'.'` explore at most the depth of the longest stored word; early failure occurs if a required depth is missing.
+* Nonexistent paths terminate early (return `false`) without traversing the entire trie.
+
+**Time Complexity**
+
+* `addWord(w)`: O(|w|) — one child step per character.
+* `search(w)`: Best O(|w|). Worst case with many `'.'` can branch up to 26 ways per wildcard: O(26^d), where `d` is the number of `'.'` (bounded by existing
+  non-null children).
+
+**Space Complexity**
+
+* O(T) for all trie nodes across inserted words (`T` = total characters stored).
 
 ## Graphs
 
