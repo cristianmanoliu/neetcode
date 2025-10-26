@@ -1,5 +1,6 @@
 package io.github.cristianmanoliu.linked_list;
 
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 // https://neetcode.io/problems/merge-k-sorted-linked-lists?list=neetcode150
@@ -11,7 +12,7 @@ public class MergeKSortedLinkedLists {
       return null;
     }
 
-    PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
+    PriorityQueue<ListNode> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a.val));
     for (ListNode head : lists) {
       if (head != null) {
         pq.offer(head);

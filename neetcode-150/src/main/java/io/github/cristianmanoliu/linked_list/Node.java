@@ -2,7 +2,7 @@ package io.github.cristianmanoliu.linked_list;
 
 public class Node {
 
-  int val;
+  final int val;
   Node next;
   Node random;
 

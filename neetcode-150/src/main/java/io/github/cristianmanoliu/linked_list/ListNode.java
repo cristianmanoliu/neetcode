@@ -2,7 +2,7 @@ package io.github.cristianmanoliu.linked_list;
 
 public class ListNode {
 
-  int val;
+  final int val;
   ListNode next;
 
   ListNode(int val) {
