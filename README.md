@@ -98,12 +98,33 @@ Usually O(1) and O(log n) are considered very efficient.
 
 ### [Easy] Contains Duplicate
 
+#### Key takeaway
+
 Scan once using a hash set: for each `x`, if `x` is already in the set return `true`; otherwise add it; if the loop ends, return `false`.
 
 **Time:** O(n)
 **Space:** O(n)
 
+#### Algorithm explanation
+
+Use a hash set to track seen elements as you iterate through the array:
+
+- **Initialize hash set**: Create an empty set to store seen elements
+- **Iterate through array**: For each element in the array:
+    - **Check for duplicate**: If current element exists in the set, return true
+    - **Add to set**: Otherwise, add current element to the set
+- **Return false**: If iteration completes without finding duplicates
+
+The key insight: A hash set provides O(1) average-case lookup and insertion, allowing us to detect duplicates in a single pass.
+
+**Edge cases**: Empty array or single element array returns false.
+
+**Time Complexity**: O(n) - single pass through the array
+**Space Complexity**: O(n) - hash set stores up to n elements
+
 ### [Easy] Valid Anagram
+
+#### Key takeaway
 
 If lengths match, count chars from `s` and decrement with `t`; if any decrement goes negative or a char is missing, return false; else true (use int[26] for
 lowercase).
@@ -111,36 +132,142 @@ lowercase).
 **Time:** O(n)
 **Space:** O(1) with fixed alphabet (otherwise O(k)).
 
-### [Easy] Two Sum
+#### Algorithm explanation
+
+Use a hash map to count character frequencies and compare between two strings:
+
+- **Early check**: If string lengths differ, return false immediately
+- **Count frequencies**: Create hash map counting frequency of each character in first string
+- **Verify second string**: Iterate through second string:
+    - Decrement count for each character in the map
+    - If character not found or count goes below zero, return false
+- **Verify completion**: Check if all counts are zero (or simply verify second string depleted the counts)
+
+Alternative approach: Use an array of size 26 for lowercase letters instead of hash map for better space efficiency.
+
+The key insight: Two strings are anagrams if and only if they have identical character frequency distributions.
+
+**Edge cases**: Empty strings are anagrams of each other. Case sensitivity matters unless specified otherwise.
+
+**Time Complexity**: O(n) - where n is the length of the strings
+**Space Complexity**: O(1) - fixed size (26 characters) or O(k) where k is character set size
+
+### (Easy) Two Sum
+
+#### Key takeaway
 
 Single-pass scan with a hash map `{value → index}`: for each `x` at `i`, if `target - x` is in the map return `[map[target - x], i]`, else store `map[x] = i`.
 
 **Time:** O(n)
 **Space:** O(n)
 
-### [Medium] Group Anagrams
+#### Algorithm explanation
+
+Use a hash map to store complements and find the pair in a single pass:
+
+- **Initialize hash map**: Create empty map to store {number: index} pairs
+- **Iterate through array**: For each element at index i:
+    - **Calculate complement**: target - nums[i]
+    - **Check for complement**: If complement exists in map, return [map[complement], i]
+    - **Store current**: Add nums[i] and its index to the map
+- **Continue**: Repeat until pair is found
+
+The key insight: By storing each number's complement (target - number) as we iterate, we can find the pair in O(n) time instead of O(n²) with nested loops.
+
+**Edge cases**: Problem guarantees exactly one solution exists. Array has at least 2 elements.
+
+**Time Complexity**: O(n) - single pass through the array
+**Space Complexity**: O(n) - hash map stores up to n elements
+
+### (Medium) Group Anagrams
+
+#### Key takeaway
 
 Group strings in a hash map keyed by their canonical form—either `sorted(s)` or a 26-length count tuple—and return the map’s values.
 
 **Time:** O(n·k log k) with sorting, O(n·k) with counts
 **Space:** O(n·k)
 
-### [Medium] Top K Frequent Elements
+#### Algorithm explanation
+
+Use a hash map with sorted strings (or character counts) as keys to group anagrams:
+
+- **Initialize hash map**: Create map where keys represent anagram patterns and values are lists of strings
+- **Iterate through strings**: For each string:
+    - **Generate key**: Sort the string to create a canonical representation (or use character count array)
+    - **Group by key**: Append the original string to the list at that key
+- **Return groups**: Extract all values from the map as the result
+
+Alternative key generation: Use character frequency array of size 26, convert to tuple for hashing (more efficient than sorting).
+
+The key insight: All anagrams share the same sorted representation or character frequency distribution, making them perfect hash keys.
+
+**Edge cases**: Empty string list returns empty result. Single character strings group individually.
+
+**Time Complexity**: O(n × k log k) - where n is number of strings and k is max string length (for sorting); O(n × k) with frequency counting
+**Space Complexity**: O(n × k) - storing all strings in the hash map
+
+### (Medium) Top K Frequent Elements
+
+#### Key takeaway
 
 Count frequencies with a hash map, stream `(freq, val)` into a size-`k` min-heap (evict smallest when >k), then read heap contents as the top-k.
 
 **Time:** O(n log k)
 **Space:** O(n)
 
-### [Medium] Encode and Decode Strings
+#### Algorithm explanation
 
-**One-line:** Encode by concatenating `len(s) + '#' + s` for each string; decode by scanning numbers up to `'#'` to get `len`, then slicing the next `len`
+Use a hash map to count frequencies, then a heap to find the top k elements:
+
+- **Count frequencies**: Create hash map tracking frequency of each element
+- **Initialize min-heap**: Create heap of size k to track top k frequent elements
+- **Process frequencies**: For each unique element and its frequency:
+    - **Add to heap**: Push (frequency, element) onto heap
+    - **Maintain size**: If heap size exceeds k, remove minimum element
+- **Extract result**: Pop all elements from heap to get top k frequent elements
+
+Alternative: Use bucket sort with array of size n+1 where index represents frequency (O(n) time).
+
+The key insight: A min-heap of size k efficiently maintains the k largest frequencies while processing all elements in O(n log k) time.
+
+**Edge cases**: If k equals array length, return all unique elements. Array must have at least k unique elements.
+
+**Time Complexity**: O(n log k) - n elements processed with heap operations of O(log k)
+**Space Complexity**: O(n) - hash map stores all unique elements
+
+### (Medium) Encode and Decode Strings
+
+#### Key takeaway
+
+Encode by concatenating `len(s) + '#' + s` for each string; decode by scanning numbers up to `'#'` to get `len`, then slicing the next `len`
 chars, repeating to the end.
 
 **Time:** O(n) over total characters
 **Space:** O(n) for encoded/decoded output.
 
-### [Medium] Product of Array Except Self
+#### Algorithm explanation
+
+Use length-prefix encoding to handle strings with any characters including delimiters:
+
+- **Encode**: For each string, prepend its length followed by a delimiter (e.g., "4#word5#hello")
+    - Concatenate: length + "#" + string for each string
+    - This handles strings containing any characters since length is explicit
+- **Decode**: Parse the encoded string:
+    - Read length until delimiter "#"
+    - Extract exactly that many characters as the string
+    - Repeat until end of encoded string
+
+The key insight: Length-prefix encoding avoids delimiter collision issues since we know exactly how many characters to read for each string.
+
+**Edge cases**: Empty strings encoded as "0#". Empty list encodes to empty string.
+
+**Time Complexity**: O(n) - where n is total characters across all strings
+**Space Complexity**: O(n) - for storing the encoded/decoded result
+
+### (Medium) Product of Array Except Self
+
+#### Key takeaway
 
 Fill `out[i]` with prefix products in a left-to-right pass, then traverse right-to-left keeping a running suffix product and multiply into `out[i]` to get
 product-except-self.
@@ -148,24 +275,92 @@ product-except-self.
 **Time:** O(n)
 **Space:** O(1) extra (excluding output).
 
-### [Medium] Valid Sudoku
+#### Algorithm explanation
 
-**One-line:** Scan all 81 cells; for each digit at (r,c), compute `b = (r//3)*3 + (c//3)` and check/insert into `rows[r]`, `cols[c]`, and `boxes[b]`; if any
+Use two passes to calculate products without division:
+
+- **Initialize output array**: Create result array of same length, initialized to 1
+- **Left pass**: Traverse left to right:
+    - For each index i, set output[i] = product of all elements to the left
+    - Maintain running product: left_product *= nums[i-1]
+- **Right pass**: Traverse right to left:
+    - For each index i, multiply output[i] by product of all elements to the right
+    - Maintain running product: right_product *= nums[i+1]
+- **Return result**: Output array now contains product of array except self
+
+The key insight: By separating left and right products into two passes, we avoid division and handle zeros correctly while maintaining O(1) extra space.
+
+**Edge cases**: Array length is at least 2. Zeros in array are handled correctly without division.
+
+**Time Complexity**: O(n) - two passes through the array
+**Space Complexity**: O(1) - output array doesn't count as extra space per problem constraints
+
+### (Medium) Valid Sudoku
+
+#### Key takeaway
+
+Scan all 81 cells; for each digit at (r,c), compute `b = (r//3)*3 + (c//3)` and check/insert into `rows[r]`, `cols[c]`, and `boxes[b]`; if any
 already contains it, return `false`, else continue and return `true`.
 
 **Time:** O(1) (81 cells)
 **Space:** O(1) (fixed sets)
 
-### [Medium] Longest Consecutive Sequence
+#### Algorithm explanation
+
+Use hash sets to track numbers seen in rows, columns, and 3×3 sub-boxes:
+
+- **Initialize tracking structures**: Create three collections of sets:
+    - rows: array of 9 sets (one per row)
+    - cols: array of 9 sets (one per column)
+    - boxes: array of 9 sets (one per 3×3 sub-box)
+- **Iterate through board**: For each cell (row, col):
+    - Skip empty cells ('.')
+    - **Calculate box index**: box_index = (row // 3) × 3 + (col // 3)
+    - **Check for duplicate**: If number exists in rows[row], cols[col], or boxes[box_index], return false
+    - **Add to sets**: Add number to respective row, column, and box sets
+- **Return true**: If no duplicates found
+
+The key insight: Using separate hash sets for rows, columns, and boxes allows O(1) duplicate checking in a single pass through the board.
+
+**Edge cases**: Board is always 9×9. Empty cells marked with '.'. Only need to validate filled cells.
+
+**Time Complexity**: O(1) - always checking 81 cells regardless of input
+**Space Complexity**: O(1) - fixed space for 27 sets (9 rows + 9 cols + 9 boxes)
+
+### (Medium) Longest Consecutive Sequence
+
+#### Key takeaway
 
 Put all numbers in a set; for each `x` where `x-1` isn’t in the set, walk forward `x, x+1, …` counting length and update a running maximum.
 
 **Time:** O(n)
 **Space:** O(n)
 
+#### Algorithm explanation
+
+Use a hash set to identify sequence starts and count lengths efficiently:
+
+- **Initialize hash set**: Add all array elements to set for O(1) lookup
+- **Initialize max length**: Track the longest sequence found (start at 0)
+- **Iterate through array**: For each number:
+    - **Check if sequence start**: If (num - 1) not in set, this is a sequence start
+    - **Count sequence length**: Starting from num, increment and check set membership:
+        - While (num + length) exists in set, increment length
+    - **Update maximum**: If current sequence longer than max, update max
+- **Return result**: Maximum sequence length found
+
+The key insight: By only counting from sequence starts (where num-1 doesn't exist), we avoid redundant work and achieve O(n) time despite nested loops.
+
+**Edge cases**: Empty array returns 0. Single element returns 1. Duplicates don't affect result.
+
+**Time Complexity**: O(n) - each number visited at most twice (once in outer loop, once when counting)
+**Space Complexity**: O(n) - hash set stores all unique elements
+
 ## Two Pointers
 
-### [Easy] Valid Palindrome
+### (Easy) Valid Palindrome
+
+#### Key takeaway
 
 Use two pointers `l,r`; while `l<r`, advance past non-alphanumerics on each side, compare `lower(s[l])` vs `lower(s[r])`; if unequal return `false`, else move
 inward; finish → `true`.
@@ -173,14 +368,60 @@ inward; finish → `true`.
 **Time:** O(n)
 **Space:** O(1)
 
-### [Medium] Two Sum II - Input Array Is Sorted
+#### Algorithm explanation
+
+Use a two-pointer approach to check if a string is a palindrome. Start with pointers at both ends of the string:
+
+- **Initialize pointers**: Set left pointer at index 0 and right pointer at the last index
+- **Advance toward center**: While left < right:
+    - Skip non-alphanumeric characters: increment left while character is not alphanumeric
+    - Skip non-alphanumeric characters: decrement right while character is not alphanumeric
+    - **Compare characters**: Compare characters at both pointers (case-insensitive)
+        - If characters match: move left pointer right (left++) and right pointer left (right--)
+        - If characters don't match: return false
+- **Return true**: If pointers cross without finding mismatches
+
+The key insight: By processing from both ends simultaneously and skipping non-alphanumeric characters, we efficiently validate palindrome properties in a single
+pass without modifying the string.
+
+**Edge cases**: Empty string and single character strings are valid palindromes.
+
+**Time Complexity**: O(n) - single pass through the string with both pointers converging
+**Space Complexity**: O(1) - only constant extra space for pointers
+
+### (Medium) Two Sum II - Input Array Is Sorted
+
+#### Key takeaway
 
 Use two pointers `l=0, r=n-1`; while `l<r`, compare `sum = a[l]+a[r]`: if `sum==target` return `[l+1, r+1]`; if `sum<target` increment `l`; else decrement `r`.
 
 **Time:** O(n)
 **Space:** O(1)
 
-### [Medium] 3Sum
+#### Algorithm explanation
+
+Use a two-pointer approach to find two numbers that sum to the target. Leverage the sorted property of the array:
+
+- **Initialize pointers**: Set left pointer at index 0 and right pointer at the last index
+- **Calculate current sum**: While left < right:
+    - Compute sum: current_sum = numbers[left] + numbers[right]
+    - **Check against target**:
+        - If current_sum == target: return [left + 1, right + 1] (1-based indexing)
+        - If current_sum < target: move left pointer right (left++) to increase sum
+        - If current_sum > target: move right pointer left (right--) to decrease sum
+- **Continue**: Repeat until target is found
+
+The key insight: Since the array is sorted, moving the left pointer increases the sum and moving the right pointer decreases it. This guarantees finding the
+solution in O(n) time without needing extra space for a hash map.
+
+**Edge cases**: The problem guarantees exactly one solution exists. Minimum array size is 2.
+
+**Time Complexity**: O(n) - single pass through the array with both pointers converging
+**Space Complexity**: O(1) - only constant extra space for pointers
+
+### (Medium) 3Sum
+
+#### Key takeaway
 
 Sort the array; for each index `i` (skipping duplicates), run a two-pointer scan on `(i+1 … n-1)` to find pairs summing to `-nums[i]`, collecting triplets and
 skipping duplicate `left/right` values.
@@ -188,25 +429,111 @@ skipping duplicate `left/right` values.
 **Time:** O(n²) (dominated by the outer loop × two-pointer)
 **Space:** O(1) extra (or O(n) depending on sort).
 
-### [Medium] Container With Most Water
+#### Algorithm explanation
+
+Sort the array to enable efficient duplicate handling and two-pointer searching. Iterate through the array fixing one element at a time:
+
+- **Sort the array**: Enable ordered traversal and efficient duplicate skipping
+- **Iterate with fixed element**: For each index i from 0 to n-3:
+    - Skip duplicate fixed elements: if i > 0 and nums[i] == nums[i-1], continue
+    - Set target: target = -nums[i]
+    - **Initialize two pointers**: left = i + 1, right = n - 1
+    - **Two-pointer search**: While left < right:
+        - Calculate sum: current_sum = nums[left] + nums[right]
+        - If current_sum == target:
+            - Add triplet [nums[i], nums[left], nums[right]] to result
+            - Move both pointers: left++, right--
+            - Skip duplicate left values: while left < right and nums[left] == nums[left-1], increment left
+            - Skip duplicate right values: while left < right and nums[right] == nums[right+1], decrement right
+        - If current_sum < target: move left pointer right (left++)
+        - If current_sum > target: move right pointer left (right--)
+- **Return result**: List of unique triplets
+
+The key insight: Sorting allows us to use the two-pointer technique efficiently and skip duplicates systematically. For a fixed first element, the problem
+reduces to finding two numbers that sum to a target, which is solvable in O(n) time with two pointers.
+
+**Edge cases**: Arrays with fewer than 3 elements return empty result.
+
+**Time Complexity**: O(n²) - O(n log n) for sorting + O(n²) for nested iteration (n iterations × O(n) two-pointer search)
+**Space Complexity**: O(1) or O(n) - depending on sorting algorithm used (not counting output space)
+
+### (Medium) Container With Most Water
+
+#### Key takeaway
 
 Two pointers `l=0, r=n-1`; at each step update `max = max(max, min(h[l],h[r])*(r-l))` and move inward the pointer at the shorter height, until `l==r`.
 
 **Time:** O(n)
 **Space:** O(1)
 
-### [Hard] Trapping Rain Water
+#### Algorithm explanation
+
+Use a two-pointer approach to find the maximum area. Start with pointers at both ends of the array:
+
+- **Initialize pointers and variables**: Set left pointer at index 0 and right pointer at the last index, initialize max_area to 0
+- **Calculate current area**: Compute area using formula: area = min(height[left], height[right]) × (right - left)
+- **Update maximum**: If current area exceeds max_area, update max_area
+- **Move pointer strategically**:
+    - If height[left] < height[right]: move left pointer right (left++)
+    - Else: move right pointer left (right--)
+- **Continue**: Repeat until left and right pointers meet
+
+The key insight: Moving the pointer pointing to the shorter line is optimal because the area is constrained by the shorter height. Moving the taller line's
+pointer would only decrease width without potential for increasing height, guaranteeing a smaller area.
+
+**Edge cases**: Array must have at least 2 elements. All heights of 0 return 0 area.
+
+**Time Complexity**: O(n) - single pass through the array with both pointers converging
+**Space Complexity**: O(1) - only constant extra space for pointers and tracking variables
+
+### (Hard) Trapping Rain Water
+
+#### Key takeaway
 
 Two pointers with running maxima: keep `l,r` and `leftMax,rightMax`; at each step, move the side with the smaller height, add `(leftMax - h[l])` or
 `(rightMax - h[r])` if positive, updating the respective max, until `l==r`.
 
-**Time:** O(n)**Space:** O(1)
+**Time:** O(n)
+**Space:** O(1)
+
+#### Algorithm explanation
+
+Use a two-pointer approach to calculate trapped water in a single pass. Start with pointers at both ends of the array:
+
+- **Initialize pointers and variables**: Set left and right pointers at array boundaries, and left_max and right_max to 0, total water to 0
+- **Compare boundary heights**: While left < right, compare height[left] and height[right]
+- **Process left side** (if height[left] < height[right]):
+    - If height[left] >= left_max: update left_max
+    - Else: add (left_max - height[left]) to total water
+    - Move left pointer right
+- **Process right side** (if height[left] >= height[right]):
+    - If height[right] >= right_max: update right_max
+    - Else: add (right_max - height[right]) to total water
+    - Move right pointer left
+- **Continue**: Repeat until pointers meet
+
+The key insight: At each step, water trapped at current position depends on the minimum of the maximum heights seen from both sides. We process from the side
+with the smaller height because that height definitively bounds the water level at that position—we don't need to know the exact maximum from the other side
+since we know it's at least as tall.
+
+**Edge cases**: Arrays with fewer than 3 elements cannot trap water. All equal heights trap 0 water.
+
+**Time Complexity**: O(n) - single pass through the array with both pointers
+**Space Complexity**: O(1) - only constant extra space
 
 ## Sliding Window
 
-### [Easy] Best Time to Buy and Sell Stock
+### (Easy) Best Time to Buy and Sell Stock
 
-**Main idea**:
+#### Key takeaway
+
+Scan prices once, tracking `minSoFar`; at each price compute `profit = price - minSoFar`, update `maxProfit`, and update `minSoFar` when you see a new low.
+
+**Time:** O(n)
+**Space:** O(1)
+
+#### Algorithm explanation
+
 Use a single pass through the array to track the minimum price seen so far and calculate the maximum profit at each step. Iterate through the prices:
 
 - **Initialize variables**: Set minimum price to infinity (or first price) and maximum profit to 0
@@ -219,9 +546,18 @@ Use a single pass through the array to track the minimum price seen so far and c
 **Time Complexity**: O(n) - single pass through the array
 **Space Complexity**: O(1) - only constant extra space for tracking minimum price and maximum profit
 
-### [Medium] Longest Substring Without Repeating Characters
+### (Medium) Longest Substring Without Repeating Characters
 
-**Main idea**:
+#### Key takeaway
+
+Slide a window with pointers `l` and `r`, keeping a map `last[c] → last index`; for each `s[r]`, set `l = max(l, last[s[r]]+1)` if seen, update
+`last[s[r]] = r`, and track `maxLen = max(maxLen, r-l+1)`.
+
+**Time:** O(n)
+**Space:** O(min(n, m)) (m = alphabet size).
+
+#### Algorithm explanation
+
 Use a sliding window approach with two pointers (left and right) to represent the current substring. Iterate through the string:
 
 - **Initialize hash set**: Track characters currently in the window
@@ -236,9 +572,18 @@ Use a sliding window approach with two pointers (left and right) to represent th
 **Time Complexity**: O(n) - each character is visited at most twice (once by right pointer, once by left pointer)
 **Space Complexity**: O(min(n, m)) - where n is string length and m is character set size (typically O(1) for fixed alphabets)
 
-### [Medium] Longest Repeating Character Replacement
+### (Medium) Longest Repeating Character Replacement
 
-**Main idea**:
+#### Key takeaway
+
+Slide a window, update count of `s[r]` and `maxCount`; while `(r-l+1) - maxCount > k`, decrement count of `s[l]` and advance `l`; track
+`best = max(best, r-l+1)`.
+
+**Time:** O(n)
+**Space:** O(1) for fixed alphabet (else O(m)).
+
+#### Algorithm explanation
+
 Use a sliding window approach with two pointers (left and right) to represent the current substring. Iterate through the string:
 
 - **Initialize frequency map**: Track character counts in the current window
@@ -253,9 +598,18 @@ Use a sliding window approach with two pointers (left and right) to represent th
 **Time Complexity**: O(n) - single pass through the string with each character processed at most twice
 **Space Complexity**: O(1) - fixed-size frequency map (26 characters for uppercase letters) or O(k) for variable character sets
 
-### [Medium] Permutation in String
+### (Medium) Permutation in String
 
-**Main idea**:
+#### Key takeaway
+
+If `|s1| > |s2|` return `false`; build 26-counts for `s1`, slide a window of length `|s1|` over `s2` updating counts (increment enter, decrement
+exit); if any window’s counts equal `s1`’s counts return `true`, else `false`.
+
+**Time:** O(n) over `s2` (O(1) per step with 26 buckets)
+**Space:** O(1) for fixed lowercase alphabet (else O(k) for alphabet size `k`)
+
+#### Algorithm explanation
+
 Use a sliding window approach with two pointers (left and right) to represent the current substring. Iterate through the string:
 
 - **Initialize frequency maps**: Track character counts for the target string (s1) and current window in s2
@@ -271,9 +625,18 @@ Frequency counts can be compared using arrays of size 26 (for lowercase letters)
 **Time Complexity**: O(n) - single pass through s2, where n is the length of s2
 **Space Complexity**: O(1) - fixed-size frequency arrays (26 characters) or O(k) for hash maps where k is the character set size
 
-### [Hard] Minimum Window Substring
+### (Hard) Minimum Window Substring
 
-**Main idea**:
+#### Key takeaway
+
+Slide `r` over `s`, updating window counts and a `formed` tally; whenever `formed == required`, shrink from `l` while valid to minimize and record the best
+window, then continue until `r` ends and return the smallest found (or `""`).
+
+**Time:** O(m + n)
+**Space:** O(k) (distinct chars in `t`).
+
+#### Algorithm explanation
+
 Use a sliding window approach with two pointers (left and right) to represent the current substring. Iterate through the string:
 
 - **Initialize frequency maps**: Track character counts for the target string and current window
@@ -285,9 +648,18 @@ Use a sliding window approach with two pointers (left and right) to represent th
 **Time Complexity**: O(m + n) — where m is target length and n is source string length
 **Space Complexity**: O(k) — where k is the number of distinct required characters (bounded by the alphabet size)
 
-### [Hard] Sliding Window Maximum
+### (Hard) Sliding Window Maximum
 
-**Main idea**:
+#### Key takeaway
+
+Maintain a deque of indices with decreasing `nums` values: for each `i`, pop front if `i - deque[0] == k`, pop back while `nums[i] ≥ nums[deque[-1]]`, push `i`,
+and when `i ≥ k-1` append `nums[deque[0]]` to the output.
+
+**Time:** O(n)
+**Space:** O(k)
+
+#### Algorithm explanation
+
 Use a deque (double-ended queue) to store indices of array elements. Iterate through the array:
 
 - **Maintain decreasing order**: The deque keeps indices in decreasing order of their corresponding values
@@ -301,9 +673,17 @@ Use a deque (double-ended queue) to store indices of array elements. Iterate thr
 
 ## Stack
 
-### [Easy] Valid Parentheses
+### (Easy) Valid Parentheses
 
-**Main idea**:
+#### Key takeaway
+
+Scan characters with a stack: push opens; on a close `c`, if stack empty or `match[c] != stack.pop()` return `false`; after the scan return `stack.isEmpty()`.
+
+**Time:** O(n)
+**Space:** O(n)
+
+#### Algorithm explanation
+
 Use a stack to track opening parentheses. Iterate through each character:
 
 - **Opening bracket** (`'('`, `'{'`, `'['`): Push onto the stack
@@ -317,9 +697,18 @@ After processing all characters, return true if the stack is empty (all brackets
 **Time Complexity**: O(n) - single pass through the string
 **Space Complexity**: O(n) - stack stores at most n/2 opening brackets
 
-### [Medium] Min Stack
+### (Medium) Min Stack
 
-**Main idea**:
+#### Key takeaway
+
+For each `push(x)` push to main stack and also push `min(x, minStack.top())` (or `x` if empty); `pop()` pops both stacks; `top()` returns main.top(); `getMin()`
+returns minStack.top().
+
+**Time:** O(1) for all operations
+**Space:** O(n) (parallel min stack)
+
+#### Algorithm explanation
+
 Use two stacks to track both values and minimum values at each state:
 
 - **Initialize two stacks**: Create a main stack for values and a min stack for tracking minimums
@@ -345,9 +734,18 @@ Each position in the min stack represents the minimum of all elements at or belo
 **Time Complexity**: O(1) - all operations (push, pop, top, getMin) are constant time
 **Space Complexity**: O(n) - worst case, min stack stores n elements (same as main stack)
 
-### [Medium] Evaluate Reverse Polish Notation
+### (Medium) Evaluate Reverse Polish Notation
 
-**Main idea**:
+#### Key takeaway
+
+Scan tokens with a stack; push numbers, and on an operator pop `b` then `a`, compute `a op b` (with division truncating toward zero), push the result; return
+the lone stack value.
+
+**Time:** O(n)
+**Space:** O(n)
+
+#### Algorithm explanation
+
 Use a stack to evaluate expressions in Reverse Polish Notation (postfix). Iterate through the tokens:
 
 - **Initialize stack**: Create empty stack to store operands
@@ -370,9 +768,17 @@ second operand), then 13 (first operand), and compute 13 / 5 = 2.
 **Time Complexity**: O(n) - single pass through all tokens
 **Space Complexity**: O(n) - stack stores at most n/2 operands
 
-### [Medium] Generate Parentheses
+### (Medium) Generate Parentheses
 
-**Main idea**:
+#### Key takeaway
+
+Backtrack building the string: add `'('` if `open < n`, add `')'` if `close < open`, and when `open == close == n` append to results.
+
+**Time:** O(4^n/√n) (≈ Catalan count; equivalently O(Cₙ·n) including output length)
+**Space:** O(n) recursion stack (excluding output)
+
+#### Algorithm explanation
+
 Use backtracking (recursive DFS) to build all valid combinations of parentheses. Track the count of opening and closing parentheses:
 
 - **Initialize result list**: Create empty list to store all valid combinations
@@ -394,9 +800,17 @@ at every step. We can add an opening parenthesis as long as we haven't used all 
 **Time Complexity**: O(4^n / √n) - this is the nth Catalan number, representing the count of valid combinations
 **Space Complexity**: O(n) - recursion stack depth for building strings of length 2n
 
-### [Medium] Daily Temperatures
+### (Medium) Daily Temperatures
 
-**Main idea**:
+#### Key takeaway
+
+Maintain a decreasing stack of indices; for each `i`, while `T[i] > T[stack.top]` pop `j` and set `ans[j] = i - j`, then push `i`; return `ans`.
+
+**Time:** O(n)
+**Space:** O(n)
+
+#### Algorithm explanation
+
 Use a monotonic decreasing stack to track indices of temperatures waiting for a warmer day. Iterate through the temperatures array:
 
 - **Initialize result array**: Create array of same length, filled with 0s (default: no warmer day)
@@ -430,9 +844,18 @@ when that order is violated.
 **Time Complexity**: O(n) - each index is pushed and popped from stack at most once
 **Space Complexity**: O(n) - stack stores at most n indices in worst case (decreasing temperatures)
 
-### [Medium] Car Fleet
+### (Medium) Car Fleet
 
-**Main idea**:
+#### Key takeaway
+
+Sort cars by position descending; scan from closest to target, compute `t=(target−pos)/speed` for each, and if `t` exceeds the last recorded fleet time start a
+new fleet and set `last=t` (else it merges).
+
+**Time:** O(n log n) (sorting dominates)
+**Space:** O(n) for pairs/stack (can be O(1) extra with in-place sort + counter)
+
+#### Algorithm explanation
+
 Sort cars by position and calculate arrival times to determine how many fleets form. Use a stack or counter to track fleets:
 
 - **Pair positions with speeds**: Create list of (position, speed) pairs for each car
@@ -466,9 +889,18 @@ independent fleets.
 **Time Complexity**: O(n log n) - dominated by sorting the cars by position
 **Space Complexity**: O(n) - storing the sorted pairs and stack of arrival times
 
-### [Hard] Largest Rectangle in Histogram
+### (Hard) Largest Rectangle in Histogram
 
-**Main idea**:
+#### Key takeaway
+
+Append a sentinel 0 height and scan indices with a stack of increasing-height indices; for each `i`, while `heights[i] < heights[stack.top]`, pop `j`, set
+`h = heights[j]`, `left = stack.top` (or `-1` if empty), `width = i - left - 1`, update `max = max(max, h*width)`; then push `i`, and at the end return `max`.
+
+**Time:** O(n)
+**Space:** O(n) (stack)
+
+#### Algorithm explanation
+
 Use a monotonic increasing stack to efficiently find the largest rectangle. For each bar, determine how far left and right it can extend:
 
 - **Initialize variables**: Create empty stack to store indices, and max_area = 0
@@ -501,9 +933,18 @@ maximum rectangle area for each bar as the minimum height in O(n) time.
 
 ## Binary Search
 
-### [Easy] Binary Search
+### (Easy) Binary Search
 
-**Main idea**:
+#### Key takeaway
+
+While `l ≤ r`, set `m = l + (r-l)//2`; if `nums[m] == target` return `m`, else if `nums[m] < target` set `l = m+1`, else set `r = m-1`; if loop ends return
+`-1`.
+
+**Time:** O(log n)
+**Space:** O(1)
+
+#### Algorithm explanation
+
 Use divide and conquer to efficiently search for a target value in a sorted array by repeatedly halving the search space:
 
 - **Initialize pointers**: Set left pointer at index 0 and right pointer at last index (n-1)
@@ -527,9 +968,18 @@ vice versa).
 **Time Complexity**: O(log n) - search space halves with each iteration
 **Space Complexity**: O(1) - only uses constant extra space for pointers (iterative version)
 
-### [Medium] Search in 2D Matrix
+### (Medium) Search in 2D Matrix
 
-**Main idea**:
+#### Key takeaway
+
+Treat matrix as a flat sorted array: binary search `l=0..m·n−1`, with `mid = l + (r−l)//2`, map to `row = mid // n`, `col = mid % n`; compare `matrix[row][col]`
+to `target` to move `l/r`, returning `true` if equal, else `false` at end.
+
+**Time:** O(log(m·n))
+**Space:** O(1)
+
+#### Algorithm explanation
+
 Treat the 2D matrix as a virtual 1D sorted array and perform binary search by converting indices between 1D and 2D coordinates:
 
 - **Initialize pointers**: Set left = 0 and right = m × n - 1 (total elements - 1)
@@ -557,9 +1007,18 @@ false.
 **Time Complexity**: O(log(m × n)) - binary search on m × n elements
 **Space Complexity**: O(1) - only using constant space for pointers and coordinate conversion
 
-### [Medium] Koko Eating Bananas
+### (Medium) Koko Eating Bananas
 
-**Main idea**:
+#### Key takeaway
+
+Binary search eating speed `k` in `[1, max(piles)]`; for each mid, compute `hours = Σ ((pile + mid − 1) // mid)`; if `hours ≤ h` set `right = mid`, else
+`left = mid + 1`; return `left`.
+
+**Time:** O(n · log max(piles))
+**Space:** O(1)
+
+#### Algorithm explanation
+
 Use binary search on the answer space (eating speed) to find the minimum speed that allows finishing all bananas within h hours:
 
 - **Define search space**: Set left = 1 (minimum speed) and right = max(piles) (maximum useful speed)
@@ -585,9 +1044,17 @@ hour per pile regardless.
 **Time Complexity**: O(n × log m) - where n is number of piles and m is max(piles), binary search runs log m iterations, each checking all n piles
 **Space Complexity**: O(1) - only using constant space for variables
 
-### [Medium] Find Minimum in Rotated Sorted Array
+### (Medium) Find Minimum in Rotated Sorted Array
 
-**Main idea**:
+#### Key takeaway
+
+While `l < r`, if `nums[l] < nums[r]` return `nums[l]`; set `m = l + (r-l)//2`; if `nums[m] > nums[r]` set `l = m+1` else `r = m`; finally return `nums[l]`.
+
+**Time:** O(log n)
+**Space:** O(1)
+
+#### Algorithm explanation
+
 Use modified binary search to find the minimum element by identifying which half is sorted and eliminating the sorted half:
 
 - **Initialize pointers**: Set left = 0 and right = n - 1
@@ -620,9 +1087,18 @@ mid. If we compared with left, the logic becomes more complex with edge cases.
 **Time Complexity**: O(log n) - binary search eliminates half the search space each iteration
 **Space Complexity**: O(1) - only using constant space for pointers
 
-### [Medium] Search in Rotated Sorted Array
+### (Medium) Search in Rotated Sorted Array
 
-**Main idea**:  
+#### Key takeaway
+
+While `l ≤ r`, set `m = l + (r−l)//2`; if `nums[m] == target` return `m`; if `nums[l] ≤ nums[m]` (left sorted) and `nums[l] ≤ target < nums[m]` set `r = m−1`
+else `l = m+1`; otherwise (right sorted) if `nums[m] < target ≤ nums[r]` set `l = m+1` else `r = m−1`; if loop ends return `-1`.
+
+**Time:** O(log n)
+**Space:** O(1)
+
+#### Algorithm explanation
+
 Use binary search while exploiting that at least one half of a rotated sorted array (with distinct elements) is always sorted; decide which half is sorted using
 nums[left] and nums[mid], then narrow the search to the half that can contain the target.
 
@@ -658,9 +1134,18 @@ variant.
 **Time Complexity**: O(log n) — each iteration halves the search interval by discarding one side  
 **Space Complexity**: O(1) — only constant extra variables for indices and comparisons are used
 
-### [Medium] Time Based Key-Value Store
+### (Medium) Time Based Key-Value Store
 
-**Main idea**:  
+#### Key takeaway
+
+Keep `map: key → [(t, val)]` in increasing `t`; `set` appends `(t,val)`, `get` binary-searches the key’s list for the rightmost `t ≤ query` and returns its
+value (or `""` if none).
+
+**Time:** `set` amortized O(1); `get` O(log m) per key (m = versions for that key)
+**Space:** O(N) total over all sets
+
+#### Algorithm explanation
+
 Use a hashmap from key to a timestamp-sorted list of (timestamp, value) pairs; on set, append because timestamps per key are strictly increasing, and on get,
 binary search to find the value with the largest timestamp ≤ t in O(log m), where m is the number of versions for that key.
 
@@ -689,9 +1174,18 @@ respectively.
 **Time Complexity**: set in amortized \(O(1)\); get in \(O(\log m)\) per query over the versions of that key.
 **Space Complexity**: \(O(N)\) total across all keys, where \(N\) is the number of set operations.
 
-### [Hard] Median of Two Sorted Arrays
+### (Hard) Median of Two Sorted Arrays
 
-**Main idea**:  
+#### Key takeaway
+
+Binary search the cut in the smaller array to find partitions `cutX, cutY` with `leftX ≤ rightY` and `leftY ≤ rightX`; when satisfied, return `max(leftX,leftY)`
+if total is odd, else `(max(leftX,leftY)+min(rightX,rightY))/2`, using −∞/+∞ sentinels at boundaries.
+
+**Time:** O(log min(m, n))
+**Space:** O(1)
+
+#### Algorithm explanation
+
 Use binary search on the partition index of the smaller array to split both arrays into left and right halves such that every element on the left is ≤ every
 element on the right; the median is then determined from the boundary elements in O(log min(m,n)) time.
 
@@ -741,9 +1235,10 @@ within bounds).
 
 ## Linked List
 
-### [Easy] Reverse Linked List
+### (Easy) Reverse Linked List
 
-**Main idea**:  
+#### Algorithm explanation
+
 Iterate once with three pointers (`prev`, `curr`, `next`): save `next`, set `curr.next = prev`, then advance `prev = curr` and `curr = next`; when `curr`
 becomes `null`, `prev` is the new head, producing an in-place reversal in O(n) time.
 
@@ -778,9 +1273,10 @@ recursion.
 **Time Complexity**: O(n) — each node is visited and relinked once  
 **Space Complexity**: O(1) — only three pointer variables are used
 
-### [Easy] Merge Two Sorted Lists
+### (Easy) Merge Two Sorted Lists
 
-**Main idea**:
+#### Algorithm explanation
+
 Use a **dummy (sentinel) head** and a **tail** pointer. Compare the heads of both sorted lists, splice the smaller node to `tail.next`, advance that list’s
 pointer, and move `tail` forward. When one list ends, append the remainder of the other. Return `dummy.next`. Runs in **O(m+n)** time, **O(1)** extra space, and
 is **stable** if ties pick from the first list.
@@ -803,9 +1299,10 @@ The sentinel `dummy` removes head special-casing; maintaining the invariant that
 **Time Complexity**: O(m+n)
 **Space Complexity**: O(1)
 
-### [Medium] Reorder List
+### (Medium) Reorder List
 
-**Main idea**:
+#### Algorithm explanation
+
 Transform the list in-place using **Split → Reverse → Weave**:
 
 * **Find middle**: Use slow/fast pointers to locate the end of the first half (slow stops at mid-left for even length)
@@ -822,9 +1319,10 @@ Empty list, single node, or two nodes require no changes. For odd lengths, the f
 **Time Complexity**: O(n) — one pass to find middle, one to reverse, one to weave
 **Space Complexity**: O(1) — in-place with a constant number of pointers
 
-### [Medium] Remove Nth Node From End of List
+### (Medium) Remove Nth Node From End of List
 
-**Main idea**:
+#### Algorithm explanation
+
 Use a **dummy head** and two pointers to keep a fixed gap of **n** nodes, so the **slow** pointer lands just **before** the node to remove.
 
 * **Create dummy**: Set `dummy.next = head`. Initialize `slow = dummy`, `fast = dummy`.
