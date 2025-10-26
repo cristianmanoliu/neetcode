@@ -1373,6 +1373,36 @@ behavior depends on your contract (common approach: no-op / return original head
 **Time Complexity**: O(n) — one pass after the initial offset
 **Space Complexity**: O(1) — constant extra pointers
 
+### (Medium) Copy List with Random Pointer
+
+#### Key takeaway
+
+Interleave clones between original nodes (`A → A' → B → B' → …`), set each clone’s `random` via `clone.random = original.random?.next`, then detach the clone
+list while restoring the original.
+
+**Time:** O(n)
+**Space:** O(1) extra (excluding the output list)
+
+#### Algorithm explanation
+
+Use a **three-pass interleaving strategy** to copy both `next` and `random` pointers without extra hash maps:
+
+1. **Interleave clones**
+   For each original node `x`, create `x'` and splice it after `x`: set `x'.next = x.next` and `x.next = x'`.
+   The list becomes `x1 → x1' → x2 → x2' → …`.
+
+2. **Set random pointers**
+   For each original `x`, its clone is `x' = x.next`.
+
+    * If `x.random != null`, set `x'.random = x.random.next` (the clone of `x.random`).
+    * Otherwise, set `x'.random = null`.
+
+3. **Detach and restore**
+   Walk the interleaved list to extract the clone chain and restore the original list:
+
+    * Append each `x'` to the new list.
+    * Restore `x.next` to the original successor (the node after `x'`).
+
 ## Trees
 
 TODO
