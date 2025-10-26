@@ -98,187 +98,70 @@ Usually O(1) and O(log n) are considered very efficient.
 
 ### [Easy] Contains Duplicate
 
-**Main idea**:
-Use a hash set to track seen elements as you iterate through the array:
+Scan once using a hash set: for each `x`, if `x` is already in the set return `true`; otherwise add it; if the loop ends, return `false`.
 
-- **Initialize hash set**: Create an empty set to store seen elements
-- **Iterate through array**: For each element in the array:
-    - **Check for duplicate**: If current element exists in the set, return true
-    - **Add to set**: Otherwise, add current element to the set
-- **Return false**: If iteration completes without finding duplicates
-
-The key insight: A hash set provides O(1) average-case lookup and insertion, allowing us to detect duplicates in a single pass.
-
-**Edge cases**: Empty array or single element array returns false.
-
-**Time Complexity**: O(n) - single pass through the array
-**Space Complexity**: O(n) - hash set stores up to n elements
+**Time:** O(n)
+**Space:** O(n)
 
 ### [Easy] Valid Anagram
 
-**Main idea**:
-Use a hash map to count character frequencies and compare between two strings:
+If lengths match, count chars from `s` and decrement with `t`; if any decrement goes negative or a char is missing, return false; else true (use int[26] for
+lowercase).
 
-- **Early check**: If string lengths differ, return false immediately
-- **Count frequencies**: Create hash map counting frequency of each character in first string
-- **Verify second string**: Iterate through second string:
-    - Decrement count for each character in the map
-    - If character not found or count goes below zero, return false
-- **Verify completion**: Check if all counts are zero (or simply verify second string depleted the counts)
-
-Alternative approach: Use an array of size 26 for lowercase letters instead of hash map for better space efficiency.
-
-The key insight: Two strings are anagrams if and only if they have identical character frequency distributions.
-
-**Edge cases**: Empty strings are anagrams of each other. Case sensitivity matters unless specified otherwise.
-
-**Time Complexity**: O(n) - where n is the length of the strings
-**Space Complexity**: O(1) - fixed size (26 characters) or O(k) where k is character set size
+**Time:** O(n)
+**Space:** O(1) with fixed alphabet (otherwise O(k)).
 
 ### [Easy] Two Sum
 
-**Main idea**:
-Use a hash map to store complements and find the pair in a single pass:
+Single-pass scan with a hash map `{value → index}`: for each `x` at `i`, if `target - x` is in the map return `[map[target - x], i]`, else store `map[x] = i`.
 
-- **Initialize hash map**: Create empty map to store {number: index} pairs
-- **Iterate through array**: For each element at index i:
-    - **Calculate complement**: target - nums[i]
-    - **Check for complement**: If complement exists in map, return [map[complement], i]
-    - **Store current**: Add nums[i] and its index to the map
-- **Continue**: Repeat until pair is found
-
-The key insight: By storing each number's complement (target - number) as we iterate, we can find the pair in O(n) time instead of O(n²) with nested loops.
-
-**Edge cases**: Problem guarantees exactly one solution exists. Array has at least 2 elements.
-
-**Time Complexity**: O(n) - single pass through the array
-**Space Complexity**: O(n) - hash map stores up to n elements
+**Time:** O(n)
+**Space:** O(n)
 
 ### [Medium] Group Anagrams
 
-**Main idea**:
-Use a hash map with sorted strings (or character counts) as keys to group anagrams:
+Group strings in a hash map keyed by their canonical form—either `sorted(s)` or a 26-length count tuple—and return the map’s values.
 
-- **Initialize hash map**: Create map where keys represent anagram patterns and values are lists of strings
-- **Iterate through strings**: For each string:
-    - **Generate key**: Sort the string to create a canonical representation (or use character count array)
-    - **Group by key**: Append the original string to the list at that key
-- **Return groups**: Extract all values from the map as the result
-
-Alternative key generation: Use character frequency array of size 26, convert to tuple for hashing (more efficient than sorting).
-
-The key insight: All anagrams share the same sorted representation or character frequency distribution, making them perfect hash keys.
-
-**Edge cases**: Empty string list returns empty result. Single character strings group individually.
-
-**Time Complexity**: O(n × k log k) - where n is number of strings and k is max string length (for sorting); O(n × k) with frequency counting
-**Space Complexity**: O(n × k) - storing all strings in the hash map
+**Time:** O(n·k log k) with sorting, O(n·k) with counts
+**Space:** O(n·k)
 
 ### [Medium] Top K Frequent Elements
 
-**Main idea**:
-Use a hash map to count frequencies, then a heap to find the top k elements:
+Count frequencies with a hash map, stream `(freq, val)` into a size-`k` min-heap (evict smallest when >k), then read heap contents as the top-k.
 
-- **Count frequencies**: Create hash map tracking frequency of each element
-- **Initialize min-heap**: Create heap of size k to track top k frequent elements
-- **Process frequencies**: For each unique element and its frequency:
-    - **Add to heap**: Push (frequency, element) onto heap
-    - **Maintain size**: If heap size exceeds k, remove minimum element
-- **Extract result**: Pop all elements from heap to get top k frequent elements
-
-Alternative: Use bucket sort with array of size n+1 where index represents frequency (O(n) time).
-
-The key insight: A min-heap of size k efficiently maintains the k largest frequencies while processing all elements in O(n log k) time.
-
-**Edge cases**: If k equals array length, return all unique elements. Array must have at least k unique elements.
-
-**Time Complexity**: O(n log k) - n elements processed with heap operations of O(log k)
-**Space Complexity**: O(n) - hash map stores all unique elements
+**Time:** O(n log k)
+**Space:** O(n)
 
 ### [Medium] Encode and Decode Strings
 
-**Main idea**:
-Use length-prefix encoding to handle strings with any characters including delimiters:
+**One-line:** Encode by concatenating `len(s) + '#' + s` for each string; decode by scanning numbers up to `'#'` to get `len`, then slicing the next `len`
+chars, repeating to the end.
 
-- **Encode**: For each string, prepend its length followed by a delimiter (e.g., "4#word5#hello")
-    - Concatenate: length + "#" + string for each string
-    - This handles strings containing any characters since length is explicit
-- **Decode**: Parse the encoded string:
-    - Read length until delimiter "#"
-    - Extract exactly that many characters as the string
-    - Repeat until end of encoded string
-
-The key insight: Length-prefix encoding avoids delimiter collision issues since we know exactly how many characters to read for each string.
-
-**Edge cases**: Empty strings encoded as "0#". Empty list encodes to empty string.
-
-**Time Complexity**: O(n) - where n is total characters across all strings
-**Space Complexity**: O(n) - for storing the encoded/decoded result
+**Time:** O(n) over total characters
+**Space:** O(n) for encoded/decoded output.
 
 ### [Medium] Product of Array Except Self
 
-**Main idea**:
-Use two passes to calculate products without division:
+Fill `out[i]` with prefix products in a left-to-right pass, then traverse right-to-left keeping a running suffix product and multiply into `out[i]` to get
+product-except-self.
 
-- **Initialize output array**: Create result array of same length, initialized to 1
-- **Left pass**: Traverse left to right:
-    - For each index i, set output[i] = product of all elements to the left
-    - Maintain running product: left_product *= nums[i-1]
-- **Right pass**: Traverse right to left:
-    - For each index i, multiply output[i] by product of all elements to the right
-    - Maintain running product: right_product *= nums[i+1]
-- **Return result**: Output array now contains product of array except self
-
-The key insight: By separating left and right products into two passes, we avoid division and handle zeros correctly while maintaining O(1) extra space.
-
-**Edge cases**: Array length is at least 2. Zeros in array are handled correctly without division.
-
-**Time Complexity**: O(n) - two passes through the array
-**Space Complexity**: O(1) - output array doesn't count as extra space per problem constraints
+**Time:** O(n)
+**Space:** O(1) extra (excluding output).
 
 ### [Medium] Valid Sudoku
 
-**Main idea**:
-Use hash sets to track numbers seen in rows, columns, and 3×3 sub-boxes:
+**One-line:** Scan all 81 cells; for each digit at (r,c), compute `b = (r//3)*3 + (c//3)` and check/insert into `rows[r]`, `cols[c]`, and `boxes[b]`; if any
+already contains it, return `false`, else continue and return `true`.
 
-- **Initialize tracking structures**: Create three collections of sets:
-    - rows: array of 9 sets (one per row)
-    - cols: array of 9 sets (one per column)
-    - boxes: array of 9 sets (one per 3×3 sub-box)
-- **Iterate through board**: For each cell (row, col):
-    - Skip empty cells ('.')
-    - **Calculate box index**: box_index = (row // 3) × 3 + (col // 3)
-    - **Check for duplicate**: If number exists in rows[row], cols[col], or boxes[box_index], return false
-    - **Add to sets**: Add number to respective row, column, and box sets
-- **Return true**: If no duplicates found
-
-The key insight: Using separate hash sets for rows, columns, and boxes allows O(1) duplicate checking in a single pass through the board.
-
-**Edge cases**: Board is always 9×9. Empty cells marked with '.'. Only need to validate filled cells.
-
-**Time Complexity**: O(1) - always checking 81 cells regardless of input
-**Space Complexity**: O(1) - fixed space for 27 sets (9 rows + 9 cols + 9 boxes)
+**Time:** O(1) (81 cells)
+**Space:** O(1) (fixed sets)
 
 ### [Medium] Longest Consecutive Sequence
 
-**Main idea**:
-Use a hash set to identify sequence starts and count lengths efficiently:
+Put all numbers in a set; for each `x` where `x-1` isn’t in the set, walk forward `x, x+1, …` counting length and update a running maximum.
 
-- **Initialize hash set**: Add all array elements to set for O(1) lookup
-- **Initialize max length**: Track longest sequence found (start at 0)
-- **Iterate through array**: For each number:
-    - **Check if sequence start**: If (num - 1) not in set, this is a sequence start
-    - **Count sequence length**: Starting from num, increment and check set membership:
-        - While (num + length) exists in set, increment length
-    - **Update maximum**: If current sequence longer than max, update max
-- **Return result**: Maximum sequence length found
-
-The key insight: By only counting from sequence starts (where num-1 doesn't exist), we avoid redundant work and achieve O(n) time despite nested loops.
-
-**Edge cases**: Empty array returns 0. Single element returns 1. Duplicates don't affect result.
-
-**Time Complexity**: O(n) - each number visited at most twice (once in outer loop, once when counting)
-**Space Complexity**: O(n) - hash set stores all unique elements
+**Time:** O(n)
+**Space:** O(n)
 
 ## Two Pointers
 
