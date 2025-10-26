@@ -1,6 +1,7 @@
 package io.github.cristianmanoliu.trees;
 
 // https://neetcode.io/problems/depth-of-binary-tree?list=neetcode150
+// https://leetcode.com/problems/maximum-depth-of-binary-tree
 public class MaximumDepthOfBinaryTree {
 
   public int maxDepth(TreeNode root) {

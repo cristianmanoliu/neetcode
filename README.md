@@ -1571,7 +1571,88 @@ reversed block back using a dummy and advance to the next block.
 
 ## Trees
 
-TODO
+### (Easy) Invert Binary Tree
+
+#### Key takeaway
+
+Swap every node’s left and right child. You can do this with either a BFS queue (iterative) or a DFS recursion; both visit each node once and perform a
+constant-time swap per node.
+
+**Time:** O(n) — each node visited once
+**Space:**
+
+* **BFS:** O(w) for the queue, where `w` is the maximum width (worst-case O(n))
+* **DFS (recursive):** O(h) call stack, where `h` is tree height (worst-case O(n), average O(log n) for balanced trees)
+
+#### Algorithm explanation
+
+**Iterative BFS approach**
+
+1. If `root == null`, return `null`.
+2. Initialize a queue with `root`.
+3. While the queue is not empty:
+
+    * Pop a node `cur`.
+    * Swap `cur.left` and `cur.right`.
+    * If `cur.left != null`, enqueue it.
+    * If `cur.right != null`, enqueue it.
+4. Return `root`.
+
+**Recursive DFS approach**
+
+1. If `root == null`, return `null`.
+2. Recursively invert the left subtree → `L = invert(root.left)`.
+3. Recursively invert the right subtree → `R = invert(root.right)`.
+4. Set `root.left = R` and `root.right = L`.
+5. Return `root`.
+
+**Why no “seen” set?**
+Binary trees (as given in this problem) are acyclic, so each node is reached exactly once via parent → child links. A visited set adds overhead without benefit.
+
+### (Easy) Maximum Depth of Binary Tree
+
+#### Key takeaway
+
+Compute depth via DFS: the depth at a node is `1 + max(depth(left), depth(right))`; base case `null → 0`.
+
+**Time:** O(n)
+**Space:** O(h) where `h` is tree height (worst-case O(n), average O(log n) for balanced)
+
+#### Algorithm explanation
+
+Use **recursive DFS** to return the height (max depth) of each subtree:
+
+1. **Base case:** If `root == null`, return `0`.
+2. **Recurse:** Compute `left = maxDepth(root.left)` and `right = maxDepth(root.right)`.
+3. **Combine:** Return `1 + Math.max(left, right)` to account for the current node.
+
+**Time Complexity:** O(n) — each node is visited exactly once.
+**Space Complexity:** O(h) — recursion stack depth equals tree height (O(n) worst-case skewed, O(log n) on average for balanced).
+
+*Iterative alternative (BFS):* Level-order traversal counting levels also yields O(n) time and O(w) space, where `w` is the tree’s maximum width.
+
+### (Easy) Diameter of Binary Tree
+
+#### Key takeaway
+
+Do a single DFS that returns the height of each subtree while updating a global `best = leftHeight + rightHeight` at every node; the maximum such sum over the
+tree is the diameter (in edges).
+
+**Time:** O(n) — each node’s height is computed once
+**Space:** O(h) — recursion stack, where `h` is tree height (O(n) worst-case skewed, O(log n) for balanced)
+
+#### Algorithm explanation
+
+* **Depth-first computation:**
+  Write a helper `depth(node)` that returns the height (in edges) from `node` to its deepest descendant.
+* **Update diameter at each node:**
+  For a node, get `left = depth(node.left)` and `right = depth(node.right)`; the longest path that passes through `node` uses the deepest node in the left
+  subtree and the deepest node in the right subtree, giving `left + right` edges. Update `best = max(best, left + right)`.
+* **Return height:**
+  The height of `node` to its parent is `max(left, right) + 1`. The final answer is the global `best` after visiting all nodes.
+
+**Time Complexity:** O(n)
+**Space Complexity:** O(h)
 
 ## Heaps & Priority Queue
 

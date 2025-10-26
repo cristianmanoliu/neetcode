@@ -1,37 +1,36 @@
 package io.github.cristianmanoliu.trees;
 
 import java.util.ArrayDeque;
-import java.util.HashSet;
 import java.util.Queue;
-import java.util.Set;
 
 // https://neetcode.io/problems/invert-a-binary-tree?list=neetcode150
+// https://leetcode.com/problems/invert-binary-tree
 public class InvertBinaryTree {
 
+  // Iterative BFS (no 'seen' needed)
   public TreeNode invertTree(TreeNode root) {
     if (root == null) {
       return null;
     }
 
-    Set<TreeNode> seen = new HashSet<>();
-    Queue<TreeNode> queue = new ArrayDeque<>();
-    queue.offer(root);
-    while (!queue.isEmpty()) {
-      TreeNode current = queue.poll();
-      TreeNode temp = current.left;
-      current.left = current.right;
-      current.right = temp;
+    Queue<TreeNode> q = new ArrayDeque<>();
+    q.offer(root);
 
-      if (current.left != null && !seen.contains(current.left)) {
-        queue.offer(current.left);
-        seen.add(current.left);
+    while (!q.isEmpty()) {
+      TreeNode cur = q.poll();
+
+      // swap children
+      TreeNode tmp = cur.left;
+      cur.left = cur.right;
+      cur.right = tmp;
+
+      if (cur.left != null) {
+        q.offer(cur.left);
       }
-      if (current.right != null && !seen.contains(current.right)) {
-        queue.offer(current.right);
-        seen.add(current.right);
+      if (cur.right != null) {
+        q.offer(cur.right);
       }
     }
-
     return root;
   }
 }
