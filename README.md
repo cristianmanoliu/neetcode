@@ -1472,6 +1472,25 @@ carry.
 **Time Complexity:** O(max(m, n))
 **Space Complexity:** O(max(m, n)) for the output list; O(1) extra workspace
 
+### (Medium) Find the Duplicate Number
+
+#### Key takeaway
+
+Treat the array as a linked list where `i -> nums[i]`; there’s a cycle because values are in `1..n` across `n+1` indices—use Floyd’s cycle detection to find the
+cycle’s entry, which equals the duplicate.
+
+**Time:** O(n)
+**Space:** O(1)
+
+#### Algorithm explanation
+
+* **Model as graph:** Each index points to `nums[i]`. With `n+1` nodes and values in `1..n`, the pigeonhole principle guarantees a cycle.
+* **Phase 1 (meet inside cycle):** Move `slow = nums[slow]` and `fast = nums[nums[fast]]` until they meet.
+* **Phase 2 (find entry):** Reset `slow = 0`, then step both one hop at a time; their meeting point is the cycle entrance → the duplicate value.
+
+**Time Complexity:** O(n) — each pointer advances at most a constant number of full passes over the array.
+**Space Complexity:** O(1) — uses only a constant number of variables.
+
 ## Trees
 
 TODO
