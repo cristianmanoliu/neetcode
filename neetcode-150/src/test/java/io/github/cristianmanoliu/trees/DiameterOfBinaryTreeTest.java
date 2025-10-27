@@ -31,5 +31,4 @@ class DiameterOfBinaryTreeTest {
     // Test case 4: Empty tree
     assertEquals(0, solution.diameterOfBinaryTree(null));
   }
-
 }
