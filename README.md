@@ -1654,6 +1654,51 @@ tree is the diameter (in edges).
 **Time Complexity:** O(n)
 **Space Complexity:** O(h)
 
+### (Easy) Balanced Binary Tree
+
+#### Key takeaway
+
+Single-pass **post-order DFS**: for each node, get `leftHeight` and `rightHeight`.
+
+* If either is `-1` (unbalanced) or `|leftHeight - rightHeight| > 1`, return `-1`.
+* Otherwise return `1 + max(leftHeight, rightHeight)`.
+  Final answer: `isBalanced(root) := dfs(root) != -1`.
+
+**Time:** O(n) — each node processed once
+**Space:** O(h) — recursion stack where `h` is tree height (worst-case O(n), balanced O(log n))
+
+#### Algorithm explanation
+
+Use a **height-or-unbalanced** helper in post-order:
+
+1. **Base case:** `dfs(null) = 0` (empty subtree is balanced with height 0).
+2. **Recurse:**
+
+    * `L = dfs(node.left)`; if `L == -1`, return `-1`.
+    * `R = dfs(node.right)`; if `R == -1`, return `-1`.
+3. **Balance check:**
+
+    * If `|L - R| > 1`, return `-1` (current node unbalanced).
+4. **Combine:**
+
+    * Return `1 + max(L, R)` (the height for the parent to use).
+5. **Result:**
+
+    * `isBalanced(root)` is `true` iff `dfs(root) != -1`.
+
+**Invariant (at each return):** If the subtree is balanced, the helper returns its true height; otherwise, it returns `-1`. This ensures any detected imbalance
+short-circuits upward.
+
+**Why single pass?**
+Top-down “compute height at each node then compare” can degrade to `O(n^2)` on skewed trees. Bottom-up with a sentinel maintains **O(n)** by avoiding repeated
+height recomputation.
+
+**Common pitfalls:**
+
+* Forgetting to short-circuit after detecting `-1`.
+* Comparing heights before confirming both subtrees are balanced.
+* Off-by-one in height definition (be consistent: `null → 0`).
+
 ## Heaps & Priority Queue
 
 TODO

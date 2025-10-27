@@ -14,6 +14,4 @@ public class MaximumDepthOfBinaryTree {
 
     return Math.max(leftDepth, rightDepth) + 1;
   }
-
 }
-
