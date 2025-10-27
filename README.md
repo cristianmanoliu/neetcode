@@ -1699,6 +1699,39 @@ height recomputation.
 * Comparing heights before confirming both subtrees are balanced.
 * Off-by-one in height definition (be consistent: `null → 0`).
 
+### (Medium) Same Tree
+
+#### Key takeaway
+
+Compare the two trees in **lockstep**:
+
+* If both nodes are `null` → equal at this branch.
+* If exactly one is `null` → not equal.
+* Otherwise values must match **and** left subtrees must match **and** right subtrees must match.
+
+**Time:** O(n) where `n` is the number of nodes compared (min size of the two trees if early exit)
+**Space:** O(h) recursion stack, where `h` is tree height (worst-case O(n) for skewed, O(log n) for balanced)
+
+#### Algorithm explanation
+
+Use **recursive DFS** with early exit on mismatch:
+
+1. **Both null:** If `p == null && q == null`, return `true`.
+2. **One null:** If `p == null || q == null`, return `false`.
+3. **Value check:** If `p.val != q.val`, return `false`.
+4. **Recurse on children:** Return
+   `isSameTree(p.left, q.left) && isSameTree(p.right, q.right)`.
+
+**Time Complexity:** O(n) — each corresponding pair of nodes is checked once (short-circuits on first mismatch).
+**Space Complexity:** O(h) — recursion depth equals tree height.
+
+*Iterative alternative:* Use a queue or stack of **pairs** `(pNode, qNode)`. At each step:
+
+* If both null, continue; if one is null, return false;
+* If values differ, return false;
+* Push left pair and right pair.
+  This yields the same O(n) time and O(h) (up to O(n)) space depending on tree shape.
+
 ## Heaps & Priority Queue
 
 TODO
