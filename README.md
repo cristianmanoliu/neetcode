@@ -1732,6 +1732,123 @@ Use **recursive DFS** with early exit on mismatch:
 * Push left pair and right pair.
   This yields the same O(n) time and O(h) (up to O(n)) space depending on tree shape.
 
+### (Easy) Subtree of Another Tree
+
+#### Key takeaway
+
+Think of `subRoot` as a **pattern tree** you’re trying to match inside the bigger tree `root`.
+
+* Traverse the big tree `root` node by node.
+* At each node, treat it as a **candidate root** and check:  
+  “Is the subtree starting here **exactly identical** to `subRoot` in both structure and node values?”
+* Implement a helper `isSameTree(a, b)` that checks tree equality:
+    * Both `null` → equal.
+    * One `null` → not equal.
+    * Values differ → not equal.
+    * Otherwise, recursively compare left and right children.
+
+If **any** node in `root` passes `isSameTree(node, subRoot)`, then `subRoot` is a subtree of `root`.
+
+**Time complexity:**
+
+* Worst case `O(m · n)` where `m = |root|`, `n = |subRoot|` (for each node in `root`, we may compare up to all nodes in `subRoot`).
+
+**Space complexity:**
+
+* `O(h)` for recursion stack, where `h` is the height of the trees (worst case `O(m + n)` for very skewed trees).
+
+#### Algorithm explanation
+
+We are given two binary trees:
+
+* `root` – the main tree.
+* `subRoot` – the candidate subtree.
+
+We must decide if `subRoot` appears as a **subtree** of `root`. Formally, `subRoot` is a subtree of `root` if there exists a node `x` in `root` such that the
+subtree rooted at `x` is **identical** to `subRoot`.
+
+---
+
+**1. Helper: `isSameTree(a, b)` for tree equality**
+
+Define a function that checks if two trees rooted at `a` and `b` are exactly the same:
+
+1. If `a == null` and `b == null`, return `true` (two empty trees are equal).
+2. If exactly one of `a` or `b` is `null`, return `false`.
+3. If `a.val != b.val`, return `false`.
+4. Otherwise:
+    * Recursively check `isSameTree(a.left, b.left)`.
+    * Recursively check `isSameTree(a.right, b.right)`.
+    * Return `true` only if both children match.
+
+This enforces **same structure + same values**.
+
+---
+
+**2. Main function: `isSubtree(root, subRoot)`**
+
+Use recursion to traverse `root` and test each node as a candidate:
+
+1. **Edge cases:**
+    * If `subRoot == null`, return `true`.  
+      An empty tree is always a subtree.
+    * If `root == null` but `subRoot != null`, return `false`.  
+      A non-empty tree cannot be a subtree of an empty one.
+
+2. **Recursive step:**
+    * At each node `root`:
+        * First, check if the subtree rooted here equals `subRoot`:
+          ```text
+          if isSameTree(root, subRoot) == true:
+              return true
+          ```
+        * Otherwise, recursively search in the left and right subtrees:
+          ```text
+          return isSubtree(root.left, subRoot)
+              || isSubtree(root.right, subRoot)
+          ```
+
+Conceptually, we are doing:
+
+> “Does `subRoot` match at the current node?  
+> If not, does it match somewhere in the left subtree?  
+> If not, does it match somewhere in the right subtree?”
+
+---
+
+**3. Correctness**
+
+*If the algorithm returns `true`:*
+
+* It must be because `isSameTree(node, subRoot)` is `true` for some node in `root` (either the original root or via recursion into left/right).
+* `isSameTree` only returns `true` when the two trees have identical structure and values.
+* Therefore, there is some node in `root` whose subtree is exactly `subRoot` → by definition, `subRoot` is a subtree.
+
+*If `subRoot` is a real subtree of `root`:*
+
+* There exists a node `x` in `root` where the subtree rooted at `x` equals `subRoot`.
+* The recursion `isSubtree` visits **every node** in `root`, so it eventually reaches `x`.
+* At `x`, we call `isSameTree(x, subRoot)` which returns `true`, so `isSubtree` returns `true`.
+
+Hence the algorithm is both **sound** (never returns true incorrectly) and **complete** (never misses a valid subtree).
+
+---
+
+**4. Complexity**
+
+Let:
+
+* `m` = number of nodes in `root`,
+* `n` = number of nodes in `subRoot`.
+
+* In the worst case, for each node of `root` (up to `m` nodes), we may compare a whole subtree of size up to `n` via `isSameTree`.
+* Therefore:
+
+    * **Time:** `O(m · n)` in the worst case.
+    * **Space:** `O(h)` for recursion depth, where `h` is the height of the larger tree (`O(m)` in the worst case of a skewed tree).
+
+This is the standard recursive solution used in most discussions for **Subtree of Another Tree**.
+
 ## Heaps & Priority Queue
 
 TODO
