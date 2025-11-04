@@ -10,7 +10,8 @@ https://neetcode.io/practice?tab=neetcode150
 - Unless stated otherwise, let `n` be the length of the main input array or string.
 - For grids, `m × n` means `m` rows and `n` columns.
 - For graphs/trees, `n` is the number of nodes.
-- Unless stated otherwise, hash map / hash set operations are assumed **O(1) amortized**, and heap push/pop operations are **O(log k)** where `k` is the heap size.
+- Unless stated otherwise, hash map / hash set operations are assumed **O(1) amortized**, and heap push/pop operations are **O(log k)** where `k` is the heap
+  size.
 - The base of the logarithm in `O(log n)` is irrelevant for Big-O (different bases differ only by a constant factor).
 
 ## Big O Notation - Time and Space Complexity
@@ -531,6 +532,7 @@ DFS or BFS over the tree and swap left and right children at every node.
 
 **Time:** O(n) — each node visited once  
 **Space:**
+
 * **BFS:** O(w) for the queue, where `w` is the maximum width (worst-case O(n))
 * **DFS (recursive):** O(h) call stack, where `h` is tree height (worst-case O(n), average O(log n) for balanced trees)
 
@@ -561,7 +563,7 @@ Post-order DFS that returns subtree height or -1 if unbalanced; any node with he
 **Time:** O(n) — each node processed once  
 **Space:** O(h) — recursion stack where `h` is tree height (worst-case O(n), balanced O(log n))
 
-### (Medium) Same Tree
+### (Easy) Same Tree
 
 #### Key takeaway
 
@@ -578,6 +580,15 @@ For each node in `root`, check with an `isSameTree` helper whether the subtree r
 
 **Time:** O(m · n) in the worst case, where `m = |root|` and `n = |subRoot|`  
 **Space:** O(h) recursion stack, where `h` is tree height (worst case O(m + n) for very skewed trees)
+
+### (Medium) Lowest Common Ancestor in Binary Search Tree
+
+#### Key takeaway
+
+Starting from `root`, if both `p` and `q` are less than the current node go left; if both are greater go right; otherwise the current node is their LCA.
+
+**Time:** O(h) where `h` is tree height (O(log n) average for balanced BST, O(n) worst-case)  
+**Space:** O(1) extra
 
 ## Heaps & Priority Queue
 
