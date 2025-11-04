@@ -1885,7 +1885,85 @@ Call `search(pattern)` as `return matches(0, root)`.
 
 ## Graphs
 
-TODO
+### (Medium) Number of Islands
+
+#### Key takeaway
+
+Treat the 2D grid as an **implicit graph**:
+
+* Each cell with `'1'` (land) is a node.
+* Edges connect **4-directionally adjacent** land cells (up, down, left, right).
+* An **island** is a **connected component** of land nodes.
+
+To count islands:
+
+* **Scan the grid** cell by cell.
+* Every time you find a `'1'` that is **not yet visited**, you:
+    * Increment `islands++` (found a new connected component).
+    * Run **DFS or BFS** from that cell to **flood-fill** all land in that island, marking them as visited (e.g., by turning them into `'0'`).
+
+Because each land cell is visited at most once, the complexity is:
+
+* **Time:** `O(m · n)` for an `m x n` grid.
+* **Space:**
+    * `O(m · n)` in the worst case due to recursion stack / queue or a `visited` matrix.
+    * `O(1)` extra (besides recursion/queue) if you mark visited cells in-place by setting them from `'1'` to `'0'`.
+
+#### Algorithm explanation
+
+We are given an `m x n` grid of `'1'`s (land) and `'0'`s (water). Two lands belong to the same island if they are connected **horizontally or vertically**.
+
+**1. Idea / Graph view**
+
+* View each land cell `(r, c)` with `grid[r][c] == '1'` as a vertex.
+* Add edges between `(r, c)` and its neighbors `(r ± 1, c)` and `(r, c ± 1)` when those neighbors are also `'1'`.
+* Then, the number of islands equals the number of **connected components** in this graph.
+* We find connected components with **DFS (recursive or stack)** or **BFS (queue)**.
+
+---
+
+**2. Main algorithm**
+
+Maintain:
+
+* `count` – the number of islands.
+* And either:
+    * a `visited[m][n]` boolean matrix, or
+    * modify the grid in-place: when visiting land, change `'1'` → `'0'`.
+
+Algorithm:
+
+1. Set `count = 0`.
+2. For each cell `(r, c)` in the grid:
+    * If `grid[r][c] == '1'` (and not visited yet):
+        * Increment `count++` – you discovered a new island.
+        * Call `dfs(r, c)` or `bfs(r, c)` to flood-fill all connected land cells and mark them visited (or turn them into `'0'`).
+3. After the double loop ends, return `count`.
+
+---
+
+**3. Flood-fill with DFS (example)**
+
+```java
+// Java-style pseudo-code for DFS
+void dfs(char[][] grid, int r, int c) {
+    int m = grid.length;
+    int n = grid[0].length;
+
+    // boundary or water / visited check
+    if (r < 0 || r >= m || c < 0 || c >= n) return;
+    if (grid[r][c] != '1') return;
+
+    // mark this cell as visited (in-place)
+    grid[r][c] = '0';
+
+    // explore 4 neighbors
+    dfs(grid, r - 1, c); // up
+    dfs(grid, r + 1, c); // down
+    dfs(grid, r, c - 1); // left
+    dfs(grid, r, c + 1); // right
+}
+
 
 ## Advanced Graphs
 
