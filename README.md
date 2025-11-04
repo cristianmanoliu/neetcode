@@ -590,6 +590,16 @@ Starting from `root`, if both `p` and `q` are less than the current node go left
 **Time:** O(h) where `h` is tree height (O(log n) average for balanced BST, O(n) worst-case)  
 **Space:** O(1) extra
 
+### (Medium) Binary Tree Level Order Traversal
+
+#### Key takeaway
+
+Do a BFS using a queue: while the queue is not empty, take its current size as the level size, pop exactly that many nodes (collecting their values), and
+enqueue each node’s children to form the next level.
+
+**Time:** O(n) — each node is enqueued and dequeued once  
+**Space:** O(n) — queue + output store up to O(n) nodes
+
 ## Heaps & Priority Queue
 
 TODO
