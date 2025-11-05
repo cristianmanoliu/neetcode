@@ -621,6 +621,16 @@ to children.
 **Time:** O(n) — each node visited once
 **Space:** O(h) — recursion stack (worst-case O(n) for a skewed tree)
 
+### (Medium) Validate Binary Search Tree
+
+#### Key takeaway
+
+Do a DFS carrying a valid range (low, high) for each node. A node is valid only if low < node.val < high. Recurse left with (low, node.val) and right with (
+node.val, high). Use long bounds to avoid edge cases near Integer.MIN_VALUE/MAX_VALUE.
+
+**Time:** O(n) — visit each node once
+**Space:** O(h) — recursion stack (worst-case O(n) for a skewed tree)
+
 ## Heaps & Priority Queue
 
 TODO
