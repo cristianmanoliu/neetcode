@@ -1,6 +1,6 @@
 # NeetCode-150
 
-https://neetcode.io/practice?tab=neetcode150
+[NeetCode-150](https://neetcode.io/practice?tab=neetcode150)
 
 > Note: Big-O notation describes asymptotic growth. It is commonly used to denote an upper bound (often the worst-case) unless an average or best case is
 > explicitly stated.
@@ -533,8 +533,8 @@ DFS or BFS over the tree and swap left and right children at every node.
 **Time:** O(n) — each node visited once  
 **Space:**
 
-* **BFS:** O(w) for the queue, where `w` is the maximum width (worst-case O(n))
-* **DFS (recursive):** O(h) call stack, where `h` is tree height (worst-case O(n), average O(log n) for balanced trees)
+- **BFS:** O(w) for the queue, where `w` is the maximum width (worst-case O(n))
+- **DFS (recursive):** O(h) call stack, where `h` is tree height (worst-case O(n), average O(log n) for balanced trees)
 
 ### (Easy) Maximum Depth of Binary Tree
 
@@ -542,7 +542,7 @@ DFS or BFS over the tree and swap left and right children at every node.
 
 Use DFS where depth is `1 + max(depth(left), depth(right))`, with null giving 0.
 
-**Time:** O(n)  
+**Time:** O(n)
 **Space:** O(h) where `h` is tree height (worst-case O(n), average O(log n) for balanced)
 
 ### (Easy) Diameter of Binary Tree
@@ -560,7 +560,7 @@ DFS that returns subtree heights and updates a global best `leftHeight + rightHe
 
 Post-order DFS that returns subtree height or -1 if unbalanced; any node with height difference > 1 marks the tree unbalanced.
 
-**Time:** O(n) — each node processed once  
+**Time:** O(n) — each node processed once
 **Space:** O(h) — recursion stack where `h` is tree height (worst-case O(n), balanced O(log n))
 
 ### (Easy) Same Tree
@@ -600,6 +600,17 @@ enqueue each node’s children to form the next level.
 **Time:** O(n) — each node is enqueued and dequeued once  
 **Space:** O(n) — queue + output store up to O(n) nodes
 
+### (Medium) Binary Tree Right Side View
+
+#### Key takeaway
+
+Do a BFS using a queue: while the queue isn’t empty, take the current size as the level size, pop exactly that many nodes, record the last node’s value as the
+right view for that level, and enqueue each node’s children.
+
+**Time:** O(n) — each node is visited once
+
+**Space:** O(w) — queue holds up to the tree’s maximum width
+
 ## Heaps & Priority Queue
 
 TODO
@@ -618,9 +629,9 @@ Store each word as a path from the root; `insert` builds nodes, `search` checks 
 
 **Time:**
 
-* `insert(word)`: O(|word|)
-* `search(word)`: O(|word|)
-* `startsWith(prefix)`: O(|prefix|)
+- `insert(word)`: O(|word|)
+- `search(word)`: O(|word|)
+- `startsWith(prefix)`: O(|prefix|)
 
 **Space:** O(T) total over all inserted words (each node has up to 26 children).
 
@@ -634,8 +645,8 @@ Use a trie; `addWord` inserts normally, and `search` does DFS, branching over al
 
 **Time:**
 
-* `addWord(w)`: O(|w|)
-* `search(w)`: Best O(|w|); worst-case with many `'.'` is O(26^d) where `d` is the number of wildcards (bounded by branching over existing children)
+- `addWord(w)`: O(|w|)
+- `search(w)`: Best O(|w|); worst-case with many `'.'` is O(26^d) where `d` is the number of wildcards (bounded by branching over existing children)
 
 **Space:** O(T) for the trie nodes, where `T` is the total number of inserted characters (each node has up to 26 pointers)
 
