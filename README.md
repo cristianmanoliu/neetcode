@@ -611,6 +611,16 @@ right view for that level, and enqueue each node’s children.
 
 **Space:** O(w) — queue holds up to the tree’s maximum width
 
+### (Medium) Count Good Nodes in Binary Tree
+
+#### Key takeaway
+
+Do a DFS from the root, carrying the maximum value seen along the current path. A node is “good” if node.val >= maxSoFar. Count it, update maxSoFar, and recurse
+to children.
+
+**Time:** O(n) — each node visited once
+**Space:** O(h) — recursion stack (worst-case O(n) for a skewed tree)
+
 ## Heaps & Priority Queue
 
 TODO
