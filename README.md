@@ -16,6 +16,8 @@
 
 ## Big O Notation - Time and Space Complexity
 
+---
+
 ### Time Complexity
 
 O(1) - Constant Time
@@ -101,9 +103,9 @@ O(n!) - Factorial Space
 
 Usually O(1) and O(log n) are considered very efficient.
 
----
-
 ## Arrays & Hashing
+
+---
 
 ### (Easy) Contains Duplicate
 
@@ -190,6 +192,8 @@ Put all numbers in a set and, for numbers without a `x-1` predecessor, expand fo
 
 ## Two Pointers
 
+---
+
 ### (Easy) Valid Palindrome
 
 #### Key takeaway
@@ -236,6 +240,8 @@ Two pointers maintaining `leftMax` and `rightMax`; move the smaller side inward 
 **Space:** O(1)
 
 ## Sliding Window
+
+---
 
 ### (Easy) Best Time to Buy and Sell Stock
 
@@ -292,6 +298,8 @@ Maintain a deque of indices with decreasing values; the front is always the max 
 **Space:** O(k)
 
 ## Stack
+
+---
 
 ### (Easy) Valid Parentheses
 
@@ -358,6 +366,8 @@ Use a stack of increasing bar indices and, when a shorter bar appears, pop and c
 
 ## Binary Search
 
+---
+
 ### (Easy) Binary Search
 
 #### Key takeaway
@@ -422,6 +432,8 @@ Binary search a partition in the smaller array so left parts and right parts for
 **Space:** O(1)
 
 ## Linked List
+
+---
 
 ### (Easy) Reverse Linked List
 
@@ -523,6 +535,8 @@ Walk the list in chunks of `k`; for each full chunk, reverse it in place and sti
 **Space:** O(1) — in-place reversal with a fixed number of pointers
 
 ## Trees
+
+---
 
 ### (Easy) Invert Binary Tree
 
@@ -650,6 +664,16 @@ left/right subtrees, build left first, then right. Avoid array slicing by passin
 
 **Time:** O(n) — each node/position processed once
 **Space:** O(n) — hash map + recursion stack (worst-case height n)
+
+### (Hard) Binary Tree Maximum Path Sum
+
+#### Key takeaway
+
+Use DFS that returns the max gain up to the parent from each node. For each node, compute leftGain and rightGain (clamped at 0 to discard negative paths).
+Update a global maxSum with node.val + leftGain + rightGain, and return node.val + max(leftGain, rightGain) to the parent.
+
+**Time:** O(n) — visit each node once
+**Space:** O(h) — recursion stack (worst-case O(n) for skewed tree)
 
 ## Heaps & Priority Queue
 
