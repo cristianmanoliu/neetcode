@@ -9,45 +9,47 @@ import java.util.Queue;
 // https://leetcode.com/problems/binary-tree-right-side-view/
 public class BinaryTreeRightSideView {
 
+  // Main function: return the list of node values visible from the right side.
+  // Idea: Do a BFS level-order traversal and record the LAST node at each level.
   public List<Integer> rightSideView(TreeNode root) {
-    // Result list
+    // Result list for rightmost values per level
     List<Integer> ans = new ArrayList<>();
-    // Edge case: empty tree
+
+    // Base case: empty tree => nothing visible
     if (root == null) {
       return ans;
     }
 
-    // BFS queue
+    // BFS queue seeded with the root
     Queue<TreeNode> q = new ArrayDeque<>();
-    // Start with the root
     q.offer(root);
 
-    // Level-order traversal
+    // Process the tree level by level
     while (!q.isEmpty()) {
-      // Number of nodes at the current level
+      // Capture the current level size (number of nodes at this depth)
       int size = q.size();
-      // Process all nodes at this level
+
+      // Iterate through all nodes of this level
       for (int i = 0; i < size; i++) {
-        // Get the next node
+        // Pop next node from the queue
         TreeNode cur = q.poll();
-        // If it's the rightmost node at this level, add to result
-        // i == size - 1 means it's the last node in this level
+
+        // If this is the LAST node at this level, it's visible from the right
         if (i == size - 1) {
-          // Add its value to the answer
           ans.add(cur.val);
         }
-        // Add child nodes to the queue for the next level
-        // Add left child first
+
+        // Enqueue children for the next level (left first, then right)
         if (cur.left != null) {
           q.offer(cur.left);
         }
-        // Add right child second
         if (cur.right != null) {
           q.offer(cur.right);
         }
       }
     }
-    // Return the list of rightmost values
+
+    // Return the collected right-view values
     return ans;
   }
 }

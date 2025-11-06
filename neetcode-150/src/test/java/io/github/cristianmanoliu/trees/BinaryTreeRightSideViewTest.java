@@ -2,38 +2,97 @@ package io.github.cristianmanoliu.trees;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+// JUnit 5 tests for BinaryTreeRightSideView
 class BinaryTreeRightSideViewTest {
 
+  // Helper: quick node constructor with children
+  private TreeNode n(int v, TreeNode l, TreeNode r) {
+    TreeNode t = new TreeNode(v);
+    t.left = l;
+    t.right = r;
+    return t;
+  }
+
   @Test
-  void rightSideView() {
-    BinaryTreeRightSideView solver = new BinaryTreeRightSideView();
+  @DisplayName("Empty tree -> empty right view")
+  void emptyTree() {
+    BinaryTreeRightSideView sol = new BinaryTreeRightSideView();
+    assertEquals(List.of(), sol.rightSideView(null));
+  }
 
-    // Example 1
-    TreeNode root1 = new TreeNode(1);
-    root1.right = new TreeNode(3);
-    root1.left = new TreeNode(2);
-    root1.left.right = new TreeNode(5);
-    root1.left.left = new TreeNode(4);
-    assertEquals(
-        java.util.Arrays.asList(1, 3, 5),
-        solver.rightSideView(root1)
-    );
+  @Test
+  @DisplayName("Single node tree -> [value]")
+  void singleNode() {
+    BinaryTreeRightSideView sol = new BinaryTreeRightSideView();
+    TreeNode root = new TreeNode(7);
+    assertEquals(List.of(7), sol.rightSideView(root));
+  }
 
-    // Example 2
-    TreeNode root2 = new TreeNode(1);
-    root2.right = new TreeNode(3);
-    assertEquals(
-        java.util.Arrays.asList(1, 3),
-        solver.rightSideView(root2)
-    );
+  @Test
+  @DisplayName("Classic example: [1,2,3,null,5,null,4] -> [1,3,4]")
+  void classicExample() {
+    BinaryTreeRightSideView sol = new BinaryTreeRightSideView();
+    //      1
+    //     / \
+    //    2   3
+    //     \   \
+    //      5   4
+    TreeNode root = n(1,
+        n(2, null, new TreeNode(5)),
+        n(3, null, new TreeNode(4)));
+    assertEquals(List.of(1, 3, 4), sol.rightSideView(root));
+  }
 
-    // Example 3
-    TreeNode root3 = null;
-    assertEquals(
-        java.util.Collections.emptyList(),
-        solver.rightSideView(root3)
-    );
+  @Test
+  @DisplayName("Left-skewed chain -> all nodes visible")
+  void leftSkewed() {
+    BinaryTreeRightSideView sol = new BinaryTreeRightSideView();
+    //   1
+    //  /
+    // 2
+    // /
+    //3
+    TreeNode root = n(1, n(2, new TreeNode(3), null), null);
+    assertEquals(List.of(1, 2, 3), sol.rightSideView(root));
+  }
+
+  @Test
+  @DisplayName("Right-skewed chain -> all nodes visible")
+  void rightSkewed() {
+    BinaryTreeRightSideView sol = new BinaryTreeRightSideView();
+    // 1
+    //  \
+    //   2
+    //    \
+    //     3
+    TreeNode root = n(1, null, n(2, null, new TreeNode(3)));
+    assertEquals(List.of(1, 2, 3), sol.rightSideView(root));
+  }
+
+  @Test
+  @DisplayName("Mixed levels where right child is missing at some depths")
+  void mixedMissingRights() {
+    BinaryTreeRightSideView sol = new BinaryTreeRightSideView();
+    //        8
+    //       / \
+    //      3   10
+    //     / \    \
+    //    1   6    14
+    //       / \   /
+    //      4   7 13
+    TreeNode root = n(8,
+        n(3,
+            new TreeNode(1),
+            n(6, new TreeNode(4), new TreeNode(7))),
+        n(10,
+            null,
+            n(14, new TreeNode(13), null)));
+    // Levels: 8 | 3,10 | 1,6,14 | 4,7,13
+    // Right view: 8,10,14,13
+    assertEquals(List.of(8, 10, 14, 13), sol.rightSideView(root));
   }
 }
