@@ -675,6 +675,16 @@ Update a global maxSum with node.val + leftGain + rightGain, and return node.val
 **Time:** O(n) — visit each node once
 **Space:** O(h) — recursion stack (worst-case O(n) for skewed tree)
 
+### (Hard) Serialize and Deserialize Binary Tree
+
+#### Key takeaway
+
+Use preorder DFS with a sentinel for nulls. During serialize, append val or "N" plus a delimiter. During deserialize, read tokens in order: on "N" return null;
+otherwise create a node and recursively build its left and right subtrees.
+
+**Time:** O(n) — each node/token processed once
+**Space:** O(n) — output string + recursion stack (worst-case height n)
+
 ## Heaps & Priority Queue
 
 TODO
