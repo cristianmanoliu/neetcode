@@ -9,33 +9,30 @@ import java.util.Map;
 // https://leetcode.com/problems/group-anagrams
 public class GroupAnagrams {
 
-  /**
-   * Groups anagrams together using character frequency array as hash key.
-   * <p>
-   * Time: O(n × k) where n = number of strings, k = max string length
-   * <p>
-   * Space: O(n × k) for storing all strings in the hash map
-   */
+  // Main function: group words that are anagrams of each other.
+  // Strategy: For each string, compute a frequency-based key (26-length histogram for 'a'..'z').
+  // Use that key in a hash map to collect all strings with identical character counts.
   public List<List<String>> groupAnagrams(String[] strs) {
+    // Map: signature (frequency key) -> list of words sharing that signature
     Map<String, List<String>> anagramGroups = new HashMap<>();
 
+    // Process each string and append it into its group
     for (String str : strs) {
-      // Generate frequency-based key
+      // Build the frequency signature key for this string
       String key = generateFrequencyKey(str);
 
-      // Add string to the appropriate group
+      // Add the string to the bucket for this key (create bucket if missing)
       anagramGroups.computeIfAbsent(key, k -> new ArrayList<>()).add(str);
     }
 
+    // Return all grouped anagram lists
     return new ArrayList<>(anagramGroups.values());
   }
 
-  /**
-   * Generates a unique key based on character frequency.
-   * <p>
-   * Example: "aab" -> "2a1b" or "a2b1" (order doesn't matter, just consistency)
-   */
+  // Helper: build a compact frequency key for lowercase ASCII letters 'a'..'z'.
+  // Example: "abbccc" -> "a1b2c3"
   private String generateFrequencyKey(String str) {
+    // Count of each letter (assumes input is lowercase a..z per problem constraints)
     int[] charCount = new int[26];
 
     // Count character frequencies
@@ -43,7 +40,7 @@ public class GroupAnagrams {
       charCount[c - 'a']++;
     }
 
-    // Build key from frequency array
+    // Build a compact key only for letters that appear (letter followed by count)
     StringBuilder key = new StringBuilder();
     for (int i = 0; i < 26; i++) {
       if (charCount[i] > 0) {

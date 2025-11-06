@@ -4,34 +4,32 @@ package io.github.cristianmanoliu.arrays_hashing;
 // https://leetcode.com/problems/valid-anagram/
 public class ValidAnagram {
 
-  // Anagram: a word, phrase, or name formed by rearranging the letters of another,
-  // such as cinema, formed from iceman.
+  // Main function: check if strings s and t are anagrams.
+  // Assumption (per problem): inputs contain only lowercase English letters 'a'..'z'.
   public boolean isAnagram(String s, String t) {
-    // Early check: different lengths cannot be anagrams
+    // Early exit: different lengths cannot be anagrams
     if (s.length() != t.length()) {
       return false;
     }
 
-    // Frequency array for 26 lowercase English letters
+    // Frequency array for 26 lowercase letters
     int[] charCount = new int[26];
 
-    // Count characters in first string (increment)
+    // Count each character from s (increment)
     for (int i = 0; i < s.length(); i++) {
       charCount[s.charAt(i) - 'a']++;
     }
 
-    // Verify characters in second string (decrement)
+    // Subtract counts using t (decrement)
+    // If any count goes negative, t has more of that char than s -> not an anagram
     for (int i = 0; i < t.length(); i++) {
-      int charCountInSecondString = charCount[t.charAt(i) - 'a'];
-      charCountInSecondString--;
-      // If count goes negative, character appears more in t than in s
-      if (charCountInSecondString < 0) {
+      int idx = t.charAt(i) - 'a';
+      if (--charCount[idx] < 0) {
         return false;
       }
     }
 
-    // All counts must be zero (already verified by decrement check above)
+    // All counts balanced to zero -> an anagram
     return true;
   }
-
 }

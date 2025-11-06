@@ -1,39 +1,47 @@
 package io.github.cristianmanoliu.arrays_hashing;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+
 // https://neetcode.io/problems/top-k-elements-in-list?list=neetcode150
+// https://leetcode.com/problems/top-k-frequent-elements/
 public class TopKFrequentElements {
 
+  // Main function: return the k most frequent elements from the array.
+  // Strategy:
+  // 1) Count frequencies with a HashMap.
+  // 2) Push (num, freq) entries into a max-heap ordered by frequency.
+  // 3) Pop the top k entries and collect their keys.
+  //
+  // Note: This is O(U log U) where U is the number of unique elements.
+  // (A bucket-sort variant can do O(n), but heap is simple and accepted.)
   public int[] topKFrequent(int[] nums, int k) {
-    if (k == 0) {
-      return new int[]{}; // Return empty array if k is 0
-    }
-    if (nums == null || nums.length == 0) {
-      return new int[]{}; // Return empty array if input is empty
+    // Handle edge cases: k == 0 or empty/null input
+    if (k == 0 || nums == null || nums.length == 0) {
+      return new int[] {};
     }
 
-    // Count the frequency of each number
-    java.util.Map<Integer, Integer> frequencyMap = new java.util.HashMap<>();
+    // Count frequency of each number
+    Map<Integer, Integer> freq = new HashMap<>();
     for (int num : nums) {
-      frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+      freq.put(num, freq.getOrDefault(num, 0) + 1);
     }
 
-    // Create a max heap based on frequency
-    java.util.PriorityQueue<java.util.Map.Entry<Integer, Integer>> maxHeap =
-        new java.util.PriorityQueue<>((a, b) -> b.getValue() - a.getValue());
+    // Max-heap by frequency (highest freq at head)
+    PriorityQueue<Map.Entry<Integer, Integer>> maxHeap =
+        new PriorityQueue<>((a, b) -> b.getValue() - a.getValue());
 
-    // Add all entries to the max heap
-    for (java.util.Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()) {
-      maxHeap.offer(entry);
+    // Add all (num, freq) entries to the heap
+    maxHeap.addAll(freq.entrySet());
+
+    // Extract up to k most frequent numbers
+    int take = Math.min(k, freq.size());
+    int[] res = new int[take];
+    for (int i = 0; i < take; i++) {
+      res[i] = maxHeap.poll().getKey();
     }
 
-    // Extract the top k frequent elements
-    int[] result = new int[Math.min(k, frequencyMap.size())];
-    for (int i = 0; i < result.length; i++) {
-      if (!maxHeap.isEmpty()) {
-        result[i] = maxHeap.poll().getKey();
-      }
-    }
-
-    return result;
+    return res;
   }
 }
