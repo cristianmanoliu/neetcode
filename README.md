@@ -641,6 +641,16 @@ and when k == 0, return that node’s value.
 **Time:** O(h + k) on average (O(n) worst-case) — you visit nodes up to the k-th
 **Space:** O(h) — stack proportional to the tree height
 
+### (Medium) Construct Binary Tree from Preorder and Inorder Traversal
+
+#### Key takeaway
+
+Use a hash map for inorder value → index. Recurse using a moving pointer on preorder: take the next value as root, split the inorder range at root’s index into
+left/right subtrees, build left first, then right. Avoid array slicing by passing indices.
+
+**Time:** O(n) — each node/position processed once
+**Space:** O(n) — hash map + recursion stack (worst-case height n)
+
 ## Heaps & Priority Queue
 
 TODO

@@ -8,31 +8,28 @@ import java.util.Deque;
 public class KthSmallestIntegerInBST {
 
   public int kthSmallest(TreeNode root, int k) {
-    // iterative inorder traversal
-    Deque<TreeNode> st = new ArrayDeque<>();
-    // current node pointer
-    TreeNode cur = root;
-
-    // iterate until we find the kth smallest
-    while (cur != null || !st.isEmpty()) {
-      // go all the way left
-      while (cur != null) {
-        // push current node to stack
-        st.push(cur);
-        // move to left child
-        cur = cur.left;
+    // In-order traversal using iterative approach with a stack
+    Deque<TreeNode> stack = new ArrayDeque<>();
+    // Start from the root node
+    TreeNode current = root;
+    // Traverse the tree
+    while (current != null || !stack.isEmpty()) {
+      // Go to the leftmost node
+      while (current != null) {
+        stack.push(current);
+        current = current.left;
       }
-      // pop from stack
-      cur = st.pop();      // next smallest
-      // decrement k
+      // Process the node from the stack
+      current = stack.pop();
+      // Decrement k and check if it's the kth smallest
       if (--k == 0) {
-        return cur.val;
+        // Found the kth smallest element
+        return current.val;
       }
-      // move to right child
-      cur = cur.right;     // then explore right subtree
+      // Move to the right subtree
+      current = current.right;
     }
 
-    // per problem constraints k is valid; fallback for safety
     return -1;
   }
 }
