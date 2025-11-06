@@ -631,6 +631,16 @@ node.val, high). Use long bounds to avoid edge cases near Integer.MIN_VALUE/MAX_
 **Time:** O(n) — visit each node once
 **Space:** O(h) — recursion stack (worst-case O(n) for a skewed tree)
 
+### (Medium) Kth Smallest Integer in BST
+
+#### Key takeaway
+
+Do an inorder traversal (left → node → right) which yields nodes in ascending order. Use a stack to push the left chain, pop one node at a time, decrement k,
+and when k == 0, return that node’s value.
+
+**Time:** O(h + k) on average (O(n) worst-case) — you visit nodes up to the k-th
+**Space:** O(h) — stack proportional to the tree height
+
 ## Heaps & Priority Queue
 
 TODO
