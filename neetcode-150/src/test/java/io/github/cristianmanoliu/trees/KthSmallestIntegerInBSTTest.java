@@ -2,48 +2,101 @@ package io.github.cristianmanoliu.trees;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+// JUnit 5 tests for KthSmallestIntegerInBST
 class KthSmallestIntegerInBSTTest {
 
+  // Helper: quick node constructor with children
+  private TreeNode n(int v, TreeNode l, TreeNode r) {
+    TreeNode t = new TreeNode(v);
+    t.left = l;
+    t.right = r;
+    return t;
+  }
+
   @Test
-  void kthSmallest() {
-    KthSmallestIntegerInBST solution = new KthSmallestIntegerInBST();
+  @DisplayName("Example 1: simple BST")
+  void example1() {
+    KthSmallestIntegerInBST sol = new KthSmallestIntegerInBST();
+    //     3
+    //    / \
+    //   1   4
+    //    \
+    //     2
+    TreeNode root = n(3, n(1, null, new TreeNode(2)), new TreeNode(4));
+    assertEquals(1, sol.kthSmallest(root, 1));
+    assertEquals(2, sol.kthSmallest(root, 2));
+    assertEquals(3, sol.kthSmallest(root, 3));
+    assertEquals(4, sol.kthSmallest(root, 4));
+  }
 
-    // Test case 1
-    TreeNode root1 = new TreeNode(3);
-    root1.left = new TreeNode(1);
-    root1.right = new TreeNode(4);
-    root1.left.right = new TreeNode(2);
-    int k1 = 1;
-    assertEquals(1, solution.kthSmallest(root1, k1));
+  @Test
+  @DisplayName("Example 2: deeper BST")
+  void example2() {
+    KthSmallestIntegerInBST sol = new KthSmallestIntegerInBST();
+    //         5
+    //        / \
+    //       3   6
+    //      / \
+    //     2   4
+    //    /
+    //   1
+    TreeNode root = n(5,
+        n(3, n(2, new TreeNode(1), null), new TreeNode(4)),
+        new TreeNode(6));
+    assertEquals(3, sol.kthSmallest(root, 3));
+  }
 
-    // Test case 2
-    TreeNode root2 = new TreeNode(5);
-    root2.left = new TreeNode(3);
-    root2.right = new TreeNode(6);
-    root2.left.left = new TreeNode(2);
-    root2.left.right = new TreeNode(4);
-    root2.left.left.left = new TreeNode(1);
-    int k2 = 3;
-    assertEquals(3, solution.kthSmallest(root2, k2));
+  @Test
+  @DisplayName("Single node tree")
+  void singleNode() {
+    KthSmallestIntegerInBST sol = new KthSmallestIntegerInBST();
+    TreeNode root = new TreeNode(10);
+    assertEquals(10, sol.kthSmallest(root, 1));
+  }
 
-    // Test case 3: Single node tree
-    TreeNode root3 = new TreeNode(10);
-    int k3 = 1;
-    assertEquals(10, solution.kthSmallest(root3, k3));
+  @Test
+  @DisplayName("Larger BST with mixed structure")
+  void largerMixed() {
+    KthSmallestIntegerInBST sol = new KthSmallestIntegerInBST();
+    //        8
+    //       / \
+    //      3   10
+    //     / \    \
+    //    1   6    14
+    //       / \   /
+    //      4   7 13
+    TreeNode root = n(8,
+        n(3, new TreeNode(1), n(6, new TreeNode(4), new TreeNode(7))),
+        n(10, null, n(14, new TreeNode(13), null)));
+    // Inorder: [1,3,4,6,7,8,10,13,14]
+    assertEquals(7, sol.kthSmallest(root, 5)); // 5th smallest is 7
+  }
 
-    // Test case 4: Larger tree
-    TreeNode root4 = new TreeNode(8);
-    root4.left = new TreeNode(3);
-    root4.right = new TreeNode(10);
-    root4.left.left = new TreeNode(1);
-    root4.left.right = new TreeNode(6);
-    root4.left.right.left = new TreeNode(4);
-    root4.left.right.right = new TreeNode(7);
-    root4.right.right = new TreeNode(14);
-    root4.right.right.left = new TreeNode(13);
-    int k4 = 5;
-    assertEquals(7, solution.kthSmallest(root4, k4));
+  @Test
+  @DisplayName("Degenerate BSTs (chains)")
+  void degenerateChains() {
+    KthSmallestIntegerInBST sol = new KthSmallestIntegerInBST();
+
+    // Left chain: 3 <- 2 <- 1
+    TreeNode left = n(3, n(2, new TreeNode(1), null), null);
+    assertEquals(2, sol.kthSmallest(left, 2));
+
+    // Right chain: 1 -> 2 -> 3
+    TreeNode right = n(1, null, n(2, null, new TreeNode(3)));
+    assertEquals(3, sol.kthSmallest(right, 3));
+  }
+
+  @Test
+  @DisplayName("Repeated calls on the same instance should be independent")
+  void repeatedCalls() {
+    KthSmallestIntegerInBST sol = new KthSmallestIntegerInBST();
+    TreeNode a = n(2, new TreeNode(1), new TreeNode(3));
+    TreeNode b = n(5, n(3, new TreeNode(2), new TreeNode(4)), new TreeNode(6));
+
+    assertEquals(2, sol.kthSmallest(a, 2));
+    assertEquals(4, sol.kthSmallest(b, 3));
   }
 }
