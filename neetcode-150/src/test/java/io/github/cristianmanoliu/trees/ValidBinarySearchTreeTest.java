@@ -3,47 +3,97 @@ package io.github.cristianmanoliu.trees;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+// JUnit 5 tests for ValidBinarySearchTree
 class ValidBinarySearchTreeTest {
 
+  // Helper: quick node constructor with children
+  private TreeNode n(int v, TreeNode l, TreeNode r) {
+    TreeNode t = new TreeNode(v);
+    t.left = l;
+    t.right = r;
+    return t;
+  }
+
   @Test
-  void isValidBST() {
-    ValidBinarySearchTree solution = new ValidBinarySearchTree();
+  @DisplayName("Empty tree is a valid BST")
+  void emptyTree() {
+    ValidBinarySearchTree sol = new ValidBinarySearchTree();
+    assertTrue(sol.isValidBST(null));
+  }
 
-    // Test case 1: Valid BST
-    TreeNode root1 = new TreeNode(2);
-    root1.left = new TreeNode(1);
-    root1.right = new TreeNode(3);
-    assertTrue(solution.isValidBST(root1));
+  @Test
+  @DisplayName("Single node is a valid BST")
+  void singleNode() {
+    ValidBinarySearchTree sol = new ValidBinarySearchTree();
+    assertTrue(sol.isValidBST(new TreeNode(7)));
+  }
 
-    // Test case 2: Invalid BST
-    TreeNode root2 = new TreeNode(5);
-    root2.left = new TreeNode(1);
-    root2.right = new TreeNode(4);
-    root2.right.left = new TreeNode(3);
-    root2.right.right = new TreeNode(6);
-    assertFalse(solution.isValidBST(root2));
+  @Test
+  @DisplayName("Simple valid BST [2,1,3]")
+  void simpleValid() {
+    ValidBinarySearchTree sol = new ValidBinarySearchTree();
+    TreeNode root = n(2, new TreeNode(1), new TreeNode(3));
+    assertTrue(sol.isValidBST(root));
+  }
 
-    // Test case 3: Single node tree (valid BST)
-    TreeNode root3 = new TreeNode(10);
-    assertTrue(solution.isValidBST(root3));
+  @Test
+  @DisplayName("Duplicates violate strict BST ordering")
+  void duplicatesInvalid() {
+    ValidBinarySearchTree sol = new ValidBinarySearchTree();
+    // Left duplicate
+    TreeNode leftDup = n(2, new TreeNode(2), new TreeNode(3));
+    assertFalse(sol.isValidBST(leftDup));
+    // Right duplicate
+    TreeNode rightDup = n(2, new TreeNode(1), new TreeNode(2));
+    assertFalse(sol.isValidBST(rightDup));
+  }
 
-    // Test case 4: Empty tree (valid BST)
-    assertTrue(solution.isValidBST(null));
+  @Test
+  @DisplayName("Classic invalid: right subtree contains a smaller value")
+  void classicInvalid() {
+    ValidBinarySearchTree sol = new ValidBinarySearchTree();
+    //      5
+    //     / \
+    //    1   4
+    //       / \
+    //      3   6
+    TreeNode root = n(5, new TreeNode(1), n(4, new TreeNode(3), new TreeNode(6)));
+    assertFalse(sol.isValidBST(root));
+  }
 
-    // Test case 5: Larger valid BST
-    TreeNode root4 = new TreeNode(10);
-    root4.left = new TreeNode(5);
-    root4.right = new TreeNode(15);
-    root4.right.left = new TreeNode(12);
-    root4.right.right = new TreeNode(20);
-    assertTrue(solution.isValidBST(root4));
+  @Test
+  @DisplayName("Bounds near Integer limits should pass with long guard rails")
+  void minMaxBounds() {
+    ValidBinarySearchTree sol = new ValidBinarySearchTree();
+    TreeNode root = n(0, new TreeNode(Integer.MIN_VALUE), new TreeNode(Integer.MAX_VALUE));
+    assertTrue(sol.isValidBST(root));
+  }
 
-    // Test case 6: Invalid BST with duplicate values
-    TreeNode root5 = new TreeNode(10);
-    root5.left = new TreeNode(10);
-    root5.right = new TreeNode(15);
-    assertFalse(solution.isValidBST(root5));
+  @Test
+  @DisplayName("Valid skewed chains")
+  void skewedValid() {
+    ValidBinarySearchTree sol = new ValidBinarySearchTree();
+    // Left-skewed decreasing: 3 <- 2 <- 1
+    TreeNode left = n(3, n(2, new TreeNode(1), null), null);
+    assertTrue(sol.isValidBST(left));
+    // Right-skewed increasing: 1 -> 2 -> 3
+    TreeNode right = n(1, null, n(2, null, new TreeNode(3)));
+    assertTrue(sol.isValidBST(right));
+  }
+
+  @Test
+  @DisplayName("Deep violation inside right subtree")
+  void deepViolation() {
+    ValidBinarySearchTree sol = new ValidBinarySearchTree();
+    //        10
+    //       /  \
+    //      5    15
+    //          /  \
+    //         6    20   <-- 6 violates because it is <= 10 but in right subtree of 10
+    TreeNode root = n(10, new TreeNode(5), n(15, new TreeNode(6), new TreeNode(20)));
+    assertFalse(sol.isValidBST(root));
   }
 }

@@ -4,6 +4,11 @@ package io.github.cristianmanoliu.trees;
 // https://leetcode.com/problems/subtree-of-a-binary-tree
 public class SubtreeOfAnotherTree {
 
+  // Main function: determine whether 'subRoot' is a subtree of 'root'.
+  // Strategy:
+  // - An empty tree (subRoot == null) is always a subtree.
+  // - Otherwise, at each node of 'root', check if the subtree starting here
+  //   exactly matches 'subRoot' (via isSameTree). If not, recurse left or right.
   public boolean isSubtree(TreeNode root, TreeNode subRoot) {
     // Edge case: empty subRoot is always a subtree
     if (subRoot == null) {
@@ -14,31 +19,29 @@ public class SubtreeOfAnotherTree {
       return false;
     }
 
-    // Check if the subtree rooted at this node matches subRoot,
-    // or recurse into left and right children.
+    // If the current root matches subRoot, we are done
     if (isSameTree(root, subRoot)) {
       return true;
     }
 
-    // Recur on left and right subtrees
+    // Otherwise, try to find subRoot in either subtree
     return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot);
   }
 
+  // Helper: check structural and value equality of two trees.
   private boolean isSameTree(TreeNode a, TreeNode b) {
-    // Both nodes are null, trees match
+    // Both nodes null -> trees match here
     if (a == null && b == null) {
       return true;
     }
-    // One node is null and the other is not, trees don't match
+    // One null and the other not -> mismatch
     if (a == null || b == null) {
       return false;
     }
-    // Node values differ, trees don't match
+    // Values must match and both subtrees must match
     if (a.val != b.val) {
       return false;
     }
-
-    // Recur on left and right children
     return isSameTree(a.left, b.left) && isSameTree(a.right, b.right);
   }
 }

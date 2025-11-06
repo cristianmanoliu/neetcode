@@ -2,7 +2,7 @@ package io.github.cristianmanoliu.trees;
 
 public class TreeNode {
 
-  final int val;
+  int val;
   TreeNode left;
   TreeNode right;
 
