@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-// JUnit 5 tests for ProductsOfArrayExceptSelf
 class ProductsOfArrayExceptSelfTest {
 
   private final ProductsOfArrayExceptSelf sol = new ProductsOfArrayExceptSelf();

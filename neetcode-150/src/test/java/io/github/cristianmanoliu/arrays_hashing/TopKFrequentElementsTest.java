@@ -9,7 +9,6 @@ import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-// JUnit 5 tests for TopKFrequentElements
 class TopKFrequentElementsTest {
 
   // Helper: compare arrays ignoring order

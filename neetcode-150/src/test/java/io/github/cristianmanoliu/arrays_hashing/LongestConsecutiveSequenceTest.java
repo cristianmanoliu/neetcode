@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-// JUnit 5 tests for LongestConsecutiveSequence
 class LongestConsecutiveSequenceTest {
 
   private final LongestConsecutiveSequence sol = new LongestConsecutiveSequence();

@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-// JUnit 5 tests for GroupAnagrams
 class GroupAnagramsTest {
 
   // Normalize a list of groups by sorting each group and then sorting groups by their first element/size.

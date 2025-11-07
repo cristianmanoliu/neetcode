@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-// JUnit 5 tests for InvertBinaryTree
 class InvertBinaryTreeTest {
 
   // Helper: quick node constructor with children
