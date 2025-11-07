@@ -52,7 +52,7 @@ class MedianOfTwoSortedArraysTest {
   @DisplayName("Call with A longer than B (swap path)")
   void swapPath() {
     // A is longer; function should internally swap arrays
-    assertEquals(2.5, sol.findMedianSortedArrays(new int[]{1, 2, 3, 4}, new int[]{5}));
+    assertEquals(3.0, sol.findMedianSortedArrays(new int[]{1, 2, 3, 4}, new int[]{5}));
     assertEquals(3.0, sol.findMedianSortedArrays(new int[]{1, 2, 3, 4}, new int[]{3}));
   }
 
