@@ -761,4 +761,158 @@ TODO
 
 ## Bit Manipulation
 
-TODO
+### (Easy) Single Number
+
+#### Key takeaway
+
+Fold the array with XOR. Since x ^ x = 0 and x ^ 0 = x, every paired element cancels out, leaving the lone element as the result.
+
+**Time:** O(n) — single pass
+**Space:** O(1) — constant extra space
+
+### (Easy) Number of 1 Bits
+
+#### Key takeaway
+
+Use Brian Kernighan’s trick: repeatedly clear the lowest set bit with n &= (n - 1) and count iterations. Each iteration removes exactly one 1.
+
+Time: O(k) — k = number of set bits (≤ 32)
+Space: O(1) — constant extra space
+
+### (Easy) Counting Bits
+
+#### Key takeaway
+
+Use the DP recurrence bits[i] = bits[i >> 1] + (i & 1): drop the least-significant bit by shifting right and add 1 if that dropped bit was 1. Build from 0 to n.
+
+**Time:** O(n) — one O(1) step per i
+**Space:** O(n) — the output array
+
+
+---
+
+# Patterns Recognition Cheat Sheet
+
+## Arrays & Hashing
+
+> When you need to track, count, or lookup elements in O(1), reach for a hash map or set first.
+
+- If you see **"frequency," "duplicate," or "group by,"** you're likely hashing.
+- For **"Top K"** problems, combine a hash map with a heap.
+
+## Two Pointers
+
+> Sorted data or need to compare/combine elements from opposite ends or different positions? Use two pointers.
+
+- One pointer often chases the other, or they squeeze inward from both ends.
+- The key idea: pointers interact but don't care about what's *between* them.
+
+## Sliding Window
+
+> If the problem asks about a **contiguous subarray/substring** with specific properties (max, min, or constraint), slide a window.
+
+- Unlike two pointers, you **do** care about everything inside the window.
+- Expand the right side to include more.
+- Shrink the left side when the window becomes invalid.
+
+## Stack
+
+> Think stack when you need to remember previous elements and process them in reverse order or when something "invalidates" earlier items.
+
+- Look for: **matching pairs**, **nearest greater/smaller element**, or building something that depends on what came before.
+
+## Binary Search
+
+> Not just for sorted arrays! Use binary search whenever you can eliminate half the search space by comparing against a midpoint.
+
+- Key phrase: **"minimize/maximize X such that condition Y holds"** → binary search on the *answer space*.
+
+## Linked List
+
+> Draw it out! Linked list problems are all about pointer manipulation.
+
+- Use a **dummy node** to simplify edge cases.
+- Fast/slow pointers detect cycles.
+- You can often solve in-place with **O(1)** extra space by rewiring pointers.
+
+## Trees
+
+> Trees = choose your traversal wisely. DFS (recursion) for depth/path problems, BFS (queue) for level/shortest-path problems.
+
+- **Post-order** when children inform parent.
+- **Pre-order** when parent informs children.
+- Always consider: what info does each node need from its subtrees?
+
+## Heaps & Priority Queue
+
+> When you need the min/max repeatedly or must process elements in sorted order dynamically, use a heap.
+
+- Classic indicators:
+    - **Kth largest/smallest**
+    - **Merge K sorted structures**
+    - **Median from stream**
+- Heap gives you **O(log k)** operations.
+
+## Backtracking
+
+> Generate all possible solutions by making choices, exploring paths, then undoing (backtracking) to try other options.
+
+- Keywords: **"all combinations," "all permutations," "generate all valid"**.
+- Think recursive tree where you build and tear down state.
+
+## Tries
+
+> Prefix problems? Build a trie (prefix tree). Each path from root = a string.
+
+- Perfect for:
+    - **"starts with"**
+    - **Autocomplete**
+    - **Dictionary-based word searches**
+- Each node branches on the next character.
+
+## Graph
+
+> DFS for connectivity/components, BFS for shortest paths (in unweighted graphs).
+
+- Always track **visited** nodes to avoid cycles.
+- Grid problems are often hidden graphs—treat cells as nodes and adjacent cells as edges.
+
+## Dynamic Programming
+
+> Can you break it into smaller overlapping subproblems with optimal substructure?
+
+- Signals:
+    - **"maximize/minimize"**
+    - **"count ways"**
+    - **"is it possible"**
+- Common patterns:
+    - **Knapsack** (choices)
+    - **LCS / edit distance** (two sequences)
+    - **Interval DP** (range/segment problems)
+
+## Greedy
+
+> Make the locally optimal choice at each step without looking back.
+
+- Only valid when **local optimum = global optimum**.
+- Common in:
+    - Interval scheduling
+    - Minimum coins (for certain denominations)
+    - Problems where you **sort first**, then sweep.
+
+## Intervals
+
+> Sort intervals by start time, then merge/process sequentially.
+
+- For overlapping intervals, check if `start2 ≤ end1`.
+- Most interval problems reduce to:
+    1. Sort by start.
+    2. Sweep while maintaining a current interval and comparing.
+
+## Bit Manipulation
+
+> Think powers of 2 and bitwise operators (`&`, `|`, `^`, `~`, `<<`, `>>`).
+
+- XOR tricks for finding unique elements.
+- AND/OR for masks.
+- Remember: `n & (n - 1)` clears the lowest set bit—useful for counting bits.

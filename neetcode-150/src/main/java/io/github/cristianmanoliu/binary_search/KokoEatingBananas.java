@@ -39,7 +39,9 @@ public class KokoEatingBananas {
       // ceil(pile / k) = (pile + k - 1) / k using integers
       hours += (pile + k - 1) / k;
       // (Optional early exit) if hours already exceed h, no need to continue
-      if (hours > h) return false;
+      if (hours > h) {
+        return false;
+      }
     }
     return hours <= h;
   }

@@ -30,9 +30,9 @@ public class MedianOfTwoSortedArrays {
       int cutB = totalLeft - cutA;
 
       // Fetch border values around the cuts (sentinels for edges)
-      int leftA  = (cutA == 0) ? Integer.MIN_VALUE : A[cutA - 1];
+      int leftA = (cutA == 0) ? Integer.MIN_VALUE : A[cutA - 1];
       int rightA = (cutA == m) ? Integer.MAX_VALUE : A[cutA];
-      int leftB  = (cutB == 0) ? Integer.MIN_VALUE : B[cutB - 1];
+      int leftB = (cutB == 0) ? Integer.MIN_VALUE : B[cutB - 1];
       int rightB = (cutB == n) ? Integer.MAX_VALUE : B[cutB];
 
       // Valid partition if both left sides are <= the opposite right sides
@@ -43,7 +43,7 @@ public class MedianOfTwoSortedArrays {
         } else {
           // Even length: average of max(lefts) and min(rights)
           // Cast to double before addition to avoid integer overflow
-          return ( (double) Math.max(leftA, leftB) + (double) Math.min(rightA, rightB) ) / 2.0;
+          return ((double) Math.max(leftA, leftB) + (double) Math.min(rightA, rightB)) / 2.0;
         }
       }
       // Otherwise adjust search range:

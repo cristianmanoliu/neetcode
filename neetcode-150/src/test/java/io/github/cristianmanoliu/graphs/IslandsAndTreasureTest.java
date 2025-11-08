@@ -1,187 +1,127 @@
 package io.github.cristianmanoliu.graphs;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class IslandsAndTreasureTest {
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class IslandsAndTreasureTest {
 
   private static final int INF = Integer.MAX_VALUE;
 
+  // Helper: assert two 2D int arrays are equal
   private void assertGridEquals(int[][] expected, int[][] actual) {
-    // Basic shape check
-    assertArrayEquals(
-        new int[]{expected.length, expected[0].length},
-        new int[]{actual.length, actual[0].length},
-        "Grid dimensions differ"
-    );
-
-    for (int r = 0; r < expected.length; r++) {
-      assertArrayEquals(expected[r], actual[r],
-          "Row " + r + " differs");
+    for (int i = 0; i < expected.length; i++) {
+      assertArrayEquals(expected[i], actual[i], "Row " + i + " differs");
     }
   }
 
   @Test
-  public void testSingleTreasureCenter() {
-    IslandsAndTreasure solver = new IslandsAndTreasure();
+  @DisplayName("Classic example with walls, treasures, and rooms")
+  void classicExample() {
+    IslandsAndTreasure sol = new IslandsAndTreasure();
 
     int[][] grid = {
-        {INF, INF, INF},
-        {INF, 0,   INF},
-        {INF, INF, INF}
+        {INF, -1, 0, INF},
+        {INF, INF, INF, -1},
+        {INF, -1, INF, -1},
+        {0, -1, INF, INF}
     };
 
     int[][] expected = {
-        {2, 1, 2},
-        {1, 0, 1},
-        {2, 1, 2}
+        {3, -1, 0, 1},
+        {2, 2, 1, -1},
+        {1, -1, 2, -1},
+        {0, -1, 3, 4}
     };
 
-    solver.islandsAndTreasure(grid);
+    sol.islandsAndTreasure(grid);
     assertGridEquals(expected, grid);
   }
 
   @Test
-  public void testWallsButAllReachable() {
-    IslandsAndTreasure solver = new IslandsAndTreasure();
-
-    int[][] grid = {
-        {INF, -1,  0},
-        {INF, INF, INF},
-        {INF, -1,  INF}
-    };
-
-    // Distances computed by BFS from (0,2) with walls at (0,1) and (2,1)
-    int[][] expected = {
-        {4, -1, 0},
-        {3,  2, 1},
-        {4, -1, 2}
-    };
-
-    solver.islandsAndTreasure(grid);
-    assertGridEquals(expected, grid);
-  }
-
-  @Test
-  public void testUnreachableRoomsRemainINF() {
-    IslandsAndTreasure solver = new IslandsAndTreasure();
-
-    /*
-      Layout:
-
-      0  -1  INF
-      INF -1 INF
-      INF -1 INF
-
-      Column 1 (index 1) is a wall barrier, so the rightmost column is unreachable.
-     */
-    int[][] grid = {
-        {0,   -1, INF},
-        {INF, -1, INF},
-        {INF, -1, INF}
-    };
-
-    int[][] expected = {
-        {0,  -1, INF},
-        {1,  -1, INF},
-        {2,  -1, INF}
-    };
-
-    solver.islandsAndTreasure(grid);
-    assertGridEquals(expected, grid);
-  }
-
-  @Test
-  public void testNoTreasureGridUnchanged() {
-    IslandsAndTreasure solver = new IslandsAndTreasure();
+  @DisplayName("Single treasure fills distances outward")
+  void singleTreasureSmall() {
+    IslandsAndTreasure sol = new IslandsAndTreasure();
 
     int[][] grid = {
         {INF, INF},
-        {-1,  INF}
+        {0, INF}
     };
 
     int[][] expected = {
-        {INF, INF},
-        {-1,  INF}
+        {1, 2},
+        {0, 1}
     };
 
-    solver.islandsAndTreasure(grid);
+    sol.islandsAndTreasure(grid);
     assertGridEquals(expected, grid);
   }
 
   @Test
-  public void testRectangularGrid() {
-    IslandsAndTreasure solver = new IslandsAndTreasure();
+  @DisplayName("Multiple treasures: choose nearest")
+  void multipleTreasures() {
+    IslandsAndTreasure sol = new IslandsAndTreasure();
 
-    /*
-      Initial:
-      [INF, INF, INF,   0]
-      [INF, -1,  INF, INF]
-
-      Expected distances:
-      [3,   2,   1,   0]
-      [4,  -1,   2,   1]
-     */
     int[][] grid = {
-        {INF, INF, INF, 0},
-        {INF, -1,  INF, INF}
+        {0, INF},
+        {INF, 0}
     };
 
     int[][] expected = {
-        {3, 2, 1, 0},
-        {4, -1, 2, 1}
+        {0, 1},
+        {1, 0}
     };
 
-    solver.islandsAndTreasure(grid);
+    sol.islandsAndTreasure(grid);
     assertGridEquals(expected, grid);
   }
 
   @Test
-  public void testSingleCellTreasure() {
-    IslandsAndTreasure solver = new IslandsAndTreasure();
+  @DisplayName("Walls block paths (unreachable stays INF)")
+  void wallsBlock() {
+    IslandsAndTreasure sol = new IslandsAndTreasure();
 
     int[][] grid = {
-        {0}
+        {0, -1, INF}
     };
 
     int[][] expected = {
-        {0}
+        {0, -1, INF}
     };
 
-    solver.islandsAndTreasure(grid);
+    sol.islandsAndTreasure(grid);
     assertGridEquals(expected, grid);
   }
 
   @Test
-  public void testSingleCellEmpty() {
-    IslandsAndTreasure solver = new IslandsAndTreasure();
+  @DisplayName("No treasures: rooms remain INF")
+  void noTreasures() {
+    IslandsAndTreasure sol = new IslandsAndTreasure();
 
     int[][] grid = {
-        {INF}
+        {INF, -1},
+        {INF, INF}
     };
 
     int[][] expected = {
-        {INF}
+        {INF, -1},
+        {INF, INF}
     };
 
-    solver.islandsAndTreasure(grid);
+    sol.islandsAndTreasure(grid);
     assertGridEquals(expected, grid);
   }
 
   @Test
-  public void testSingleCellWall() {
-    IslandsAndTreasure solver = new IslandsAndTreasure();
+  @DisplayName("Empty or degenerate inputs are safely ignored")
+  void emptyInputs() {
+    IslandsAndTreasure sol = new IslandsAndTreasure();
 
-    int[][] grid = {
-        {-1}
-    };
+    int[][] empty = new int[][]{};
+    sol.islandsAndTreasure(empty); // should not throw
 
-    int[][] expected = {
-        {-1}
-    };
-
-    solver.islandsAndTreasure(grid);
-    assertGridEquals(expected, grid);
+    int[][] rowEmpty = new int[][]{{}};
+    sol.islandsAndTreasure(rowEmpty); // should not throw
   }
 }

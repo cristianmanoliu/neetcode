@@ -1,53 +1,142 @@
 package io.github.cristianmanoliu.graphs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+// JUnit 5 tests for CloneGraph
 class CloneGraphTest {
 
-  @Test
-  void testCloneGraph() {
-    // Create a sample graph
-    Node node1 = new Node(1);
-    Node node2 = new Node(2);
-    Node node3 = new Node(3);
-    Node node4 = new Node(4);
+  // Helper: structural sanity check.
+  // Assumes unique node values (as in LeetCode: 1..N).
+  // Verifies:
+  //  - All original nodes map to distinct cloned nodes (no shared references).
+  //  - Values match and neighbor sets (by value) match for every visited node.
+  //  - Graph size (reachable component) is preserved.
+  private void assertGraphCloned(Node orig, Node clone) {
+    // Both null considered equal; caller avoids null here for brevity.
+    Map<Integer, Node> byValClone = new HashMap<>();
+    // BFS through both graphs simultaneously using mapping original->clone
+    Map<Node, Node> map = new HashMap<>();
+    Queue<Node> q = new ArrayDeque<>();
 
-    node1.neighbors.add(node2);
-    node1.neighbors.add(node4);
-    node2.neighbors.add(node1);
-    node2.neighbors.add(node3);
-    node3.neighbors.add(node2);
-    node3.neighbors.add(node4);
-    node4.neighbors.add(node1);
-    node4.neighbors.add(node3);
+    map.put(orig, clone);
+    q.offer(orig);
 
-    CloneGraph cloneGraph = new CloneGraph();
-    Node clonedNode = cloneGraph.cloneGraph(node1);
+    while (!q.isEmpty()) {
+      Node u = q.poll();
+      Node v = map.get(u);
 
-    // Verify the cloned graph structure
-    assertNotNull(clonedNode);
-    assertEquals(1, clonedNode.val);
-    assertEquals(2, clonedNode.neighbors.size());
+      // Different instances
+      assertNotSame(u, v, "Clone must be a different instance than original");
 
-    Node clonedNode2 = clonedNode.neighbors.get(0);
-    Node clonedNode4 = clonedNode.neighbors.get(1);
+      // Same value
+      assertEquals(u.val, v.val, "Node values must match");
 
-    assertEquals(2, clonedNode2.val);
-    assertEquals(4, clonedNode4.val);
+      // Record unique clone per value (guards accidental reuse)
+      byValClone.putIfAbsent(v.val, v);
 
-    assertEquals(2, clonedNode2.neighbors.size());
-    assertEquals(2, clonedNode4.neighbors.size());
+      // Compare neighbor value sets (order-insensitive)
+      Set<Integer> uNeiVals = new HashSet<>();
+      for (Node x : u.neighbors) uNeiVals.add(x.val);
+      Set<Integer> vNeiVals = new HashSet<>();
+      for (Node y : v.neighbors) vNeiVals.add(y.val);
+      assertEquals(uNeiVals, vNeiVals, "Neighbor value sets must match");
 
-    Node clonedNode3 = clonedNode2.neighbors.stream()
-        .filter(n -> n.val == 3)
-        .findFirst()
-        .orElse(null);
+      // Enqueue neighbors and extend mapping
+      for (Node un : u.neighbors) {
+        // Find the corresponding clone neighbor by value
+        Node vn = null;
+        for (Node cand : v.neighbors) {
+          if (cand.val == un.val) {
+            vn = cand;
+            break;
+          }
+        }
+        // Must exist
+        assertTrue(vn != null, "Corresponding clone neighbor must exist");
 
-    assertNotNull(clonedNode3);
-    assertEquals(3, clonedNode3.val);
+        // First time seeing this original neighbor -> map it and enqueue
+        if (!map.containsKey(un)) {
+          map.put(un, vn);
+          q.offer(un);
+        } else {
+          // If we've seen it, mapping should be consistent
+          assertTrue(map.get(un) == vn, "Mapping must be consistent for repeated visits");
+        }
+      }
+    }
   }
 
+  @Test
+  @DisplayName("Null input -> null output")
+  void nullGraph() {
+    CloneGraph sol = new CloneGraph();
+    Node out = sol.cloneGraph(null);
+    assertTrue(out == null);
+  }
+
+  @Test
+  @DisplayName("Single node with no neighbors")
+  void singleNode() {
+    CloneGraph sol = new CloneGraph();
+    Node a = new Node(1, new java.util.ArrayList<>());
+    Node b = sol.cloneGraph(a);
+
+    // Basic checks
+    assertNotSame(a, b);
+    assertEquals(1, b.val);
+    assertTrue(b.neighbors.isEmpty());
+
+    // Structural check
+    assertGraphCloned(a, b);
+  }
+
+  @Test
+  @DisplayName("Triangle cycle 1-2-3-1")
+  void triangleCycle() {
+    CloneGraph sol = new CloneGraph();
+
+    Node n1 = new Node(1, new java.util.ArrayList<>());
+    Node n2 = new Node(2, new java.util.ArrayList<>());
+    Node n3 = new Node(3, new java.util.ArrayList<>());
+
+    // Undirected edges: 1-2, 2-3, 3-1
+    n1.neighbors.add(n2); n2.neighbors.add(n1);
+    n2.neighbors.add(n3); n3.neighbors.add(n2);
+    n3.neighbors.add(n1); n1.neighbors.add(n3);
+
+    Node c1 = sol.cloneGraph(n1);
+    assertGraphCloned(n1, c1);
+  }
+
+  @Test
+  @DisplayName("Square 1-2-3-4-1 (cycle of length 4)")
+  void squareCycle() {
+    CloneGraph sol = new CloneGraph();
+
+    Node n1 = new Node(1, new ArrayList<>());
+    Node n2 = new Node(2, new ArrayList<>());
+    Node n3 = new Node(3, new ArrayList<>());
+    Node n4 = new Node(4, new ArrayList<>());
+
+    // 1-2-3-4-1 (undirected)
+    n1.neighbors.add(n2); n2.neighbors.add(n1);
+    n2.neighbors.add(n3); n3.neighbors.add(n2);
+    n3.neighbors.add(n4); n4.neighbors.add(n3);
+    n4.neighbors.add(n1); n1.neighbors.add(n4);
+
+    Node c1 = sol.cloneGraph(n1);
+    assertGraphCloned(n1, c1);
+  }
 }
