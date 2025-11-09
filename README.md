@@ -687,7 +687,54 @@ otherwise create a node and recursively build its left and right subtrees.
 
 ## Heaps & Priority Queue
 
-TODO
+### (Easy) Kth Largest Element in a Stream
+
+#### Key takeaway
+
+Maintain a min-heap of size `k` that always stores the `k` largest values seen so far; after each insertion, the heap’s root is the current k-th largest
+element.
+
+**Time:** O(n log k) to build, O(log k) per `add`  
+**Space:** O(k)
+
+### (Easy) Last Stone Weight
+
+#### Key takeaway
+
+Use a max-heap to always pull the two heaviest stones, smash them, and if their weights differ push the difference back until at most one stone remains; that
+weight (or 0) is the answer.
+
+**Time:** O(n log n)  
+**Space:** O(n)
+
+### (Medium) K Closest Points to Origin
+
+#### Key takeaway
+
+Maintain a size-k max-heap by squared distance. Push each point; if the heap grows beyond k, pop the farthest. The heap ends up holding the k closest points.
+
+**Time:** O(n log k) — each of n points causes at most one heap insertion and (sometimes) one deletion
+**Space:** O(k) — the heap stores up to k points
+
+### (Medium) Kth Largest Element in an Array
+
+#### Key takeaway
+
+Maintain a min-heap of size `k`: push every number into the heap, and whenever its size exceeds `k`, pop the smallest; after processing the whole array, the
+heap’s root is the k-th largest element.
+
+**Time:** O(n log k)  
+**Space:** O(k)
+
+### (Medium) Task Scheduler
+
+#### Key takeaway
+
+Count how often each task appears, find the maximum frequency and how many tasks share it, then apply  
+`max(tasks.length, (maxCount - 1) * (n + 1) + numMax)` to get the minimum number of intervals, since the most frequent tasks dictate the idle slots needed.
+
+**Time:** O(T), where T = number of tasks  
+**Space:** O(1) (only 26 frequency counters)
 
 ## Backtracking
 
