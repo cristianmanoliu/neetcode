@@ -736,6 +736,26 @@ Count how often each task appears, find the maximum frequency and how many tasks
 **Time:** O(T), where T = number of tasks  
 **Space:** O(1) (only 26 frequency counters)
 
+### (Medium) Design Twitter
+
+#### Key takeaway
+
+Store each user’s tweets as a reverse-chronologically linked list and the follow graph as a map from user to followees; build a news feed by k-way merging the
+heads of all followed users’ tweet lists using a max-heap to pull the 10 most recent tweets.
+
+**Time:** `postTweet` / `follow` / `unfollow` → O(1); `getNewsFeed` → O((F + K) log F), where F is the number of followed users and K = 10  
+**Space:** O(U + F + T) for users, follow relationships, and stored tweets
+
+### (Hard) Find Median from Data Stream
+
+#### Key takeaway
+
+Maintain two heaps: a max-heap for the lower half of the numbers and a min-heap for the upper half, rebalancing them so their sizes differ by at most one; the
+median is then either the top of the larger heap or the average of both tops.
+
+**Time:** O(log n) per `addNum`, O(1) per `findMedian`  
+**Space:** O(n)
+
 ## Backtracking
 
 TODO
