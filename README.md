@@ -758,7 +758,25 @@ median is then either the top of the larger heap or the average of both tops.
 
 ## Backtracking
 
-TODO
+### (Medium) Subsets (Power Set)
+
+#### Key takeaway
+
+Use backtracking to build subsets by exploring, for each position, whether to include the current element or skip it; at every recursion level, record the
+current partial choice as one valid subset.
+
+**Time:** O(n · 2^n)  
+**Space:** O(n) extra for recursion and the current path (O(n · 2^n) including the output)
+
+### (Medium) Generate Parentheses
+
+#### Key takeaway
+
+Use backtracking with counts of open and close parentheses to build only valid prefixes: add `'('` while you still can, add `')'` only when there are more opens
+than closes, and record each length-`2n` string as a solution.
+
+**Time:** O(Cₙ · n), where Cₙ is the n-th Catalan number  
+**Space:** O(n) extra for recursion and the current string (excluding the output list)
 
 ## Tries
 
