@@ -4,7 +4,6 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 // https://neetcode.io/problems/islands-and-treasure?list=neetcode150
-// https://leetcode.com/problems/islands-and-treasure/
 public class IslandsAndTreasure {
 
   // Main function: fill each empty room (Integer.MAX_VALUE) with its distance

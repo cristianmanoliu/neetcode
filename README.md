@@ -809,6 +809,16 @@ Use a trie; `addWord` inserts normally, and `search` does DFS, branching over al
 
 **Space:** O(T) for the trie nodes, where `T` is the total number of inserted characters (each node has up to 26 pointers)
 
+### (Hard) Word Search II
+
+#### Key takeaway
+
+Build a Trie of the dictionary and run DFS with pruning from each board cell. Follow only Trie edges matching the current character; when you reach a node with
+a stored word, add it and null it out to avoid duplicates. Use in-place visited marking and prune dead Trie branches as you backtrack.
+
+**Time:** O(R·C·α) average — α shrinks with Trie pruning; worst case exponential without pruning
+**Space:** O(sum |word|) for the Trie + O(L) recursion depth (L = longest word)
+
 ## Graphs
 
 ### (Medium) Number of Islands
@@ -819,6 +829,45 @@ Scan the grid and, for each unvisited land cell, run DFS/BFS to flood-fill its c
 
 **Time:** O(m · n) for an m × n grid  
 **Space:** O(m · n) in the worst case for recursion stack or BFS queue (O(1) extra if visited cells are marked in-place)
+
+### (Medium) Max Area of Island
+
+#### Key takeaway
+
+Scan all cells; when you hit land (1), run a DFS flood fill that flips visited cells to 0 and returns the component’s size. Track the maximum size seen.
+
+**Time:** O(R·C) — each cell visited at most once
+**Space:** O(R·C) worst case — recursion stack in a snake-shaped island
+
+### (Medium) Clone Graph
+
+#### Key takeaway
+
+Use DFS with a hash map (original → clone). On first visit, create and memoize the clone, then recursively clone neighbors—memoization both prevents infinite
+cycles and guarantees each node is cloned exactly once.
+
+**Time:** O(V + E) — visit each node and edge once
+**Space:** O(V) — map of clones + recursion stack
+
+### (Medium) Islands and Treasure
+
+#### Key takeaway
+
+Run a multi-source BFS starting from all treasures (0). When visiting a cell, relax any neighbor that’s INF by setting dist = current + 1 and enqueue it.
+Walls (-1) block traversal; unreachable rooms remain INF.
+
+**Time:** O(R·C) — each cell enqueued at most once
+**Space:** O(R·C) — queue in the worst case
+
+### (Medium) Rotting Oranges
+
+#### Key takeaway
+
+Use multi-source BFS: enqueue all initially rotten cells, then process level-by-level. Each level represents one minute; when you pop a rotten orange, rot its
+fresh neighbors and enqueue them. If any fresh remains after BFS, return -1; otherwise return the minutes elapsed.
+
+**Time:** O(R·C) — each cell visited at most once
+**Space:** O(R·C) — queue in the worst case
 
 ## Advanced Graphs
 
